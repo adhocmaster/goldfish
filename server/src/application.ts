@@ -9,6 +9,14 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import {AuthenticationComponent} from '@loopback/authentication';
+import {
+  JWTAuthenticationComponent,
+  SECURITY_SCHEME_SPEC,
+  UserServiceBindings,
+} from '@loopback/authentication-jwt';
+
+import {GoldfishDataSource} from './datasources';
 
 export {ApplicationConfig};
 
@@ -29,6 +37,10 @@ export class ServerApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+    this.dataSource(GoldfishDataSource, UserServiceBindings.DATASOURCE_NAME)
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here

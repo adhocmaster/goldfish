@@ -10,6 +10,12 @@ import {
   Send,
   SequenceHandler,
 } from '@loopback/rest';
+import {
+  AuthenticateFn,
+  AuthenticationBindings,
+  AUTHENTICATION_STRATEGY_NOT_FOUND,
+  USER_PROFILE_NOT_FOUND,
+} from '@loopback/authentication';
 
 const SequenceActions = RestBindings.SequenceActions;
 
@@ -27,6 +33,7 @@ export class MySequence implements SequenceHandler {
     @inject(SequenceActions.INVOKE_METHOD) protected invoke: InvokeMethod,
     @inject(SequenceActions.SEND) public send: Send,
     @inject(SequenceActions.REJECT) public reject: Reject,
+    @inject(AuthenticationBindings.AUTH_ACTION) protected authenticateRequest: AuthenticateFn,
   ) {}
 
   async handle(context: RequestContext) {
@@ -35,10 +42,20 @@ export class MySequence implements SequenceHandler {
       const finished = await this.invokeMiddleware(context);
       if (finished) return;
       const route = this.findRoute(request);
+
+      await this.authenticateRequest(request);
+
       const args = await this.parseParams(request, route);
       const result = await this.invoke(route, args);
       this.send(response, result);
     } catch (err) {
+
+      if ( err.code === AUTHENTICATION_STRATEGY_NOT_FOUND
+          || err.code === USER_PROFILE_NOT_FOUND 
+      ) {
+        Object.assign(err, {statusCode: 401 /* Unauthorized */});
+      }
+
       this.reject(context, err);
     }
   }

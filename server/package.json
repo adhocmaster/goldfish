@@ -45,6 +45,8 @@
     "!*/__tests__"
   ],
   "dependencies": {
+    "@loopback/authentication": "^4.2.7",
+    "@loopback/authentication-jwt": "^0.4.1",
     "@loopback/boot": "^2.3.3",
     "@loopback/core": "^2.8.0",
     "@loopback/openapi-v3": "^3.4.3",
@@ -52,6 +54,7 @@
     "@loopback/rest": "^5.1.1",
     "@loopback/rest-explorer": "^2.2.4",
     "@loopback/service-proxy": "^2.3.2",
+    "loopback-connector-mongodb": "^5.2.3",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
