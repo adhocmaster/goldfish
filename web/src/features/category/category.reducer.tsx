@@ -2,7 +2,8 @@ export default function CategoryReducer(state: any, action: any) {
 
     if( state === undefined) {
         state = { 
-            categories: [], 
+            categories
+            : [], 
             count: 0
         };
     }
