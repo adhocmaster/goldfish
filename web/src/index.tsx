@@ -2,9 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import store from './app/store';
+import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+
+store.subscribe(() => console.log("wtf am I doing with redux"));
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,3 +21,12 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+console.log( store.getState() );
+
+store.dispatch({
+  type: 'ADD_USER',
+  user: {name: 'Dan'}
+});
+
+console.log( store.getState() );

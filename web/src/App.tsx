@@ -2,15 +2,19 @@ import React from 'react';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
+import UserComponent from './features/user/User.component'
+import ItemComponent from './features/item/item.component'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <UserComponent />
+        <ItemComponent />
         <Counter />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Edit <code>src/App.tsx</code> and save to reload.
         </p>
         <span>
           <span>Learn </span>
