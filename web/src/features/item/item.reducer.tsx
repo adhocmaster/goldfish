@@ -9,7 +9,7 @@ export default function ItermReducer(state: any, action: any) {
         }
     }
 
-    if ( action.type == 'VIEW_ITEM' ) {
+    if ( action.type === 'VIEW_ITEM' ) {
 
         return Object.assign( {}, state, action.item );
 

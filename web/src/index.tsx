@@ -29,4 +29,9 @@ store.dispatch({
   user: {name: 'Dan'}
 });
 
+store.dispatch({
+  type: 'VIEW_ITEM',
+  item: {id: 'someid', name: 'Item 1'}
+});
+
 console.log( store.getState() );

@@ -14,9 +14,6 @@ const mapStateToProps = function(state: RootState) {
 
 class UserComponent {
 
-    constructor() {
-
-    }
 
     public UserComponent(props: any) {
         return (

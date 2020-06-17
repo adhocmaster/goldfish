@@ -1,6 +1,5 @@
 import React from 'react';
-import { RootState, store } from './../../app/store';
-import { connect } from 'react-redux';
+import { store } from './../../app/store';
 
 
 export default class ItemComponent extends React.Component {
@@ -17,7 +16,7 @@ export default class ItemComponent extends React.Component {
     getStateFromStore() {
         return {
 
-            id: store.getState().itemState.name,
+            id: store.getState().itemState.id,
             name: store.getState().itemState.name,
         }
     }
@@ -49,7 +48,7 @@ export default class ItemComponent extends React.Component {
         
         const {id, name} = this.state;
         return (
-            <div>
+            <div id="itemComponent">
                 <h1>{id}</h1>
                 <p>{name}</p>
             </div>
