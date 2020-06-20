@@ -49,3 +49,6 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 1. Install webpack
 2. npm install --save-dev typescript ts-loader source-map-loader
 3. npm install --save-dev css-loader
+4. npm install @types/react-router-dom, npm install react-router-dom
+5. npm install react-bootstrap bootstrap, add bootstrap (check original doc)
+6. npm install deep-equal, npm install @types/deep-equal

@@ -3,6 +3,8 @@ import counterReducer from '../features/counter/counterSlice';
 import userReducer from '../features/user/User.reducer';
 import ItemReducer from '../features/item/item.reducer';
 import CategoryReducer from '../features/category/category.reducer';
+import YearReducer from '../features/year/year.reducer';
+import WeekSummaryReducer from '../features/week/WeekSummary.reducer';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,9 @@ export const store = configureStore({
     userState: userReducer,
     itemState: ItemReducer,
     categoryState: CategoryReducer,
+    yearState: YearReducer,
+    weekSummaryState: WeekSummaryReducer,
+    
   },
 });
 

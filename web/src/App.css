@@ -1,6 +1,4 @@
-.App {
-  text-align: center;
-}
+
 
 .App-logo {
   height: 40vmin;
@@ -36,4 +34,8 @@
   100% {
     transform: translateY(0px)
   }
+}
+
+.login-container {
+  margin-top: 100px;
 }

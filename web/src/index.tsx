@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
-store.subscribe(() => console.log("wtf am I doing with redux"));
+store.subscribe(() => console.log("Index subscribe listens to everyone."));
 
 ReactDOM.render(
   <React.StrictMode>

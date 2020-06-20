@@ -1,5 +1,6 @@
 import React from 'react';
 import { RootState, store } from './../app/store';
+import deepEqual from 'deep-equal';
 
 
 export default abstract class ReduxUIComponent extends React.Component {
@@ -28,7 +29,10 @@ export default abstract class ReduxUIComponent extends React.Component {
 
         const newState = this.getStateFromStore();
 
-        if ( this.state != newState ) {
+        console.log(newState);
+        console.log(this.state);
+
+        if ( deepEqual( this.state, newState ) ) {
 
             this.setState(newState);
 
