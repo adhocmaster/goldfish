@@ -43,6 +43,10 @@ var config = {
         {
           test: /\.(jpe?g|png|gif|svg)$/i, 
           loader: "file-loader?name=/public/icons/[name].[ext]"
+        },
+        {
+          test: /\.(woff|ttf|otf|eot|woff2|svg)$/i,
+          loader: "file-loader"
         }
     ]
   },

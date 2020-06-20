@@ -21,5 +21,10 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "baseUrl":"src/",
+  "paths":{
+    "@components/*":["src/app/components/*"],
+    "@features/*":["src/app/features/*"]
+  }
 }
