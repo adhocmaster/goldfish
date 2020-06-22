@@ -6,6 +6,7 @@ import App from './App';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import actionManager from 'framework/ActionManager';
 
 store.subscribe(() => console.log("Index subscribe listens to everyone."));
 
@@ -25,14 +26,7 @@ serviceWorker.unregister();
 
 console.log( store.getState() );
 
-store.dispatch({
-  type: 'ADD_USER',
-  user: {name: 'Dan'}
-});
 
-store.dispatch({
-  type: 'VIEW_ITEM',
-  item: {id: 'someid', name: 'Item 1'}
-});
+actionManager.dispatch('VIEW_ITEM',  {id: 'someid', name: 'Item 1'} );
 
 console.log( store.getState() );

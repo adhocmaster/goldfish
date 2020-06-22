@@ -1,3 +1,6 @@
+
+import {YearActionTypes} from 'features/year/year.action';
+
 export default function YearReducer(state: any, action: any) {
 
     if( state === undefined) {
@@ -23,15 +26,20 @@ export default function YearReducer(state: any, action: any) {
         };
     }
 
-    if(action.type === 'VIEW_YEAR') {
-        
-        // const weeks = state.weeks.slice(); // copy elements
-        // users.push(action.user);
-        // const count = state.count + 1;
+    switch(action.type) {
 
-        // return Object.assign({}, state, { users: users, count: count } )
+        case YearActionTypes.YEAR_WEEK_FORM_SHOW:
+            state = Object.assign({}, state, {weekFormShow: true});
+            break;
+            
+        case YearActionTypes.YEAR_WEEK_FORM_HIDE:
+            state = Object.assign({}, state, {weekFormShow: false});
+            break;
+            
 
     }
+
+    console.log(state);
 
     return state;
 

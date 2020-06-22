@@ -10,17 +10,15 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 
 import WeekSummaryComponent from './../week/WeekSummary.component';
+import actionManager from 'framework/ActionManager';
+import {YearActionTypes} from 'features/year/year.action';
 
 export default class YearComponent extends ReduxUIComponent {
 
     
     getStateFromStore(): any {
 
-        return {
-            id: store.getState().yearState.id,
-            name: store.getState().yearState.name,
-            weeks: store.getState().yearState.weeks,
-        }
+        return store.getState().yearState;
         
     }
 
@@ -45,17 +43,14 @@ export default class YearComponent extends ReduxUIComponent {
 
     showWeekForm(): any {
         
-        store.dispatch({
-            type: 'WEEK_FORM_SHOW'
-        });
+        actionManager.dispatch(YearActionTypes.YEAR_WEEK_FORM_SHOW);
 
     }
 
     hideWeekForm(): any {
 
-        store.dispatch({
-            type: 'WEEK_FORM_HIDE'
-        });
+        actionManager.dispatch(YearActionTypes.YEAR_WEEK_FORM_HIDE);
+
     }
 
     addWeek(): any {
