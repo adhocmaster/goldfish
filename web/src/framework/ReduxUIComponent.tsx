@@ -29,10 +29,15 @@ export default abstract class ReduxUIComponent extends React.Component {
 
         const newState = this.getStateFromStore();
 
+        console.log(`listener class : ${this.constructor.name}`);
+        console.log('new state:');
         console.log(newState);
+        console.log('old state:');
         console.log(this.state);
 
-        if ( deepEqual( this.state, newState ) ) {
+        if ( !deepEqual( this.state, newState ) ) {
+
+            console.log('states are not equal. So updating');
 
             this.setState(newState);
 
