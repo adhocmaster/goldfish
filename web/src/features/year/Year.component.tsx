@@ -8,12 +8,17 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
+import YearReducer from 'features/year/year.reducer';
 
 import WeekSummaryComponent from './../week/WeekSummary.component';
 import actionManager from 'framework/ActionManager';
 import {YearActionTypes} from 'features/year/year.action';
 
 export default class YearComponent extends ReduxUIComponent {
+
+    constructor(props: any) {
+        super(props);
+    }
 
     
     getStateFromStore(): any {
