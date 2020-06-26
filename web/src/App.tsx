@@ -8,17 +8,28 @@ import {
   Link
 } from "react-router-dom";
 import NavComponent from './components/NavComponent'
-import LoginComponent from './components/LoginComponent'
+import LoginComponent from './account/LoginComponent'
 import UserComponent from './features/user/User.component'
 import ItemComponent from './features/item/item.component'
 import YearComponent from './features/year/Year.component'
+import SettingsComponent from 'account/settings.component';
+
 
 function App() {
   return (
-    <div className="App">
-      <NavComponent />
-      <YearComponent />
-    </div>
+    <Router>
+      <div className="App">
+        <NavComponent />
+        <Switch>
+          <Route path="/settings">
+            <SettingsComponent />
+          </Route>
+          <Route path="/">
+            <YearComponent />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

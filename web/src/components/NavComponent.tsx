@@ -1,4 +1,10 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import logo from './../logo.svg';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
@@ -19,12 +25,12 @@ function NavComponent() {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link href="#dashboard">Dashboard</Nav.Link>
+                    <Nav.Link href="/">Dashboard</Nav.Link>
                     <Nav.Link href="#week">Week details</Nav.Link>
                 </Nav>
                 <Nav>
                     <NavDropdown title="Account" id="collasible-nav-dropdown" alignRight>
-                        <NavDropdown.Item href="#action/3.1">Settings</NavDropdown.Item>
+                        <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item href="#action/3.2">Logout</NavDropdown.Item>
                     </NavDropdown>
