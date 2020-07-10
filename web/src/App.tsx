@@ -19,7 +19,8 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <NavComponent />
+        <LoginComponent />
+        {/* <NavComponent />
         <Switch>
           <Route path="/settings">
             <SettingsComponent />
@@ -27,7 +28,7 @@ function App() {
           <Route path="/">
             <YearComponent />
           </Route>
-        </Switch>
+        </Switch> */}
       </div>
     </Router>
   );

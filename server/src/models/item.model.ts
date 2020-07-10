@@ -1,5 +1,5 @@
 import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {Category} from './category.model';
+import {Category, CategoryWithRelations} from './category.model';
 
 @model()
 export class Item extends Entity {
@@ -33,6 +33,13 @@ export class Item extends Entity {
   })
   priority: number;
 
+  @property({
+    type: 'number',
+    required: true,
+    default: 0
+  })
+  minutes: number;
+
   @belongsTo(() => Category)
   categoryId: string;
 
@@ -43,6 +50,8 @@ export class Item extends Entity {
 
 export interface ItemRelations {
   // describe navigational properties here
+  category?: CategoryWithRelations;
+
 }
 
 export type ItemWithRelations = Item & ItemRelations;
