@@ -6,6 +6,7 @@ export default function SettingsReducer(state: any, action: any) {
         state = {
             'authToken': null,
             'email': null,
+            'isLoggedIn': false
         };
     }
 
@@ -13,8 +14,16 @@ export default function SettingsReducer(state: any, action: any) {
 
         let credentials = action.payload;
         return Object.assign({}, state, {
-            'authToken': credentials['authToken']
+            'authToken': credentials['authToken'],
+            'email': credentials['email'],
+            'isLoggedIn': true
         });
+    }
+
+    if (action.type == ActionType.LOGIN_FAILED) {
+
+        
+
     }
 
     return state;

@@ -9,7 +9,12 @@ import logo from './../logo.svg';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import userService from 'services/UserService';
+
 function NavComponent() {
+    const isLoggedIn = userService.isLoggedIn();
+    const email = userService.getEmail();
+
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand href="#home">
@@ -28,14 +33,29 @@ function NavComponent() {
                     <Nav.Link href="/">Dashboard</Nav.Link>
                     <Nav.Link href="#week">Week details</Nav.Link>
                 </Nav>
-                <Nav>
-                    <NavDropdown title="Account" id="collasible-nav-dropdown" alignRight>
-                        <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-                        <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
-                    </NavDropdown>
-                </Nav>
+                {
+                    isLoggedIn 
+                    &&
+                    <Nav>
+                        <NavDropdown title={email} id="collasible-nav-dropdown" alignRight>
+                            <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
+
+                }
+                {
+                    isLoggedIn == false
+                    &&
+                                        
+                    <Nav className="justify-content-end">
+                        <Nav.Item>
+                            <Nav.Link href="/login">login</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+
+                }
             </Navbar.Collapse>
         </Navbar>
     );

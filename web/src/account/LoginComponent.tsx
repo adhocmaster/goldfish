@@ -8,21 +8,21 @@ import Card from 'react-bootstrap/Card';
 import Alert from 'react-bootstrap/Alert';
 import axios from 'axios';
 import { RootState } from 'app/store';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux'
+import { Redirect } from 'react-router-dom';
 
 import Utility from 'framework/Utility';
-import { Redirect } from 'react-router-dom';
 
 import userService from 'services/UserService';
 
-function LoginComponent(props: any) {
+export default function LoginComponent(props: any) {
 
-    const [isLoggedIn, setLoggedIn] = useState(false);
     const [isError, setIsError] = useState(false);
     const [errors, setErrors] = useState([] as string[]);
     const [email, setemail] = useState("");
     const [password, setPassword] = useState("");
 
+    const isLoggedIn: boolean = useSelector((state: RootState) => { return state.settingsState.isLoggedIn} );
     
     function postLogin(e: any) {
 
@@ -30,48 +30,14 @@ function LoginComponent(props: any) {
         console.log(email);
         console.log(password);
         userService.login(email, password);
-        // axios.post("http://localhost:4000/users/login", {
-
-        //         email: email,
-        //         password: password
-
-        //     }).then(result => {
-
-        //         console.log(result);
-
-        //         // if (result.status === 200) {
-        //         //     // setAuthTokens(result.data);
-        //         //     setLoggedIn(true);
-        //         // } else {
-        //         //     setIsError(true);
-        //         // }
-
-        //         const error = ResponseProcessor.getError(result.data);
-
-        //         if ( error.length == 0 ) {
-
-        //             console.log("got token");
-        //             let token = result.data.token;
-        //             actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token}, false)
-
-
-        //         } else {
-
-        //             setErrors(errors => [...error]);
-        //             setIsError(true);
-
-        //         }
-
-        //     }).catch(error => {
-                
-        //         let errorMessages = ResponseProcessor.getHTTPError(error);
-        //         setErrors(errors => [...errorMessages]);
-        //         setIsError(true);
-        //     }
-        // );
         
     }
 
+    if (isLoggedIn) {
+
+        return (<Redirect to="/"></Redirect>)
+
+    }
 
     return (
         <Container className="login-container" >
@@ -124,14 +90,3 @@ function LoginComponent(props: any) {
         </Container>
     );
 }
-
-
-const mapStateToProps = function(state: RootState) {
-
-    return {
-        count: 0, // full path to state variable
-        users: 0 // full path to state variable
-    }
-}
-
-export default connect(mapStateToProps)(LoginComponent);

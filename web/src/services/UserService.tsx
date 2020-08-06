@@ -1,7 +1,9 @@
 import axios from 'axios';
 import ResponseProcessor from 'framework/ResponseProcessor';
 import actionManager from 'framework/ActionManager';
-import {ActionType} from 'app/actionTypes';
+import { ActionType } from 'app/actionTypes';
+import { RootState } from 'app/store';
+import { shallowEqual, useSelector } from 'react-redux'
 
 class UserService {
 
@@ -9,7 +11,19 @@ class UserService {
 
     }
 
-    public login(email: string, password:string): [] {
+    public isLoggedIn() {
+
+        return useSelector((state: RootState) => { return state.settingsState.isLoggedIn} );
+
+    }
+
+    public getEmail() {
+        
+        return useSelector((state: RootState) => { return state.settingsState.email} );
+
+    }
+
+    public login(email: string, password:string) {
 
         axios.post("http://localhost:4000/users/login", {
 
@@ -18,14 +32,7 @@ class UserService {
 
             }).then(result => {
 
-                console.log(result);
-
-                // if (result.status === 200) {
-                //     // setAuthTokens(result.data);
-                //     setLoggedIn(true);
-                // } else {
-                //     setIsError(true);
-                // }
+                // console.log(result);
 
                 const errors = ResponseProcessor.getError(result.data);
 
@@ -33,7 +40,7 @@ class UserService {
 
                     console.log("got token");
                     let token = result.data.token;
-                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token}, false)
+                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false)
 
                 } else {
 
