@@ -52,8 +52,7 @@ function LoginComponent(props: any) {
             }).catch(error => {
                 
                 let errorMessages = ResponseProcessor.getHTTPError(error);
-                console.log(errorMessages);
-                setErrors(errors => [...errors, ...errorMessages]);
+                setErrors(errors => [...errorMessages]);
                 setIsError(true);
             }
         );
@@ -95,11 +94,14 @@ function LoginComponent(props: any) {
                                     Submit
                                 </Button>
                             </Form>
-                            {isError && 
-                                <Alert variant="warning">
-                                    {Utility.getListRep(errors)}
-                                </Alert>
-                            }
+                            <br/>
+                            <div>
+                                {isError && 
+                                    <Alert variant="warning">
+                                        {Utility.getListRep(errors)}
+                                    </Alert>
+                                }
+                            </div>
                         </Card.Body>
                     </Card>
                 </Col>

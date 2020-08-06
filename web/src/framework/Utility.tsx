@@ -10,7 +10,6 @@ class Utility {
     }
 
     public getListRep(a: Array<any>) {
-        console.log(a);
         return (
             <>
                 {

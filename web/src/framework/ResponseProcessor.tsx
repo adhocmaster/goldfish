@@ -26,8 +26,19 @@ class ResponseProcessor {
             // console.log(error.response.data);
             // console.log(error.response.status);
             // console.log(error.response.headers);
+            let serverError = error.response.data.error;
+            let errorMessages: any = null;
 
-            let errorMessages = this.get422Error((error.response))
+            switch (error.response.status) {
+                
+                case 422:
+                    errorMessages = this.get422Error(serverError);
+                    break;
+                case 401:
+                    errorMessages = this.get401Error(serverError);
+                    break;
+
+            }
 
             if (errorMessages) {
                 return errorMessages;
@@ -51,18 +62,9 @@ class ResponseProcessor {
         
     }
 
-    private get422Error(errorResponse: any) {
+    private get422Error(data: any) {
 
-        console.log(errorResponse)
-
-        if (errorResponse.status != 422) {
-            return false;
-        }
-
-        let data = errorResponse.data.error;
-        let details = data.details;
-
-        let errors: string[] = [];
+         let errors: string[] = [];
         errors.push(data.code)
 
         for (let serverError of data.details) {
@@ -73,6 +75,12 @@ class ResponseProcessor {
 
         return errors;
 
+
+    }
+
+    private get401Error(data: any) {
+
+        return [data.message];
 
     }
 }
