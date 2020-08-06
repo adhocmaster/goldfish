@@ -10,9 +10,10 @@ import axios from 'axios';
 import { RootState } from 'app/store';
 import { connect } from 'react-redux';
 
-import ResponseProcessor from 'framework/ResponseProcessor';
 import Utility from 'framework/Utility';
 import { Redirect } from 'react-router-dom';
+
+import userService from 'services/UserService';
 
 function LoginComponent(props: any) {
 
@@ -28,34 +29,46 @@ function LoginComponent(props: any) {
         e.preventDefault();
         console.log(email);
         console.log(password);
-        axios.post("http://localhost:4000/users/login", {
+        userService.login(email, password);
+        // axios.post("http://localhost:4000/users/login", {
 
-                email: email,
-                password: password
+        //         email: email,
+        //         password: password
 
-            }).then(result => {
+        //     }).then(result => {
 
-                console.log(result);
+        //         console.log(result);
 
-                // if (result.status === 200) {
-                //     // setAuthTokens(result.data);
-                //     setLoggedIn(true);
-                // } else {
-                //     setIsError(true);
-                // }
+        //         // if (result.status === 200) {
+        //         //     // setAuthTokens(result.data);
+        //         //     setLoggedIn(true);
+        //         // } else {
+        //         //     setIsError(true);
+        //         // }
 
-                const error = ResponseProcessor.getError(result.data);
-                if ( error !== false ) {
-                    console.log("got token")
-                }
+        //         const error = ResponseProcessor.getError(result.data);
 
-            }).catch(error => {
+        //         if ( error.length == 0 ) {
+
+        //             console.log("got token");
+        //             let token = result.data.token;
+        //             actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token}, false)
+
+
+        //         } else {
+
+        //             setErrors(errors => [...error]);
+        //             setIsError(true);
+
+        //         }
+
+        //     }).catch(error => {
                 
-                let errorMessages = ResponseProcessor.getHTTPError(error);
-                setErrors(errors => [...errorMessages]);
-                setIsError(true);
-            }
-        );
+        //         let errorMessages = ResponseProcessor.getHTTPError(error);
+        //         setErrors(errors => [...errorMessages]);
+        //         setIsError(true);
+        //     }
+        // );
         
     }
 

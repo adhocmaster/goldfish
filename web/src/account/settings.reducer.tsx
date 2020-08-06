@@ -13,10 +13,8 @@ export default function SettingsReducer(state: any, action: any) {
 
         let credentials = action.payload;
         return Object.assign({}, state, {
-            'authToken': credentials['authToken'],
-            'email': credentials['email'],
+            'authToken': credentials['authToken']
         });
-
     }
 
     return state;

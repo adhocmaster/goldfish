@@ -2,15 +2,13 @@ import { Fragment } from "react";
 
 class ResponseProcessor {
 
-    public getError(response: any) {
+    public getError(data: any) {
 
-        if ( 'error' in response ) {
-            return { message: response.error.message };
+        if ( 'error' in data ) {
+            return [ data.error.message ];
         }
 
-        return false;
-        
-
+        return [];
 
     } 
 

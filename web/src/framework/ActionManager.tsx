@@ -2,7 +2,7 @@ import { store } from 'app/store';
 
 class ActionManager{
 
-    create(type: string, payload?: any, error?:boolean, meta?:any ) {
+    private create(type: string, payload?: any, error?:boolean, meta?:any ) {
 
         let action:any = {
             type: type
@@ -23,7 +23,7 @@ class ActionManager{
         return action;
     }
 
-    dispatch(type: string, payload?: any, error?:boolean, meta?:any ) {
+    public dispatch(type: string, payload?: any, error?:boolean, meta?:any ) {
 
         store.dispatch(this.create(type, payload, error, meta));
         
