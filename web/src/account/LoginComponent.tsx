@@ -5,37 +5,59 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Alert from 'react-bootstrap/Alert';
 import axios from 'axios';
 import { RootState } from 'app/store';
 import { connect } from 'react-redux';
+
+import ResponseProcessor from 'framework/ResponseProcessor';
+import Utility from 'framework/Utility';
+import { Redirect } from 'react-router-dom';
 
 function LoginComponent(props: any) {
 
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [isError, setIsError] = useState(false);
-    const [userName, setUserName] = useState("");
+    const [errors, setErrors] = useState([] as string[]);
+    const [email, setemail] = useState("");
     const [password, setPassword] = useState("");
-    // const { setAuthTokens } = useAuth();
 
     
     function postLogin(e: any) {
 
         e.preventDefault();
-        console.log(userName);
+        console.log(email);
         console.log(password);
-        // axios.post("https://www.somePlace.com/auth/login", {
-        // userName,
-        // password
-        // }).then(result => {
-        // if (result.status === 200) {
-        //     // setAuthTokens(result.data);
-        //     setLoggedIn(true);
-        // } else {
-        //     setIsError(true);
-        // }
-        // }).catch(e => {
-        // setIsError(true);
-        // });
+        axios.post("http://localhost:4000/users/login", {
+
+                email: email,
+                password: password
+
+            }).then(result => {
+
+                console.log(result);
+
+                // if (result.status === 200) {
+                //     // setAuthTokens(result.data);
+                //     setLoggedIn(true);
+                // } else {
+                //     setIsError(true);
+                // }
+
+                const error = ResponseProcessor.getError(result.data);
+                if ( error !== false ) {
+                    console.log("got token")
+                }
+
+            }).catch(error => {
+                
+                let errorMessages = ResponseProcessor.getHTTPError(error);
+                console.log(errorMessages);
+                setErrors(errors => [...errors, ...errorMessages]);
+                setIsError(true);
+            }
+        );
+        
     }
 
 
@@ -51,10 +73,9 @@ function LoginComponent(props: any) {
                             <Form>
                                 <Form.Group controlId="formBasicEmail">
                                     <Form.Control type="email" placeholder="Enter email"
-                                    
-                                        value={userName}
+                                        value={email}
                                         onChange={e => {
-                                            setUserName(e.target.value);
+                                            setemail(e.target.value);
                                         }} />
                                     <Form.Text className="text-muted">
                                     </Form.Text>
@@ -74,6 +95,11 @@ function LoginComponent(props: any) {
                                     Submit
                                 </Button>
                             </Form>
+                            {isError && 
+                                <Alert variant="warning">
+                                    {Utility.getListRep(errors)}
+                                </Alert>
+                            }
                         </Card.Body>
                     </Card>
                 </Col>

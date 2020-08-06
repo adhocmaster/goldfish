@@ -32,8 +32,8 @@ function NavComponent() {
                     <NavDropdown title="Account" id="collasible-nav-dropdown" alignRight>
                         <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.2">Login</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Logout</NavDropdown.Item>
+                        <NavDropdown.Item href="/login">Login</NavDropdown.Item>
+                        <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
             </Navbar.Collapse>

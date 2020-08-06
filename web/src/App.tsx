@@ -19,16 +19,18 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <LoginComponent />
-        {/* <NavComponent />
+        <NavComponent />
         <Switch>
           <Route path="/settings">
             <SettingsComponent />
           </Route>
+          <Route path="/login">
+            <LoginComponent />
+          </Route>
           <Route path="/">
             <YearComponent />
           </Route>
-        </Switch> */}
+        </Switch>
       </div>
     </Router>
   );
