@@ -7,8 +7,14 @@ import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import actionManager from 'framework/ActionManager';
+import { ActionType } from 'app/actionTypes';
+import userService from 'services/UserService';
 
 store.subscribe(() => console.log("Index subscribe listens to everyone."));
+
+
+actionManager.dispatch(ActionType.APP_STARTING);
+
 
 ReactDOM.render(
   <React.StrictMode>
@@ -24,9 +30,3 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-console.log( store.getState() );
-
-
-actionManager.dispatch('VIEW_ITEM',  {id: 'someid', name: 'Item 1'} );
-
-console.log( store.getState() );

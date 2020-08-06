@@ -46,7 +46,7 @@ function NavComponent() {
 
                 }
                 {
-                    isLoggedIn == false
+                    !isLoggedIn
                     &&
                                         
                     <Nav className="justify-content-end">

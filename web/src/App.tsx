@@ -7,11 +7,12 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import NavComponent from './components/NavComponent'
-import LoginComponent from './account/LoginComponent'
-import UserComponent from './features/user/User.component'
-import ItemComponent from './features/item/item.component'
-import YearComponent from './features/year/Year.component'
+import NavComponent from './components/NavComponent';
+import LoginComponent from './account/LoginComponent';
+import LogoutComponent from './account/LogoutComponent';
+import UserComponent from './features/user/User.component';
+import ItemComponent from './features/item/item.component';
+import YearComponent from './features/year/Year.component';
 import SettingsComponent from 'account/settings.component';
 
 
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route path="/login">
             <LoginComponent />
+          </Route>
+          <Route path="/logout">
+            <LogoutComponent />
           </Route>
           <Route path="/">
             <YearComponent />

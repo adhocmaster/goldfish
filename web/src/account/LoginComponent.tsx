@@ -8,7 +8,7 @@ import Card from 'react-bootstrap/Card';
 import Alert from 'react-bootstrap/Alert';
 import axios from 'axios';
 import { RootState } from 'app/store';
-import { shallowEqual, useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import Utility from 'framework/Utility';
@@ -35,7 +35,7 @@ export default function LoginComponent(props: any) {
 
     if (isLoggedIn) {
 
-        return (<Redirect to="/"></Redirect>)
+        return (<Redirect to="/"></Redirect>);
 
     }
 

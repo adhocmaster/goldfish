@@ -3,7 +3,8 @@ import ResponseProcessor from 'framework/ResponseProcessor';
 import actionManager from 'framework/ActionManager';
 import { ActionType } from 'app/actionTypes';
 import { RootState } from 'app/store';
-import { shallowEqual, useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux';
+import cookies from 'framework/Cookie';
 
 class UserService {
 
@@ -13,15 +14,26 @@ class UserService {
 
     public isLoggedIn() {
 
-        return useSelector((state: RootState) => { return state.settingsState.isLoggedIn} );
+        return useSelector((state: RootState) => { return state.settingsState.isLoggedIn } );
 
     }
 
     public getEmail() {
-        
-        return useSelector((state: RootState) => { return state.settingsState.email} );
+
+        return useSelector((state: RootState) => { return state.settingsState.email } );
 
     }
+
+    public fromCookie() {
+
+        return  {
+            'authToken': cookies.get('authToken'),
+            'email': cookies.get('email'),
+            'isLoggedIn': cookies.get('isLoggedIn')
+        };
+
+    }
+
 
     public login(email: string, password:string) {
 
@@ -40,7 +52,11 @@ class UserService {
 
                     console.log("got token");
                     let token = result.data.token;
-                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false)
+                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false);
+                    cookies.set('authToken', token, {'path': '/', 'maxAge': 3600*24*7});
+                    cookies.set('email', email, {'path': '/', 'maxAge': 3600*24*7});
+                    cookies.set('isLoggedIn', true, {'path': '/', 'maxAge': 3600*24*7});
+
 
                 } else {
 
@@ -54,6 +70,18 @@ class UserService {
                 actionManager.dispatch(ActionType.LOGIN_FAILED, errors, true);
             }
         );
+    }
+
+    public logout() {
+        this.removeFromCookie();
+    }
+
+    private removeFromCookie() {
+
+        cookies.remove('authToken');
+        cookies.remove('email');
+        cookies.remove('isLoggedIn');
+
     }
 
 }
