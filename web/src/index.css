@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.card-small-header {
+  font-size: 0.8rem;
+}
+
+.link-gray {
+  color: black;
+}

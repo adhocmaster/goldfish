@@ -13,7 +13,7 @@ import { Redirect } from 'react-router-dom';
 
 import Utility from 'framework/Utility';
 
-import userService from 'services/UserService';
+import userService from 'features/user/UserService';
 
 export default function LoginComponent(props: any) {
 

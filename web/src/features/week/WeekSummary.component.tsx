@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Badge from 'react-bootstrap/Badge';
 
 
 export default function WeekSummaryComponent(props: any) {
@@ -14,9 +15,17 @@ export default function WeekSummaryComponent(props: any) {
     return (
         
         <Card style={{ width: '12rem', margin: '5px' }}>
+            <Card.Header className='card-small-header link-gray'><a className='link-gray' href=''>Week {props.no} <small>{props.start.toLocaleDateString()} - {props.end.toLocaleDateString()}</small></a></Card.Header>
             <Card.Body>
-                <Card.Title>{props.name}</Card.Title>
-                <Card.Text>This is a week</Card.Text>
+                {
+                    props.name &&
+                    <Card.Title>{props.name}</Card.Title>
+                }
+                {
+                    props.summary &&
+                    <Card.Text>{props.summary}</Card.Text>
+                }
+                <Badge pill variant='info'>100</Badge>
             </Card.Body>
         </Card>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionType } from 'app/actionTypes';
 import cookies from 'framework/Cookie';
-import userService from 'services/UserService';
+import userService from 'features/user/UserService';
 
 export default function SettingsReducer(state: any, action: any) {
 
