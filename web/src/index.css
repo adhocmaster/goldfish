@@ -5,18 +5,26 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(57, 137, 168);
+  background-color: rgb(30, 88, 110);
+  font-size: 0.9rem;
+}
+.form-control {
+  font-size: 1em;
+}
+.btn-sm {
+  font-size: 0.7rem;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-#second-nav {
+
+.second-nav {
   color: white;
   margin: 0.5rem;
 }
-#second-nav .title {
+.second-nav .title {
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -30,9 +38,10 @@ code {
 }
 
 .week-category-card {
-  width: 18rem;
+  width: 15rem;
+  height: fit-content;
   margin: 5px;
-  background-color: #fafafa;
+  background-color: #f3f3f3;
 }
 
 .week-category-card .card-body{
@@ -49,6 +58,15 @@ code {
   padding: 1rem 0;
 }
 
+.week-category-card .progress {
+  margin-top: 0.5em;
+  font-size: 0.8em;
+}
+
+.week-category-card .favorite:hover {
+  background-color: rgb(251, 235, 255);
+
+}
 
 .task-card {
   margin-top: 0.5rem;
@@ -60,4 +78,9 @@ code {
 
 .task-card .card-body, .week-category-card .card-footer{
   padding: 0.3rem 0.5rem 0.4rem 0.5rem;
+}
+
+.task-card .task-card-options:hover {
+  background-color: #666666;
+
 }
