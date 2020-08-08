@@ -5,6 +5,7 @@ import ItemReducer from '../features/item/item.reducer';
 import CategoryReducer from '../features/category/category.reducer';
 import YearReducer from '../features/year/year.reducer';
 import WeekSummaryReducer from '../features/week/weekSummary.reducer';
+import WeekReducer from '../features/week/week.reducer';
 import SettingsReducer from 'account/settings.reducer';
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     yearState: YearReducer,
     weekSummaryState: WeekSummaryReducer,
     settingsState: SettingsReducer,
+    weekState: WeekReducer,
 
   },
 });

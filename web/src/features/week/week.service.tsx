@@ -3,6 +3,7 @@ import ResponseProcessor from 'framework/ResponseProcessor';
 import actionManager from 'framework/ActionManager';
 import config from 'framework/Configuration';
 import { ActionType } from 'app/actionTypes';
+import { WeekActionType } from 'features/week/week.actions';
 import { RootState } from 'app/store';
 
 class WeekService {
@@ -26,6 +27,11 @@ class WeekService {
             const errors = ResponseProcessor.getHTTPError(error);
             actionManager.dispatch(ActionType.LOGIN_FAILED, errors, true);
         });
+    }
+
+    public createGoal(props: any) {
+
+        actionManager.dispatch(WeekActionType.GOAL_ADDED);
     }
 
 }

@@ -4,6 +4,4 @@ export enum ActionType {
     LOGIN_FAILED = 'LOGIN_FAILED',
     TOAST_ERROR = 'TOAST_ERROR',
     LOG_OUT = 'LOG_OUT',
-    WEEK_ADDED = 'WEEK_ADDED',
-    WEEK_ERROR = 'WEEK_ERROR'
 }

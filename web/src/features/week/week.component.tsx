@@ -11,11 +11,21 @@ import Badge from 'react-bootstrap/Badge';
 import Alert from 'react-bootstrap/ProgressBar';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import FormControl from 'react-bootstrap/FormControl';
+import Modal from 'react-bootstrap/Modal';
 
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import GoalModal from 'features/week/goal.component';
+import actionManager from 'framework/ActionManager';
+import { WeekActionType } from 'features/week/week.actions';
 
 
 export default function WeekComponent( props: any ) {
+
+
+    const goalAdded = useSelector( (state:RootState) => { return state.weekState.goalAdded } )
 
     function getMenubar(props: any) {
         return (
@@ -60,7 +70,8 @@ export default function WeekComponent( props: any ) {
                         />
                         
                     </div>
-                    <Button variant='info' size='sm'>+ NEW GOAL &nbsp;</Button>
+                    <Button variant='info' size='sm' onClick={() => showGoalModal(null)}>+ NEW GOAL &nbsp;</Button>
+                    { getGoalModal(null) }
                 </div>
             </Row>
         );
@@ -155,6 +166,20 @@ export default function WeekComponent( props: any ) {
         );
     }
 
+    function getGoalModal(props: any): any {
+
+        return (
+            <>
+                {<GoalModal />}
+            </>
+        );
+    }
+
+    function showGoalModal(props: any) {
+
+        actionManager.dispatch(WeekActionType.SHOW_GOAL_FORM);
+
+    }
 
     function getNewGoalForm() {
         return (
