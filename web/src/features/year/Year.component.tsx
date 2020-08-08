@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import YearReducer from 'features/year/year.reducer';
 import yearService from 'features/year/year.service';
 
-import WeekSummaryComponent from './../week/WeekSummary.component';
+import WeekSummaryComponent from 'features/week/weekSummary.component';
 import actionManager from 'framework/ActionManager';
 import {YearActionTypes} from 'features/year/year.action';
 

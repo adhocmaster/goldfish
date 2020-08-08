@@ -1,10 +1,10 @@
 import { createStore, configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
-import userReducer from '../features/user/User.reducer';
+import userReducer from '../features/user/user.reducer';
 import ItemReducer from '../features/item/item.reducer';
 import CategoryReducer from '../features/category/category.reducer';
 import YearReducer from '../features/year/year.reducer';
-import WeekSummaryReducer from '../features/week/WeekSummary.reducer';
+import WeekSummaryReducer from '../features/week/weekSummary.reducer';
 import SettingsReducer from 'account/settings.reducer';
 
 export const store = configureStore({

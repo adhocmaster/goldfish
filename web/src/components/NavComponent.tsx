@@ -9,7 +9,7 @@ import logo from './../logo.svg';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import userService from 'features/user/UserService';
+import userService from 'features/user/user.service';
 
 function NavComponent() {
     const isLoggedIn = userService.isLoggedIn();

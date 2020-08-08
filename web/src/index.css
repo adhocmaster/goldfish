@@ -5,11 +5,20 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(57, 137, 168);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+#second-nav {
+  color: white;
+  margin: 0.5rem;
+}
+#second-nav .title {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .card-small-header {
@@ -18,4 +27,37 @@ code {
 
 .link-gray {
   color: black;
+}
+
+.week-category-card {
+  width: 18rem;
+  margin: 5px;
+  background-color: #fafafa;
+}
+
+.week-category-card .card-body{
+  padding: .5rem 0.5rem 0.5rem 0.5rem;
+}
+.week-category-card .card-header{
+  padding: 0.5rem 0.7rem;
+}
+
+.week-category-card .header{
+  padding: 0.1rem 0.2rem 0.5rem 0.2rem;
+}
+.week-category-card .footer{
+  padding: 1rem 0;
+}
+
+
+.task-card {
+  margin-top: 0.5rem;
+  color: #666666;
+}
+.task-card:hover {
+  background-color: #fff5ec;
+}
+
+.task-card .card-body, .week-category-card .card-footer{
+  padding: 0.3rem 0.5rem 0.4rem 0.5rem;
 }

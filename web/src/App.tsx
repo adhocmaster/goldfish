@@ -10,10 +10,9 @@ import {
 import NavComponent from './components/NavComponent';
 import LoginComponent from './account/LoginComponent';
 import LogoutComponent from './account/LogoutComponent';
-import UserComponent from './features/user/User.component';
-import ItemComponent from './features/item/item.component';
-import YearComponent from './features/year/Year.component';
 import SettingsComponent from 'account/settings.component';
+import YearComponent from './features/year/year.component';
+import WeekComponent from 'features/week/week.component';
 
 
 function App() {
@@ -22,6 +21,9 @@ function App() {
       <div className="App">
         <NavComponent />
         <Switch>
+          <Route path="/week">
+            <WeekComponent />
+          </Route>
           <Route path="/settings">
             <SettingsComponent />
           </Route>

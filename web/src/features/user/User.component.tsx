@@ -1,5 +1,5 @@
 import React from 'react';
-import {RootState} from './../../app/store';
+import {RootState} from '../../app/store';
 import { connect } from 'react-redux';
 
 

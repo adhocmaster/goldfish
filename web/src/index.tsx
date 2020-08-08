@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import actionManager from 'framework/ActionManager';
 import { ActionType } from 'app/actionTypes';
-import userService from 'features/user/UserService';
+import userService from 'features/user/user.service';
 
 store.subscribe(() => console.log("Index subscribe listens to everyone."));
 
