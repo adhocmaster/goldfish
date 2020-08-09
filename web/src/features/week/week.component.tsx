@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import GoalModal from 'features/week/goal.component';
+import GoalModal from 'features/goal/goal.component';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 
@@ -180,74 +180,6 @@ export default function WeekComponent( props: any ) {
         actionManager.dispatch(WeekActionType.SHOW_GOAL_FORM);
 
     }
-
-    function getNewGoalForm() {
-        return (
-            <>
-                <Card className='week-category-card'>
-                        
-                    <Card.Body>
-                        
-                        <div className='text-info' style={{marginBottom: '0.5em'}}>
-                            Select from Favorites or type new.
-                        </div>
-                        <Form.Group>
-                            <Form.Label>Title</Form.Label>
-                            <Form.Control type="text" placeholder='Type title of the goal' />
-                        </Form.Group>
-                        
-                        <Form.Group>
-                            
-                            <Form.Label>Allocate: (5.5 of 23 h)</Form.Label>
-                            <Form.Control type="range" min={0} max={50} step={0.5} />
-                        </Form.Group>
-                        
-                        <Form.Group>
-                            <Form.Check
-                                name="addToFavorite"
-                                inline
-                                label="Add to Favorites"
-                                type='checkbox'
-                                id='schedule-type-1'
-                            />
-                        </Form.Group>
-
-                        <Button variant='secondary' size='sm'>
-                            + ADD
-                        </Button>
-                        <br></br>
-                        
-                    </Card.Body>
-                </Card>
-                <Card className='week-category-card'>
-                        
-                    <Card.Body>
-                        
-                        <div className='header'>
-                            <b>Pick from Favorites</b>
-                            <div className="float-right">
-                                4 of 22
-                            </div>
-                            { getFavoriteComponent() }
-                        </div>
-                        
-                    </Card.Body>
-                </Card>
-            </>
-        );
-    }
-
-    function getFavoriteComponent() {
-        return (
-            
-            <Card className='task-card favorite'>
-                <Card.Body>
-                    <div>{`<<`} Guitar</div>
-                </Card.Body>
-            </Card>
-        );
-    }
-
     function getTaskComponent() {
         return (
             
@@ -309,7 +241,6 @@ export default function WeekComponent( props: any ) {
                 </Card>
 
                 {/* New goal form */}
-                { getNewGoalForm() }
             </Row>
         </Container>
 

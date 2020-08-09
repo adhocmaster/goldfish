@@ -2,7 +2,7 @@ import { createStore, configureStore, ThunkAction, Action } from '@reduxjs/toolk
 import { combineReducers } from 'redux';
 import userReducer from '../features/user/user.reducer';
 import ItemReducer from '../features/item/item.reducer';
-import CategoryReducer from '../features/category/category.reducer';
+import GoalReducer from '../features/goal/goal.reducer';
 import YearReducer from '../features/year/year.reducer';
 import WeekSummaryReducer from '../features/week/weekSummary.reducer';
 import WeekReducer from '../features/week/week.reducer';
@@ -12,7 +12,7 @@ export const store = configureStore({
   reducer: {
     userState: userReducer,
     itemState: ItemReducer,
-    categoryState: CategoryReducer,
+    categoryState: GoalReducer,
     yearState: YearReducer,
     weekSummaryState: WeekSummaryReducer,
     settingsState: SettingsReducer,
@@ -24,7 +24,7 @@ export const store = configureStore({
 const rootReducer = combineReducers({
   userState: userReducer,
   itemState: ItemReducer,
-  categoryState: CategoryReducer,
+  categoryState: GoalReducer,
   weekSummaryState: WeekSummaryReducer,
   
 });

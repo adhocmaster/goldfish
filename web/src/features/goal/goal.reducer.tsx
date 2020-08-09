@@ -1,4 +1,4 @@
-export default function CategoryReducer(state: any, action: any) {
+export default function GoalReducer(state: any, action: any) {
 
     if( state === undefined) {
         state = { 

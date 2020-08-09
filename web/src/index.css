@@ -84,3 +84,21 @@ code {
   background-color: #666666;
 
 }
+
+.goal-modal {
+  min-width: 600px;
+
+}
+
+.goal-modal .modal-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+@media only screen and (max-width: 576px) {
+  .goal-modal {
+    min-width: 550px;
+
+  }
+}
