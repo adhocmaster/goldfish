@@ -13,7 +13,10 @@ export class CategoryRepository extends DefaultCrudRepository<
   public readonly items: HasManyRepositoryFactory<Item, typeof Category.prototype.id>;
 
   constructor(
-    @inject('datasources.goldfish') dataSource: GoldfishDataSource, @repository.getter('ItemRepository') protected itemRepositoryGetter: Getter<ItemRepository>,
+    @inject('datasources.goldfish') 
+    dataSource: GoldfishDataSource, 
+    @repository.getter('ItemRepository') 
+    protected itemRepositoryGetter: Getter<ItemRepository>,
   ) {
     super(Category, dataSource);
     this.items = this.createHasManyRepositoryFactoryFor('items', itemRepositoryGetter,);

@@ -38,7 +38,7 @@ const CredentialsSchema = {
     },
     password: {
       type: 'string',
-      minLength: 8,
+      minLength: 4,
     },
   },
 };
@@ -111,6 +111,25 @@ export class UserController {
   ): Promise<string> {
     return currentUserProfile[securityId];
   }
+
+  @authenticate('jwt')
+  @get('/userDetails', {
+    responses: {
+      '200': {
+        description: '',
+        schema: {
+          'x-ts-type': User,
+        },
+      },
+    },
+  })
+  async getLoggedinUser(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+  ): Promise<UserProfile> {
+    return currentUserProfile;
+  }
+
 
   @post('/signup', {
     responses: {

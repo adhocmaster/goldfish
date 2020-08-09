@@ -3,6 +3,8 @@ import {Item, ItemWithRelations} from './item.model';
 
 @model()
 export class Category extends Entity {
+
+
   @property({
     type: 'string',
     id: true,
