@@ -8,7 +8,14 @@ export class CustomUser extends User {
     type: 'string',
     required: true,
   })
+  password: string;
+  
+  @property({
+    type: 'string',
+    required: true,
+  })
   name: string;
+
   @property({
     type: 'date',
   })

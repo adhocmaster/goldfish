@@ -8,8 +8,6 @@ import {
   Credentials,
   MyUserService,
   TokenServiceBindings,
-  User,
-  UserRepository,
   UserServiceBindings,
 } from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
@@ -18,14 +16,11 @@ import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
+import UserRepository from '../repositories/user.repository';
+import {CustomUser} from '../models/user.model';
 
 @model()
-export class NewUserRequest extends User {
-  @property({
-    type: 'string',
-    required: true,
-  })
-  password: string;
+export class NewUserRequest extends CustomUser {
 }
 
 const CredentialsSchema = {
@@ -59,7 +54,7 @@ export class UserController {
     public userService: MyUserService,
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
-    @repository(UserRepository) protected userRepository: UserRepository,
+    @inject(UserServiceBindings.USER_REPOSITORY) protected userRepository: UserRepository,
   ) {}
 
   @post('/users/login', {
@@ -118,7 +113,7 @@ export class UserController {
       '200': {
         description: '',
         schema: {
-          'x-ts-type': User,
+          'x-ts-type': CustomUser,
         },
       },
     },
@@ -138,7 +133,7 @@ export class UserController {
         content: {
           'application/json': {
             schema: {
-              'x-ts-type': User,
+              'x-ts-type': CustomUser,
             },
           },
         },
@@ -156,13 +151,15 @@ export class UserController {
       },
     })
     newUserRequest: NewUserRequest,
-  ): Promise<User> {
-    const password = await hash(newUserRequest.password, await genSalt());
-    const savedUser = await this.userRepository.create(
-      _.omit(newUserRequest, 'password'),
-    );
+  ): Promise<CustomUser> {
+    const password = await hash(newUserRequest.password, 4);
+    newUserRequest.password = password
+    const savedUser = await this.userRepository.create(newUserRequest);
+    // const savedUser = await this.userRepository.create(
+    //   _.omit(newUserRequest, 'password'),
+    // );
 
-    await this.userRepository.userCredentials(savedUser.id).create({password});
+    // await this.userRepository.userCredentials(savedUser.id).create({password});
 
     return savedUser;
   }

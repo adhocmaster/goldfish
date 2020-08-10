@@ -2,11 +2,12 @@ import {UserService} from '@loopback/authentication';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
+import {genSalt, hash} from 'bcryptjs';
 import {compare} from 'bcryptjs';
 // User --> MyUser
 import {CustomUser} from '../models';
 // UserRepository --> MyUserRepository
-import {UserRepository} from '../repositories';
+import CustomUserRepository from '../repositories/user.repository';
 
 export type Credentials = {
   email: string;
@@ -17,16 +18,23 @@ export type Credentials = {
 export class CustomUserService implements UserService<CustomUser, Credentials> {
   constructor(
     // UserRepository --> MyUserRepository
-    @repository(UserRepository) public userRepository: UserRepository,
+    @repository(CustomUserRepository) public userRepository: CustomUserRepository,
   ) {}
 
   // User --> MyUser
   async verifyCredentials(credentials: Credentials): Promise<CustomUser> {
     const invalidCredentialsError = 'Invalid email or password.';
 
+    // console.log("input credentials:");
+    // console.log(credentials);
+
     const foundUser = await this.userRepository.findOne({
       where: {email: credentials.email},
     });
+
+    // console.log("found user:");
+    // console.log(foundUser);
+
     if (!foundUser) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
@@ -34,14 +42,20 @@ export class CustomUserService implements UserService<CustomUser, Credentials> {
     const credentialsFound = await this.userRepository.findCredentials(
       foundUser.id,
     );
+    // console.log("credentialsFound:");
+    // console.log(credentialsFound);
     if (!credentialsFound) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
 
+    // const hashedPassword = await hash(credentials.password, 4);
+
     const passwordMatched = await compare(
-      credentials.password,
+      credentials.password,      
       credentialsFound.password,
     );
+    // console.log("passwordMatched:");
+    // console.log(passwordMatched);
 
     if (!passwordMatched) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);

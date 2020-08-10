@@ -1,4 +1,6 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import { type } from 'os';
+import { CategorizedTasks } from '../models';
 
 @model()
 export class Week extends Entity {
@@ -25,6 +27,13 @@ export class Week extends Entity {
     default: 7,
   })
   days?: number;
+
+  @property({
+    type: 'array',
+    itemType: 'any'
+  })
+  categorizedTasks?: CategorizedTasks[]
+
 
 
   constructor(data?: Partial<Week>) {

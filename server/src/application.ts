@@ -20,7 +20,7 @@ import {
 import {CustomUserService} from './services/user.service';
 
 import {GoldfishDataSource} from './datasources';
-import { UserRepository } from './repositories';
+import CustomUserRepository from './repositories/user.repository';
 
 export {ApplicationConfig};
 
@@ -46,7 +46,7 @@ export class ServerApplication extends BootMixin(
     this.component(JWTAuthenticationComponent);
     this.dataSource(GoldfishDataSource, UserServiceBindings.DATASOURCE_NAME)
     this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService)
-    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(UserRepository)
+    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(CustomUserRepository)
     this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(UserCredentialsRepository)
 
     this.projectRoot = __dirname;
