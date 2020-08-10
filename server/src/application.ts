@@ -14,9 +14,13 @@ import {
   JWTAuthenticationComponent,
   SECURITY_SCHEME_SPEC,
   UserServiceBindings,
+  UserCredentialsRepository,
 } from '@loopback/authentication-jwt';
 
+import {CustomUserService} from './services/user.service';
+
 import {GoldfishDataSource} from './datasources';
+import { UserRepository } from './repositories';
 
 export {ApplicationConfig};
 
@@ -41,6 +45,9 @@ export class ServerApplication extends BootMixin(
     this.component(AuthenticationComponent);
     this.component(JWTAuthenticationComponent);
     this.dataSource(GoldfishDataSource, UserServiceBindings.DATASOURCE_NAME)
+    this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService)
+    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(UserRepository)
+    this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(UserCredentialsRepository)
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
