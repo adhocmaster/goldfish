@@ -5,6 +5,7 @@ import {
   FilterExcludingWhere,
   repository,
   Where,
+  WhereBuilder,
 } from '@loopback/repository';
 import {
   post,
@@ -15,20 +16,25 @@ import {
   put,
   del,
   requestBody,
+  HttpErrors,
 } from '@loopback/rest';
 import {Week} from '../models';
 import {WeekRepository} from '../repositories';
 import { authenticate } from '@loopback/authentication';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import { inject } from '@loopback/core';
+import { UserServiceBindings } from '@loopback/authentication-jwt';
+import { CustomUserService } from '../services/user.service';
 
+@authenticate('jwt')
 export class WeekController {
   constructor(
     @repository(WeekRepository)
     public weekRepository : WeekRepository,
+    @inject(UserServiceBindings.USER_SERVICE)
+    public userService : CustomUserService
   ) {}
 
-  @authenticate('jwt')
   @post('/weeks', {
     responses: {
       '200': {
@@ -65,8 +71,12 @@ export class WeekController {
     },
   })
   async count(
-    @param.where(Week) where?: Where<Week>,
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @param.where(Week) where?: Where<Week>
   ): Promise<Count> {
+
+    where  = this.userService.addUserIdToWhere(where, currentUserProfile);
     return this.weekRepository.count(where);
   }
 
@@ -86,8 +96,11 @@ export class WeekController {
     },
   })
   async find(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @param.filter(Week) filter?: Filter<Week>,
   ): Promise<Week[]> {
+    filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
     return this.weekRepository.find(filter);
   }
 
@@ -100,6 +113,10 @@ export class WeekController {
     },
   })
   async updateAll(
+    
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+
     @requestBody({
       content: {
         'application/json': {
@@ -108,8 +125,11 @@ export class WeekController {
       },
     })
     week: Week,
+
     @param.where(Week) where?: Where<Week>,
   ): Promise<Count> {
+
+    where  = this.userService.addUserIdToWhere(where, currentUserProfile);
     return this.weekRepository.updateAll(week, where);
   }
 
@@ -126,9 +146,12 @@ export class WeekController {
     },
   })
   async findById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
     @param.filter(Week, {exclude: 'where'}) filter?: FilterExcludingWhere<Week>
   ): Promise<Week> {
+    filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
     return this.weekRepository.findById(id, filter);
   }
 
@@ -140,6 +163,8 @@ export class WeekController {
     },
   })
   async updateById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
     @requestBody({
       content: {
@@ -150,7 +175,13 @@ export class WeekController {
     })
     week: Week,
   ): Promise<void> {
-    await this.weekRepository.updateById(id, week);
+
+    if (await this.weekRepository.canEdit(id, currentUserProfile[securityId])) {
+      await this.weekRepository.updateById(id, week)
+    } else {
+      throw new HttpErrors.Unauthorized("Week not accessible");
+    }
+
   }
 
   @put('/weeks/{id}', {
@@ -161,10 +192,17 @@ export class WeekController {
     },
   })
   async replaceById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
     @requestBody() week: Week,
   ): Promise<void> {
-    await this.weekRepository.replaceById(id, week);
+    
+    if (await this.weekRepository.canEdit(id, currentUserProfile[securityId])) {
+      await this.weekRepository.replaceById(id, week);
+    } else {
+      throw new HttpErrors.Unauthorized("Week not accessible");
+    }
   }
 
   @del('/weeks/{id}', {
@@ -174,7 +212,16 @@ export class WeekController {
       },
     },
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.weekRepository.deleteById(id);
+  async deleteById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @param.path.string('id') id: string
+    ): Promise<void> {
+    
+    if (await this.weekRepository.canEdit(id, currentUserProfile[securityId])) {
+      await this.weekRepository.deleteById(id);
+    } else {
+      throw new HttpErrors.Unauthorized("Week not accessible");
+    }
   }
 }

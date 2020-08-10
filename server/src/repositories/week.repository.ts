@@ -13,4 +13,17 @@ export class WeekRepository extends DefaultCrudRepository<
   ) {
     super(Week, dataSource);
   }
+
+  public async canEdit(weekId: string, userId: string) {
+
+    const week = await this.findById(weekId);
+    if ( week ) {
+      if (week.userId == userId) {
+        return true;
+      }
+    }
+
+    return false;
+
+  }
 }

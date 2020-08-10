@@ -1,5 +1,5 @@
 import {UserService} from '@loopback/authentication';
-import {repository} from '@loopback/repository';
+import {repository, Where, WhereBuilder, Filter, FilterBuilder} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
@@ -76,5 +76,31 @@ export class CustomUserService implements UserService<CustomUser, Credentials> {
       id: user.id,
       email: user.email,
     };
+  }
+
+  addUserIdToWhere(where:Where<any> | undefined, userProfile:UserProfile) {
+
+    const whereBuilder = new WhereBuilder(where);
+    where = whereBuilder.eq("userId", userProfile[securityId]).build();
+    return where
+
+  }
+  addUserIdToFilter(filter:Filter<any> | undefined, userProfile:UserProfile) {
+
+    if (filter) {
+
+      const where = this.addUserIdToWhere(filter.where, userProfile);
+      filter.where = where
+
+    } else {
+
+      const where = this.addUserIdToWhere(undefined, userProfile);
+      const filterBuilder = new FilterBuilder(filter);
+      filter = filterBuilder.where(where).build();
+
+    }
+
+    return filter
+
   }
 }
