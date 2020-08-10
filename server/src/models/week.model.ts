@@ -13,6 +13,12 @@ export class Week extends Entity {
 
   @property({
     type: 'string',
+    generated: true,
+  })
+  userId?: string;
+
+  @property({
+    type: 'string',
   })
   goal?: string;
 

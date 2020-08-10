@@ -18,6 +18,9 @@ import {
 } from '@loopback/rest';
 import {Week} from '../models';
 import {WeekRepository} from '../repositories';
+import { authenticate } from '@loopback/authentication';
+import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import { inject } from '@loopback/core';
 
 export class WeekController {
   constructor(
@@ -25,6 +28,7 @@ export class WeekController {
     public weekRepository : WeekRepository,
   ) {}
 
+  @authenticate('jwt')
   @post('/weeks', {
     responses: {
       '200': {
@@ -45,7 +49,10 @@ export class WeekController {
       },
     })
     week: Omit<Week, 'id'>,
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile
   ): Promise<Week> {
+    week.userId = currentUserProfile[securityId];
     return this.weekRepository.create(week);
   }
 
