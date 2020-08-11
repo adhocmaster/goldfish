@@ -35,8 +35,6 @@ export class CustomUserService implements UserService<CustomUser, Credentials> {
       where: {email: credentials.email},
     });
 
-    // console.log("found user:");
-    // console.log(foundUser);
 
     if (!foundUser) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
@@ -45,20 +43,15 @@ export class CustomUserService implements UserService<CustomUser, Credentials> {
     const credentialsFound = await this.userRepository.findCredentials(
       foundUser.id,
     );
-    // console.log("credentialsFound:");
-    // console.log(credentialsFound);
+    
     if (!credentialsFound) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
-
-    // const hashedPassword = await hash(credentials.password, 4);
 
     const passwordMatched = await compare(
       credentials.password,      
       credentialsFound.password,
     );
-    // console.log("passwordMatched:");
-    // console.log(passwordMatched);
 
     if (!passwordMatched) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);

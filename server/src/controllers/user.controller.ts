@@ -111,7 +111,7 @@ export class UserController {
   }
 
   @authenticate('jwt')
-  @get('/userDetails', {
+  @get('/myDetails', {
     responses: {
       '200': {
         description: '',
@@ -121,11 +121,13 @@ export class UserController {
       },
     },
   })
-  async getLoggedinUser(
+  async myDetails(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-  ): Promise<UserProfile> {
-    return currentUserProfile;
+  ): Promise<CustomUser> {
+    let foundUser = await this.userRepository.findById(currentUserProfile[securityId]);
+    foundUser.password = "";
+    return foundUser;
   }
 
 
@@ -167,4 +169,6 @@ export class UserController {
 
     return savedUser;
   }
+
+
 }
