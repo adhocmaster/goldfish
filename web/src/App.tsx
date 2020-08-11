@@ -13,6 +13,7 @@ import LogoutComponent from './account/LogoutComponent';
 import SettingsComponent from 'account/settings.component';
 import YearComponent from './features/year/year.component';
 import WeekComponent from 'features/week/week.component';
+import userService from 'features/user/user.service';
 
 
 function App() {
@@ -21,18 +22,26 @@ function App() {
       <div className="App">
         <NavComponent />
         <Switch>
-          <Route path="/week">
-            <WeekComponent />
-          </Route>
-          <Route path="/settings">
-            <SettingsComponent />
-          </Route>
           <Route path="/login">
             <LoginComponent />
           </Route>
-          <Route path="/logout">
-            <LogoutComponent />
-          </Route>
+          {
+              userService.isLoggedIn() &&
+              <>
+                <Route path="/week">
+                  <WeekComponent />
+                </Route>
+                <Route path="/settings">
+                  <SettingsComponent />
+                </Route>
+                <Route path="/logout">
+                  <LogoutComponent />
+                </Route>
+                <Route path="/year">
+                  <YearComponent />
+                </Route>
+              </>
+          }
           <Route path="/">
             <YearComponent />
           </Route>

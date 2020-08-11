@@ -34,6 +34,11 @@ export default function SettingsReducer(state: any, action: any) {
 
         state = initialState;
 
+    } else if (action.type == ActionType.LOGIN_FAILED) {
+
+        state = {...state, loginErrors: action.payload};
+        console.log(state);
+
     }
 
     return state;

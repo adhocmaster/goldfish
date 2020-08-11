@@ -10,15 +10,17 @@ class Utility {
     }
 
     public getListRep(a: Array<any>) {
-        return (
-            <>
-                {
-                    a.map((s) => (
-                        <p>{s}<br/></p>
-                    ))
-                }
-            </>
-        );
+        if (a) {
+            return (
+                <>
+                    {
+                        a.map((s) => (
+                            <p key={s}>{s}<br/></p>
+                        ))
+                    }
+                </>
+            );
+        }
     }
 
 }

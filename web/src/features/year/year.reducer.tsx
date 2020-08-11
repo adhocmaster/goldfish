@@ -39,7 +39,7 @@ export default function YearReducer(state: any, action: any) {
 
     }
 
-    console.log(state);
+    // console.log(state);
 
     return state;
 

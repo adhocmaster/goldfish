@@ -1,3 +1,4 @@
+import React from 'react';
 import axios from 'axios';
 import ResponseProcessor from 'framework/ResponseProcessor';
 import actionManager from 'framework/ActionManager';
@@ -5,6 +6,7 @@ import { ActionType } from 'app/actionTypes';
 import { RootState } from 'app/store';
 import { shallowEqual, useSelector } from 'react-redux';
 import cookies from 'framework/Cookie';
+import { Redirect } from 'react-router-dom';
 
 class UserService {
 
@@ -34,6 +36,12 @@ class UserService {
 
     }
 
+    public getLoginPage() {
+        
+        return (<Redirect to="/login"></Redirect>);
+        
+    }
+
 
     public login(email: string, password:string) {
 
@@ -55,6 +63,10 @@ class UserService {
                     cookies.set('authToken', token, {'path': '/', 'maxAge': 3600*24*7});
                     cookies.set('email', email, {'path': '/', 'maxAge': 3600*24*7});
                     cookies.set('isLoggedIn', true, {'path': '/', 'maxAge': 3600*24*7});
+                    axios.interceptors.request.use(req => {
+                        req.headers.authorization = `Bearer ${token}`;
+                        return req;
+                      });
                     actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false);
 
 
@@ -74,6 +86,10 @@ class UserService {
 
     public logout() {
         this.removeFromCookie();
+        axios.interceptors.request.use(req => {
+            req.headers.authorization = "";
+            return req;
+          });
         actionManager.dispatch(ActionType.LOG_OUT);
     }
 
@@ -84,6 +100,8 @@ class UserService {
         cookies.remove('isLoggedIn');
 
     }
+
+
 
 }
 

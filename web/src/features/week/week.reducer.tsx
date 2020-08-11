@@ -1,6 +1,7 @@
 
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
+import toastService from 'app/toast.service';
 
 export default function WeekReducer(state: any, action: any) {
 
@@ -32,6 +33,17 @@ export default function WeekReducer(state: any, action: any) {
 
         //  then hide the goal modal
         state = {...state, showGoalModal: false};
+
+    }
+
+    switch(action.type) {
+
+        case WeekActionType.WEEK_FETCHED:
+            let week = action.payload;
+            state = {...state, week: week}
+            break;
+        case WeekActionType.WEEK_ERROR:
+            break;
 
     }
 

@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import GoalModal from 'features/goal/goal.component';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
+import weekService from './week.service';
 
 
 export default function WeekComponent( props: any ) {
@@ -206,6 +207,16 @@ export default function WeekComponent( props: any ) {
             </>
         );
     }
+
+    weekService.getById('5f311ccd8c32ed4bf89f9fc1');
+    if (props.weekId) {
+        weekService.getById(props.weekId);
+    } else if (props.startDate) {
+        weekService.getByStartDate(props.startDate);
+    } else {
+        weekService.getClosestWeek();
+    }
+
 
     return (
 

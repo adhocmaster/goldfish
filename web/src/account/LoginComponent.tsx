@@ -18,11 +18,13 @@ import userService from 'features/user/user.service';
 export default function LoginComponent(props: any) {
 
     const [isError, setIsError] = useState(false);
-    const [errors, setErrors] = useState([] as string[]);
     const [email, setemail] = useState("");
     const [password, setPassword] = useState("");
 
     const isLoggedIn: boolean = useSelector((state: RootState) => { return state.settingsState.isLoggedIn} );
+
+    const errors: string[] = useSelector((state: RootState) => { return state.settingsState.loginErrors} );
+    
     
     function postLogin(e: any) {
 
@@ -31,9 +33,9 @@ export default function LoginComponent(props: any) {
         
     }
 
-    if (isLoggedIn) {
+    if (userService.isLoggedIn()) {
 
-        return (<Redirect to="/"></Redirect>);
+        return (<Redirect to="/week"></Redirect>);
 
     }
 
@@ -65,7 +67,7 @@ export default function LoginComponent(props: any) {
                                         }} />
                                 </Form.Group>
                                 <Form.Group controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" label="Check me out" />
+                                    <Form.Check type="checkbox" label="Remember me!" />
                                 </Form.Group>
                                 <Button variant="primary" type="submit" onClick={postLogin}>
                                     Submit
@@ -73,7 +75,7 @@ export default function LoginComponent(props: any) {
                             </Form>
                             <br/>
                             <div>
-                                {isError && 
+                                {errors && 
                                     <Alert variant="warning">
                                         {Utility.getListRep(errors)}
                                     </Alert>

@@ -5,7 +5,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -13,6 +14,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import userService from 'features/user/user.service';
 
 export default class SettingsComponent extends ReduxUIComponent {
     
@@ -24,6 +26,11 @@ export default class SettingsComponent extends ReduxUIComponent {
     }
 
     render(): any {
+
+        if (!userService.isLoggedIn()) {
+
+            return (<Redirect to="/login"></Redirect>);
+        }
 
         return (
             <Container className="login-container" >

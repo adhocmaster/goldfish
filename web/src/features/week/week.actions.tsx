@@ -7,5 +7,6 @@ export enum WeekActionType {
     SUBMIT_GOAL_FORM = 'SUBMIT_GOAL_FORM',
     GOAL_ADDED = 'GOAL_ADDED',
     GOAL_ERROR = 'GOAL_ERROR',
+    WEEK_FETCHED = 'WEEK_FETCHED'
 
 }

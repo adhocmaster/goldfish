@@ -7,6 +7,7 @@ import YearReducer from '../features/year/year.reducer';
 import WeekSummaryReducer from '../features/week/weekSummary.reducer';
 import WeekReducer from '../features/week/week.reducer';
 import SettingsReducer from 'account/settings.reducer';
+import AppReducer from './app.reducer';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     weekSummaryState: WeekSummaryReducer,
     settingsState: SettingsReducer,
     weekState: WeekReducer,
+    appState: AppReducer
 
   },
 });
