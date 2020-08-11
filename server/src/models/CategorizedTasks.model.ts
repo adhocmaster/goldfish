@@ -12,6 +12,24 @@ export class CategorizedTasks extends Model {
     categoryId: string;
 
     @property({
+        type: 'number',
+        default: 0
+    })
+    totalMinutes?: number;
+    
+    @property({
+        type: 'number',
+        default: 0
+    })
+    plannedMinutes?: number;
+  
+    @property({
+        type: 'number',
+        default: 0
+    })
+    completedMinutes?: number;
+    
+    @property({
         type: 'array',
         itemType: 'any'
       })

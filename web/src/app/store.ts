@@ -11,6 +11,7 @@ import AppReducer from './app.reducer';
 
 export const store = configureStore({
   reducer: {
+    appState: AppReducer,
     userState: userReducer,
     itemState: ItemReducer,
     categoryState: GoalReducer,
@@ -18,8 +19,7 @@ export const store = configureStore({
     weekSummaryState: WeekSummaryReducer,
     settingsState: SettingsReducer,
     weekState: WeekReducer,
-    appState: AppReducer
-
+    goalState: GoalReducer
   },
 });
 

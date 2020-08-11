@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReduxUIComponent from '../../framework/ReduxUIComponent';
 import { RootState, store } from '../../app/store';
 import Container from 'react-bootstrap/Container';
@@ -19,10 +19,40 @@ import { useSelector } from 'react-redux';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import weekService from 'features/week/week.service';
+import GoalService from './goal.service';
+import goalService from './goal.service';
+import Utility from 'framework/Utility';
 
-export default function GoalModal(props: any): any {
+export default function GoalModal(weekDetails: any): any {
 
     const showGoalModal = useSelector( (state:RootState) => { return state.weekState.showGoalModal } )
+
+
+    const goalIdFromStore = useSelector((state: RootState) => { return state.goalState.goalId });
+    const titleFromStore = useSelector((state: RootState) => { return state.goalState.title });
+    const plannedMinutesFromStore = useSelector((state: RootState) => { return state.goalState.plannedMinutes });
+
+    const [goalId, setGoalId] = useState<string>(goalIdFromStore);
+    const [title, setTitle] = useState<string>(titleFromStore);
+    const [plannedMinutes, setPlannedMinutes] = useState<number>(plannedMinutesFromStore);
+    const [plannedHours, setPlannedHours] = useState<number>(0);
+
+    const availableMinutes = weekService.getAvaiableMinutes(weekDetails);
+    const availableHours= weekService.getAvailableHours(weekDetails);
+    
+
+    useEffect(() => {
+
+        // if (existingGoal) {
+
+        //     setGoalId(existingGoal.categoryId);
+        //     setTitle(existingGoal.title);
+        //     setPlannedMinutes(existingGoal.plannedMinutes);
+    
+        // }
+        setPlannedHours(Utility.hoursFromMinutes(plannedMinutes));
+    
+    });
 
     function hide() {
 
@@ -35,7 +65,28 @@ export default function GoalModal(props: any): any {
         //  user service to submit. dispatch actions based on the result.
         // actionManager.dispatch(WeekActionType.SUBMIT_GOAL_FORM);
 
-        weekService.createGoal(null);
+        // new goal or old goal?
+        if (!goalId) {
+            // need to create the goal first.
+            goalService.create({
+                title: title
+            })
+        } else {
+            // we have a goal id. Gotta add/update to the week.
+            let goal = { 
+
+                categoryId: goalId,
+                title: title,
+                plannedMinutes: plannedMinutes
+    
+            };
+
+            weekService.createGoal(weekDetails, {})
+        }
+
+
+
+        // weekService.createGoal(weekDetails,);
 
     }
 
@@ -76,13 +127,23 @@ export default function GoalModal(props: any): any {
                                     </div>
                                     <Form.Group>
                                         <Form.Label>Title</Form.Label>
-                                        <Form.Control type="text" placeholder='Type title of the goal' />
+                                        <Form.Control type="text" placeholder='Type title of the goal'                                         
+                                            value={title}
+                                            onChange={e => {
+                                                setTitle(e.target.value);
+                                            }}
+                                        />
                                     </Form.Group>
                                     
                                     <Form.Group>
                                         
-                                        <Form.Label>Allocate: (5.5 of 23 h)</Form.Label>
-                                        <Form.Control type="range" min={0} max={50} step={0.5} />
+                                        <Form.Label>Allocate: ({plannedHours} of {availableHours} h)</Form.Label>
+                                        <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
+                                            value={plannedMinutes}
+                                            onChange={e => {
+                                                setPlannedMinutes(parseInt(e.target.value));
+                                                setPlannedHours(Utility.hoursFromMinutes(plannedMinutes));
+                                            }}/>
                                     </Form.Group>
                                     
                                     <Form.Group>

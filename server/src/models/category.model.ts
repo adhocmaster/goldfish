@@ -14,21 +14,21 @@ export class Category extends Entity {
 
   @property({
     type: 'string',
+    required: true
+  })
+  userId: string;
+
+  @property({
+    type: 'string',
     required: true,
   })
-  name: string;
+  title: string;
 
   @property({
     type: 'string',
     default: '#aaaaaa',
   })
   color?: string;
-
-  @property({
-    type: 'number',
-    default: 0,
-  })
-  order?: number;
 
   @hasMany(() => Item)
   items: Item[];
@@ -40,7 +40,7 @@ export class Category extends Entity {
 
 export interface CategoryRelations {
   // describe navigational properties here
-  items?: ItemWithRelations[];
+  // items?: ItemWithRelations[];
 
 }
 

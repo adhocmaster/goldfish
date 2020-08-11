@@ -25,6 +25,12 @@ class Utility {
         }
     }
 
+    public hoursFromMinutes( minutes: number ) {
+        
+        return Math.round((minutes / 60 + Number.EPSILON) * 100) / 100;
+
+    }
+
 }
 
 export default new Utility();

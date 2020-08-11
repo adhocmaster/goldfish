@@ -184,7 +184,7 @@ export default function WeekComponent( props: any ) {
             <Card className='task-card' id={`task-${task.taskNo}`}>
                 <Card.Body>
                     <Badge className='float-right'>--</Badge>
-                    <div>{task.name}</div>
+                    <div>{task.title}</div>
                 </Card.Body>
             </Card>
         );
@@ -270,7 +270,7 @@ export default function WeekComponent( props: any ) {
 
     });
     
-
+    console.log(weekDetails);
 
     return (
 

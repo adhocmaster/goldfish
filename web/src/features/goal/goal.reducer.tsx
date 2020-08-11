@@ -1,20 +1,20 @@
+import { WeekActionType } from "features/week/week.actions";
+
 export default function GoalReducer(state: any, action: any) {
 
     if( state === undefined) {
         state = { 
-            categories
-            : [], 
-            count: 0
+
+            categoryId: "",
+            title: "",
+            plannedMinutes: 0
+
         };
     }
 
-    if(action.type === 'VIEW_CATEGORY') {
+    if(action.type === WeekActionType.NEW_GOAL_ADDED) {
         
-        const users = state.users.slice(); // copy elements
-        users.push(action.user);
-        const count = state.count + 1;
-
-        return Object.assign({}, state, { users: users, count: count } )
+        state = {...state, ...action.payload};
 
     }
 

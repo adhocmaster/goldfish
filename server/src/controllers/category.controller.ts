@@ -19,12 +19,18 @@ import {
 import {Category} from '../models';
 import {CategoryRepository} from '../repositories';
 import {authenticate} from '@loopback/authentication';
+import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import { inject } from '@loopback/core';
+import { UserServiceBindings } from '@loopback/authentication-jwt';
+import { CustomUserService } from '../services/user.service';
 
 @authenticate('jwt')
 export class CategoryController {
   constructor(
     @repository(CategoryRepository)
     public categoryRepository : CategoryRepository,
+    @inject(UserServiceBindings.USER_SERVICE)
+    public userService : CustomUserService
   ) {}
 
   @post('/categories', {
@@ -36,6 +42,8 @@ export class CategoryController {
     },
   })
   async create(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @requestBody({
       content: {
         'application/json': {
@@ -48,6 +56,8 @@ export class CategoryController {
     })
     category: Omit<Category, 'id'>,
   ): Promise<Category> {
+    
+    category.userId = currentUserProfile[securityId];
     return this.categoryRepository.create(category);
   }
 
@@ -81,8 +91,11 @@ export class CategoryController {
     },
   })
   async find(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @param.filter(Category) filter?: Filter<Category>,
   ): Promise<Category[]> {
+    filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
     return this.categoryRepository.find(filter);
   }
 
@@ -121,9 +134,12 @@ export class CategoryController {
     },
   })
   async findById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
     @param.filter(Category, {exclude: 'where'}) filter?: FilterExcludingWhere<Category>
   ): Promise<Category> {
+    filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
     return this.categoryRepository.findById(id, filter);
   }
 
@@ -135,6 +151,8 @@ export class CategoryController {
     },
   })
   async updateById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
     @requestBody({
       content: {
@@ -145,6 +163,8 @@ export class CategoryController {
     })
     category: Category,
   ): Promise<void> {
+
+    throw new Error("Not implemented yet");
     await this.categoryRepository.updateById(id, category);
   }
 

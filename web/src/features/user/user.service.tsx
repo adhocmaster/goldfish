@@ -101,6 +101,7 @@ class UserService {
 
     private updateAxiosHeader(token: string | undefined) {
 
+        console.log("setting axios header to token: " + token);
         if (token) {
 
             axios.interceptors.request.use(req => {

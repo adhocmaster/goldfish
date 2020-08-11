@@ -20,7 +20,7 @@ export class Week extends Entity {
   @property({
     type: 'string',
   })
-  goal?: string;
+  title?: string;
 
   @property({
     type: 'date',
@@ -33,6 +33,30 @@ export class Week extends Entity {
     default: 7,
   })
   days?: number;
+  
+  @property({
+    type: 'string',
+  })
+  schedule?: string;
+
+  @property({
+      type: 'number',
+      default: 0
+  })
+  totalMinutes?: number;
+  
+  @property({
+      type: 'number',
+      default: 0
+  })
+  plannedMinutes?: number;
+
+  @property({
+      type: 'number',
+      default: 0
+  })
+  completedMinutes?: number;
+
 
   @property({
     type: 'array',

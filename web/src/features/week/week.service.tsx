@@ -9,6 +9,7 @@ import toastService from 'app/toast.service';
 import { useSelector, shallowEqual } from 'react-redux';
 import deepEqual from 'deep-equal';
 import yearService from 'features/year/year.service';
+import Utility from 'framework/Utility';
 
 class WeekService {
 
@@ -30,14 +31,10 @@ class WeekService {
         }).catch((error) => {
             
             const errors = ResponseProcessor.getHTTPError(error);
-            actionManager.dispatch(ActionType.LOGIN_FAILED, errors, true);
+            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
         });
     }
 
-    public createGoal(props: any) {
-
-        actionManager.dispatch(WeekActionType.GOAL_ADDED);
-    }
 
     public getFromStore() {
         return useSelector((state:RootState) => {return state.weekState.weekDetails}, deepEqual);
@@ -137,6 +134,35 @@ class WeekService {
         }
         return date.toLocaleDateString();
 
+    }
+
+    public createGoal(weekDetails: any, goal: any) {
+
+        // 1. check hours
+        if( !this.hasEnoughTimeForGoal(weekDetails, goal) ) {
+            throw new Error(`You have ${this.getAvailableHours(weekDetails)}, but your attempted to allocate ${goal.minutes}`)
+        }
+
+        actionManager.dispatch(WeekActionType.GOAL_ADDED);
+    }
+
+    public hasEnoughTimeForGoal(weekDetails: any, goal: any) {
+
+        if (this.getAvaiableMinutes(weekDetails) >= goal.plannedMinutes) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public getAvailableHours(weekDetails: any) {
+        let minutes = this.getAvaiableMinutes(weekDetails);
+        return Utility.hoursFromMinutes(minutes);
+    }
+
+    public getAvaiableMinutes(weekDetails: any) {
+        return weekDetails.totalMinutes - weekDetails.plannedMinutes;
     }
 
 }

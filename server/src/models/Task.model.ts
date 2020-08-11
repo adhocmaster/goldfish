@@ -7,7 +7,7 @@ export class Task extends Model {
         type: 'string',
         required: true
       })
-    name: string;
+    title: string;
 
     @property({
       type: 'number',
@@ -21,11 +21,15 @@ export class Task extends Model {
     isDone?: boolean;
     
     @property({
-        type: 'number', default: 0
-      })
-    hoursPlanned?: number;
+      type: 'number',
+      default: 0
+    })
+    plannedMinutes?: number;
+
     @property({
-        type: 'number', default: 0
-      })
-    hoursSpend?: number;
+        type: 'number',
+        default: 0
+    })
+    completedMinutes?: number;
+    
 }
