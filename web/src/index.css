@@ -29,6 +29,12 @@ code {
   font-weight: bold;
 }
 
+.toast {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+}
+
 .card-small-header {
   font-size: 0.8rem;
 }

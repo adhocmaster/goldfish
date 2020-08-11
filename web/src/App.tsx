@@ -14,6 +14,7 @@ import SettingsComponent from 'account/settings.component';
 import YearComponent from './features/year/year.component';
 import WeekComponent from 'features/week/week.component';
 import userService from 'features/user/user.service';
+import ToastComponent from 'components/toast.component';
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
             <YearComponent />
           </Route>
         </Switch>
+        <ToastComponent />
       </div>
     </Router>
   );

@@ -14,7 +14,7 @@ class ResponseProcessor {
 
     public getHTTPError(error: any) {
         
-        let defaultErrors = ["Unknown Error"];
+        let defaultErrors = ["Unprocessed Error"];
                 
         if (error.response) {
             /*
@@ -34,6 +34,9 @@ class ResponseProcessor {
                     break;
                 case 401:
                     errorMessages = this.get401Error(serverError);
+                    break;
+                case 404:
+                    errorMessages = this.get404Error(serverError);
                     break;
 
             }
@@ -62,17 +65,25 @@ class ResponseProcessor {
 
     private get422Error(data: any) {
 
-         let errors: string[] = [];
-        errors.push(data.code)
+        let errors: string[] = [];
+        errors.push(data.code);
 
         for (let serverError of data.details) {
 
-            errors.push(serverError.path + " " + serverError.message)
+            errors.push(serverError.path + " " + serverError.message);
 
         }
 
         return errors;
+    }
 
+    private get404Error(data: any) {
+
+        let errors: string[] = [];
+        errors.push(data.code);
+        errors.push(data.message);
+
+        return errors;
 
     }
 

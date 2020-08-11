@@ -28,6 +28,9 @@ class UserService {
 
     public fromCookie() {
 
+        
+        this.updateAxiosHeader(cookies.get('authToken'));
+
         return  {
             'authToken': cookies.get('authToken'),
             'email': cookies.get('email'),
@@ -63,10 +66,8 @@ class UserService {
                     cookies.set('authToken', token, {'path': '/', 'maxAge': 3600*24*7});
                     cookies.set('email', email, {'path': '/', 'maxAge': 3600*24*7});
                     cookies.set('isLoggedIn', true, {'path': '/', 'maxAge': 3600*24*7});
-                    axios.interceptors.request.use(req => {
-                        req.headers.authorization = `Bearer ${token}`;
-                        return req;
-                      });
+
+                    this.updateAxiosHeader(token);
                     actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false);
 
 
@@ -86,10 +87,7 @@ class UserService {
 
     public logout() {
         this.removeFromCookie();
-        axios.interceptors.request.use(req => {
-            req.headers.authorization = "";
-            return req;
-          });
+        this.updateAxiosHeader(undefined);
         actionManager.dispatch(ActionType.LOG_OUT);
     }
 
@@ -98,6 +96,24 @@ class UserService {
         cookies.remove('authToken');
         cookies.remove('email');
         cookies.remove('isLoggedIn');
+
+    }
+
+    private updateAxiosHeader(token: string | undefined) {
+
+        if (token) {
+
+            axios.interceptors.request.use(req => {
+                req.headers.authorization = `Bearer ${token}`;
+                return req;
+              });
+        } else {
+            
+            axios.interceptors.request.use(req => {
+                req.headers.authorization = "";
+                return req;
+            });
+        }
 
     }
 

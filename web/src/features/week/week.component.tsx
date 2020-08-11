@@ -208,7 +208,8 @@ export default function WeekComponent( props: any ) {
         );
     }
 
-    weekService.getById('5f311ccd8c32ed4bf89f9fc1');
+    weekService.getById('5f311ccd8c32ed4bf89f9fc1-');
+    
     if (props.weekId) {
         weekService.getById(props.weekId);
     } else if (props.startDate) {

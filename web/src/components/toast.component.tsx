@@ -10,11 +10,12 @@ import GoalModal from 'features/goal/goal.component';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import toastService from 'app/toast.service';
+import Utility from 'framework/Utility';
 
 export default function ToastComponent(props: any) {
 
     // const toastMessage = toastService.getMessage();
-    const toastMessage = toastService.getError();
+    const toastMessage = Utility.getListRep( toastService.getError() );
     let show = false;
     if (toastMessage) {
         show = true;
