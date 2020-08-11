@@ -14,7 +14,7 @@ import SettingsComponent from 'account/settings.component';
 import YearComponent from './features/year/year.component';
 import WeekComponent from 'features/week/week.component';
 import userService from 'features/user/user.service';
-import ToastComponent from 'components/toast.component';
+import ToastComponent, { ToastErrorComponent } from 'components/toast.component';
 
 
 function App() {
@@ -48,6 +48,7 @@ function App() {
           </Route>
         </Switch>
         <ToastComponent />
+        <ToastErrorComponent />
       </div>
     </Router>
   );

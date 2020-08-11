@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReduxUIComponent from '../../framework/ReduxUIComponent';
 import { RootState, store } from '../../app/store';
 import Container from 'react-bootstrap/Container';
@@ -21,12 +21,14 @@ import GoalModal from 'features/goal/goal.component';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import weekService from './week.service';
+import toastService from 'app/toast.service';
 
 
 export default function WeekComponent( props: any ) {
 
 
-    const goalAdded = useSelector( (state:RootState) => { return state.weekState.goalAdded } )
+    const goalAdded = useSelector( (state:RootState) => { return state.weekState.goalAdded } );
+    const weekDetails = weekService.getFromStore();
 
     function getMenubar(props: any) {
         return (
@@ -34,10 +36,10 @@ export default function WeekComponent( props: any ) {
             <Row>
                 <div  className='second-nav d-flex flex-row align-items-center'>
                     <div className='title p-2'>
-                        Week 1
+                        Week {weekService.getWeekOfTheYear(weekDetails)}
                     </div>
                     <div className='p-2'>
-                        08/02/2020 - 08/09-2020
+                        {weekService.getLocalStartDateString(weekDetails)}
                     </div>
                     <div className='p-2'>
                         
@@ -158,11 +160,6 @@ export default function WeekComponent( props: any ) {
                         </div>
                     </div>
                 </Card.Body>
-                <Card.Footer>
-                    {
-                        getNewTaskForm()
-                    }
-                </Card.Footer>
             </Card>
         );
     }
@@ -181,19 +178,36 @@ export default function WeekComponent( props: any ) {
         actionManager.dispatch(WeekActionType.SHOW_GOAL_FORM);
 
     }
-    function getTaskComponent() {
+    function getTaskComponent(task: any) {
         return (
             
-            <Card className='task-card'>
+            <Card className='task-card' id={`task-${task.taskNo}`}>
                 <Card.Body>
                     <Badge className='float-right'>--</Badge>
-                    <div>This is a task</div>
+                    <div>{task.name}</div>
                 </Card.Body>
             </Card>
         );
     }
 
-    function getNewTaskForm() {
+
+    function getTaskComponents(tasks: any[]) {
+
+        let taskItems = [];
+
+        for (let task of tasks) {
+            taskItems.push(getTaskComponent(task));
+        }
+
+        return taskItems;
+
+    }
+
+    function addTask(categoryId: string) {
+        toastService.message("Going to add tasks soon");
+    }
+
+    function getNewTaskForm(categoryId: string) {
         return (
             <>
                 <Form.Group>
@@ -201,22 +215,61 @@ export default function WeekComponent( props: any ) {
 
                     </Form.Control>
                 </Form.Group>
-                <Button variant='secondary' size='sm'>
+                <Button variant='secondary' size='sm' onClick={(e: any) => { e.preventDefault(); addTask(categoryId); }}>
                     + ADD
                 </Button>
             </>
         );
     }
 
-    weekService.getById('5f311ccd8c32ed4bf89f9fc1-');
-    
-    if (props.weekId) {
-        weekService.getById(props.weekId);
-    } else if (props.startDate) {
-        weekService.getByStartDate(props.startDate);
-    } else {
-        weekService.getClosestWeek();
+    function getGoalCards() {
+
+        if(!weekDetails) return;
+
+        let cards = [];
+        for (let categorizedTask of weekDetails.categorizedTasks) {
+
+            
+            cards.push(
+                <Card className='week-category-card'>
+                        
+                    <Card.Body>
+                        <div className='header'>
+                            <b>{categorizedTask.categoryId}</b>
+                            <div className="float-right">
+                                4 of 22
+                            </div>
+                            <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
+                        </div>
+                        {
+                            getTaskComponents(categorizedTask.tasks)
+                        }
+                    </Card.Body>
+                    <Card.Footer>
+                        {
+                            getNewTaskForm(categorizedTask.categoryId)
+                        }
+                    </Card.Footer>
+                </Card>
+
+            )
+        }
+        return cards;
     }
+
+    useEffect(() => {
+
+        weekService.getById('5f311ccd8c32ed4bf89f9fc1', true);
+        // if (props.weekId) {
+        //     weekService.getById(props.weekId);
+        // } else if (props.startDate) {
+        //     weekService.getByStartDate(props.startDate);
+        // } else {
+        //     weekService.getClosestWeek();
+        // }
+
+    });
+    
 
 
     return (
@@ -230,6 +283,7 @@ export default function WeekComponent( props: any ) {
                 { getSummaryCard(null) }
 
                 {/* Week Goal Cards */}
+                {getGoalCards()}
                     
                 <Card className='week-category-card'>
                     
@@ -242,12 +296,12 @@ export default function WeekComponent( props: any ) {
                             <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
                         </div>
                         {
-                            getTaskComponent()
+                            getTaskComponent("some task")
                         }
                     </Card.Body>
                     <Card.Footer>
                         {
-                            getNewTaskForm()
+                            getNewTaskForm("someid")
                         }
                     </Card.Footer>
                 </Card>

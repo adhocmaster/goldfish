@@ -6,9 +6,13 @@ import { ActionType } from 'app/actionTypes';
 import { WeekActionType } from 'features/week/week.actions';
 import { RootState } from 'app/store';
 import toastService from 'app/toast.service';
+import { useSelector, shallowEqual } from 'react-redux';
+import deepEqual from 'deep-equal';
+import yearService from 'features/year/year.service';
 
 class WeekService {
 
+    cache: Map<string, any> = new Map();
     serviceUrl = config.getBackend() + "/weeks";
 
     public create(goal: string, start?: Date, days?: number) {
@@ -34,7 +38,21 @@ class WeekService {
 
         actionManager.dispatch(WeekActionType.GOAL_ADDED);
     }
-    public getById(weekId: string) {
+
+    public getFromStore() {
+        return useSelector((state:RootState) => {return state.weekState.weekDetails}, deepEqual);
+    }
+
+
+    public getById(weekId: string, useCache = false) {
+
+        if (useCache && this.cache.get(weekId)) {
+            
+            const week = this.cache.get(weekId);
+            actionManager.dispatch(WeekActionType.WEEK_FETCHED, week, false);
+            return;
+
+        }
 
         axios.get(
             this.serviceUrl + '/' + weekId
@@ -48,7 +66,11 @@ class WeekService {
 
                 console.log("got week");
                 let data = result.data;
-                actionManager.dispatch(WeekActionType.WEEK_FETCHED, {data}, false);
+                
+                if (useCache) {
+                    this.cache.set(weekId, data);
+                }
+                actionManager.dispatch(WeekActionType.WEEK_FETCHED, data, false);
 
 
             } else {
@@ -61,7 +83,7 @@ class WeekService {
         }).catch((error) => {
             
             const errors = ResponseProcessor.getHTTPError(error);
-            console.log(errors);
+            // console.log(errors);
             actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
             toastService.error(errors);
         });
@@ -71,6 +93,49 @@ class WeekService {
 
     }
     public getClosestWeek() {
+
+    }
+
+    public getWeekOfTheYear(weekDetails: any) {
+
+        //  TODO: getWeekOfTheYear fix this, optimize this.
+
+        if (!weekDetails) {
+            return undefined;
+        }
+
+        let date = weekDetails.dateStart;
+        if (typeof(date) === "string") {
+            date = new Date(date);
+        }
+
+
+        let weeks = yearService.getWeekDates(date.getFullYear());
+
+        for (let index in weeks) {
+            let weekStart = weeks[index].start;
+            if (
+                weekStart.getDate() == date.getDate() 
+                &&  weekStart.getMonth() == date.getMonth() 
+                && weekStart.getFullYear() == date.getFullYear()
+                ){
+                return index;
+            }
+        }
+
+        return 53; 
+    }
+
+    public getLocalStartDateString(weekDetails: any){
+        
+        if (!weekDetails) {
+            return undefined;
+        }
+        let date = weekDetails.dateStart;
+        if (typeof(date) === "string") {
+            date = new Date(date);
+        }
+        return date.toLocaleDateString();
 
     }
 

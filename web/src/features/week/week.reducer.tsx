@@ -9,8 +9,8 @@ export default function WeekReducer(state: any, action: any) {
         state = { 
             id: null,
             name: "Week 1",
-            dateStart: '06/21/2020',
-            days: 0
+            dateStart: "2020-11-11",
+            days: 7
         };
     }
 
@@ -40,7 +40,7 @@ export default function WeekReducer(state: any, action: any) {
 
         case WeekActionType.WEEK_FETCHED:
             let week = action.payload;
-            state = {...state, week: week}
+            state = {...state, weekDetails: week}
             break;
         case WeekActionType.WEEK_ERROR:
             break;

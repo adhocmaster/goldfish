@@ -34,7 +34,7 @@ class YearService {
 
         for (let i = 1; i < 53; ++i) {
             
-            console.log("startDate toISOString() = " + startDate.toISOString());
+            // console.log("startDate toISOString() = " + startDate.toISOString());
             // console.log("endDate toISOString() = " + endDate.toISOString());
             // console.log("startDate toString() = " + startDate.toString());
             // console.log("endDate toString() = " + endDate.toString());

@@ -10,7 +10,7 @@ class Utility {
     }
 
     public getListRep(a: Array<any>) {
-        if (a) {
+        if (a && typeof a == "object") {
             return (
                 <>
                     {
@@ -20,6 +20,8 @@ class Utility {
                     }
                 </>
             );
+        } else {
+            return a;
         }
     }
 
