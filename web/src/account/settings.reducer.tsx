@@ -33,7 +33,6 @@ export default function SettingsReducer(state: any, action: any) {
     } else if (action.type == ActionType.LOG_OUT) {
 
         state = initialState;
-        userService.logout();
 
     }
 

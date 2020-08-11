@@ -52,10 +52,10 @@ class UserService {
 
                     console.log("got token");
                     let token = result.data.token;
-                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false);
                     cookies.set('authToken', token, {'path': '/', 'maxAge': 3600*24*7});
                     cookies.set('email', email, {'path': '/', 'maxAge': 3600*24*7});
                     cookies.set('isLoggedIn', true, {'path': '/', 'maxAge': 3600*24*7});
+                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false);
 
 
                 } else {
@@ -74,6 +74,7 @@ class UserService {
 
     public logout() {
         this.removeFromCookie();
+        actionManager.dispatch(ActionType.LOG_OUT);
     }
 
     private removeFromCookie() {

@@ -27,8 +27,6 @@ export default function LoginComponent(props: any) {
     function postLogin(e: any) {
 
         e.preventDefault();
-        console.log(email);
-        console.log(password);
         userService.login(email, password);
         
     }
