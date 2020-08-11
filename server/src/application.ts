@@ -21,6 +21,8 @@ import {CustomUserService} from './services/user.service';
 
 import {GoldfishDataSource} from './datasources';
 import CustomUserRepository from './repositories/user.repository';
+import { Bindings } from './bindings';
+import { accountActionSequence } from './user/action.sequence';
 
 export {ApplicationConfig};
 
@@ -40,14 +42,8 @@ export class ServerApplication extends BootMixin(
     this.configure(RestExplorerBindings.COMPONENT).to({
       path: '/explorer',
     });
-    this.component(RestExplorerComponent);
 
-    this.component(AuthenticationComponent);
-    this.component(JWTAuthenticationComponent);
-    this.dataSource(GoldfishDataSource, UserServiceBindings.DATASOURCE_NAME)
-    this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService)
-    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(CustomUserRepository)
-    this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(UserCredentialsRepository)
+    this.initBindings();
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
@@ -59,5 +55,19 @@ export class ServerApplication extends BootMixin(
         nested: true,
       },
     };
+  }
+
+  initBindings() {
+
+    this.component(RestExplorerComponent);
+
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+    this.dataSource(GoldfishDataSource, UserServiceBindings.DATASOURCE_NAME);
+    this.bind(UserServiceBindings.USER_SERVICE).toClass(CustomUserService);
+    this.bind(UserServiceBindings.USER_REPOSITORY).toClass(CustomUserRepository);
+    this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(UserCredentialsRepository);
+    this.bind(Bindings.ACCOUNT_ACTION_SEQUENCE).to(accountActionSequence);
+
   }
 }

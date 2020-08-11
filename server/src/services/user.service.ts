@@ -8,6 +8,9 @@ import {compare} from 'bcryptjs';
 import {CustomUser} from '../models';
 // UserRepository --> MyUserRepository
 import CustomUserRepository from '../repositories/user.repository';
+import { inject } from '@loopback/core';
+import { Bindings } from '../bindings';
+import { ActionSequence } from '../user/action.sequence';
 
 export type Credentials = {
   email: string;
@@ -18,7 +21,7 @@ export type Credentials = {
 export class CustomUserService implements UserService<CustomUser, Credentials> {
   constructor(
     // UserRepository --> MyUserRepository
-    @repository(CustomUserRepository) public userRepository: CustomUserRepository,
+    @repository(CustomUserRepository) public userRepository: CustomUserRepository
   ) {}
 
   // User --> MyUser
@@ -103,4 +106,6 @@ export class CustomUserService implements UserService<CustomUser, Credentials> {
     return filter
 
   }
+
+
 }

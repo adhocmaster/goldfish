@@ -21,6 +21,11 @@ export class CustomUser extends User {
   })
   dob?: string;
 
+  @property({
+    type: 'string',
+    default: null
+  })
+  nextAction?: string
 
   constructor(data?: Partial<CustomUser>) {
     super(data);

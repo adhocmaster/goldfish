@@ -18,6 +18,8 @@ import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
 import UserRepository from '../repositories/user.repository';
 import {CustomUser} from '../models/user.model';
+import { ActionSequence } from '../user/action.sequence';
+import { Bindings } from '../bindings';
 
 @model()
 export class NewUserRequest extends CustomUser {
@@ -55,6 +57,7 @@ export class UserController {
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
     @inject(UserServiceBindings.USER_REPOSITORY) protected userRepository: UserRepository,
+    @inject(Bindings.ACCOUNT_ACTION_SEQUENCE) public accountActionSequence: ActionSequence
   ) {}
 
   @post('/users/login', {
@@ -154,6 +157,7 @@ export class UserController {
   ): Promise<CustomUser> {
     const password = await hash(newUserRequest.password, 4);
     newUserRequest.password = password
+    newUserRequest.nextAction = this.accountActionSequence.first();
     const savedUser = await this.userRepository.create(newUserRequest);
     // const savedUser = await this.userRepository.create(
     //   _.omit(newUserRequest, 'password'),
