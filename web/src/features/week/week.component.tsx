@@ -210,7 +210,7 @@ export default function WeekComponent( props: any ) {
     }
 
     function addTask(categoryId: string) {
-        toastService.message("Going to add tasks soon");
+        toastService.message(`Going to add tasks soon under category ${categoryId}`);
     }
 
     function getNewTaskForm(categoryId: string) {
@@ -220,7 +220,14 @@ export default function WeekComponent( props: any ) {
                     <Form.Control as="textarea" rows={1} placeholder='Type title of the task'> 
 
                     </Form.Control>
+                    <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
+                        value={totalMinutes}
+                        onChange={e => {
+                            setTotalMinutes(parseInt(e.target.value));
+                            setTotalHours(Utility.hoursFromMinutes(totalMinutes));
+                    }}/>
                 </Form.Group>
+                
                 <Button variant='secondary' size='sm' onClick={(e: any) => { e.preventDefault(); addTask(categoryId); }}>
                     + ADD
                 </Button>

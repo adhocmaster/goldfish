@@ -8,6 +8,7 @@ import WeekSummaryReducer from '../features/week/weekSummary.reducer';
 import WeekReducer from '../features/week/week.reducer';
 import SettingsReducer from 'account/settings.reducer';
 import AppReducer from './app.reducer';
+import TaskReducer from 'features/goal/task.reducer';
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +20,8 @@ export const store = configureStore({
     weekSummaryState: WeekSummaryReducer,
     settingsState: SettingsReducer,
     weekState: WeekReducer,
-    goalState: GoalReducer
+    goalState: GoalReducer,
+    taskState: TaskReducer
   },
 });
 

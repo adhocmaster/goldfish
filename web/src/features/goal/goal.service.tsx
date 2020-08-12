@@ -40,6 +40,16 @@ class GoalService {
         });
 
     }
+
+
+    public getAvaiableMinutes(goal: any) {
+
+        // console.log("type of total minutes" + typeof weekDetails.totalMinutes);
+        const availableMinutes =  goal.totalMinutes - goal.plannedMinutes;
+        // console.log("available minutes " + availableMinutes);
+        return availableMinutes;
+    }
+    
 }
 
 export default new GoalService();
