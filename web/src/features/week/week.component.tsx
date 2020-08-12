@@ -12,6 +12,7 @@ import Alert from 'react-bootstrap/ProgressBar';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import FormControl from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
 
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -166,9 +167,11 @@ export default function WeekComponent( props: any ) {
 
     function getGoalModal(props: any): any {
 
+        console.log("creating goal modal. checking week detauls");
+        console.log(weekDetails);
         return (
             <>
-                {<GoalModal />}
+                {<GoalModal weekDetails={weekDetails} />}
             </>
         );
     }
@@ -270,7 +273,13 @@ export default function WeekComponent( props: any ) {
 
     });
     
-    console.log(weekDetails);
+    // console.log(weekDetails);
+
+    if (!weekDetails) {
+        return(
+            <Spinner animation="grow" />
+        )
+    }
 
     return (
 

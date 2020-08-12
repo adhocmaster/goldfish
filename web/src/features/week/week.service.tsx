@@ -162,7 +162,11 @@ class WeekService {
     }
 
     public getAvaiableMinutes(weekDetails: any) {
-        return weekDetails.totalMinutes - weekDetails.plannedMinutes;
+
+        console.log("type of total minutes" + typeof weekDetails.totalMinutes);
+        const availableMinutes =  weekDetails.totalMinutes - weekDetails.plannedMinutes;
+        console.log("available minutes " + availableMinutes);
+        return availableMinutes;
     }
 
 }

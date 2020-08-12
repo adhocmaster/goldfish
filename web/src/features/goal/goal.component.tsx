@@ -12,6 +12,7 @@ import Alert from 'react-bootstrap/ProgressBar';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import FormControl from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
 
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -23,7 +24,8 @@ import GoalService from './goal.service';
 import goalService from './goal.service';
 import Utility from 'framework/Utility';
 
-export default function GoalModal(weekDetails: any): any {
+export default function GoalModal(props: any): any {
+
 
     const showGoalModal = useSelector( (state:RootState) => { return state.weekState.showGoalModal } )
 
@@ -32,16 +34,22 @@ export default function GoalModal(weekDetails: any): any {
     const titleFromStore = useSelector((state: RootState) => { return state.goalState.title });
     const plannedMinutesFromStore = useSelector((state: RootState) => { return state.goalState.plannedMinutes });
 
+    const [weekDetails, setWeekDetails] = useState({});
     const [goalId, setGoalId] = useState<string>(goalIdFromStore);
     const [title, setTitle] = useState<string>(titleFromStore);
     const [plannedMinutes, setPlannedMinutes] = useState<number>(plannedMinutesFromStore);
     const [plannedHours, setPlannedHours] = useState<number>(0);
-
-    const availableMinutes = weekService.getAvaiableMinutes(weekDetails);
-    const availableHours= weekService.getAvailableHours(weekDetails);
+    const [availableMinutes, setAvailableMinutes] = useState<number>(0);
+    const [availableHours, setAvailableHours] = useState<number>(0);
     
 
     useEffect(() => {
+
+        setWeekDetails(props.weekDetails);
+        console.log(weekDetails);
+
+        setAvailableMinutes(weekService.getAvaiableMinutes(weekDetails));
+        setAvailableHours(weekService.getAvailableHours(weekDetails));
 
         // if (existingGoal) {
 
@@ -108,6 +116,11 @@ export default function GoalModal(weekDetails: any): any {
         );
     }
 
+    if (!weekDetails) {
+        return(
+            <Spinner animation="grow" />
+        )
+    }
 
     return (
         <>
