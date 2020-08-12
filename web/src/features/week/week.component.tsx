@@ -197,6 +197,9 @@ export default function WeekComponent( props: any ) {
     function getTaskComponents(tasks: any[]) {
 
         let taskItems = [];
+        if (!tasks) {
+            return <></>;
+        }
 
         for (let task of tasks) {
             taskItems.push(getTaskComponent(task));

@@ -31,7 +31,8 @@ export class CategorizedTasks extends Model {
     
     @property({
         type: 'array',
-        itemType: 'any'
+        itemType: 'any',
+        default: []
       })
     tasks: Task[];
 

@@ -136,19 +136,68 @@ class WeekService {
 
     }
 
-    public createGoal(weekDetails: any, goal: any) {
+    public addGoal(weekDetails: any, goal: any) {
 
         // 1. check hours
         if( !this.hasEnoughTimeForGoal(weekDetails, goal) ) {
-            throw new Error(`You have ${this.getAvailableHours(weekDetails)}, but your attempted to allocate ${goal.minutes}`)
+            throw new Error(`You have ${this.getAvailableHours(weekDetails)}, but your attempted to allocate ${Utility.hoursFromMinutes( goal.totalMinutes )}`)
         }
 
-        actionManager.dispatch(WeekActionType.GOAL_ADDED);
+
+
+        const existingGoals = weekDetails.categorizedTasks;
+        
+        const updatedGoals = [...existingGoals, goal];
+
+        const clonedWeek = {...weekDetails, categorizedTasks: updatedGoals};
+
+        this.update(clonedWeek);
+
+    }
+
+    public update(weekDetails: any) {
+        
+        const weekId = weekDetails.id;
+
+        axios.patch(
+
+            this.serviceUrl + '/' + weekId, 
+            weekDetails
+
+        ).then( (result) => {
+
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("got week");
+                let data = result.data;
+                console.log(data);
+                // actionManager.dispatch(WeekActionType.WEEK_FETCHED, data, false);
+                actionManager.dispatch(WeekActionType.GOAL_ADDED_TO_WEEK, data);
+
+
+            } else {
+
+                actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+                toastService.error(errors);
+
+            }
+
+        }).catch((error) => {
+            
+            const errors = ResponseProcessor.getHTTPError(error);
+            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+            toastService.error(errors);
+        });
+
+
     }
 
     public hasEnoughTimeForGoal(weekDetails: any, goal: any) {
 
-        if (this.getAvaiableMinutes(weekDetails) >= goal.plannedMinutes) {
+        if (this.getAvaiableMinutes(weekDetails) >= goal.totalMinutes) {
             return true;
         }
 
@@ -163,9 +212,9 @@ class WeekService {
 
     public getAvaiableMinutes(weekDetails: any) {
 
-        console.log("type of total minutes" + typeof weekDetails.totalMinutes);
+        // console.log("type of total minutes" + typeof weekDetails.totalMinutes);
         const availableMinutes =  weekDetails.totalMinutes - weekDetails.plannedMinutes;
-        console.log("available minutes " + availableMinutes);
+        // console.log("available minutes " + availableMinutes);
         return availableMinutes;
     }
 

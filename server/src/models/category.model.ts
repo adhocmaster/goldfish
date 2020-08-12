@@ -14,15 +14,14 @@ export class Category extends Entity {
 
   @property({
     type: 'string',
-    required: true
   })
-  userId: string;
+  userId?: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  title: string;
+  title?: string;
 
   @property({
     type: 'string',
@@ -31,7 +30,7 @@ export class Category extends Entity {
   color?: string;
 
   @hasMany(() => Item)
-  items: Item[];
+  items?: Item[];
 
   constructor(data?: Partial<Category>) {
     super(data);

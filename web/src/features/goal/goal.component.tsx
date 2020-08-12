@@ -23,22 +23,23 @@ import weekService from 'features/week/week.service';
 import GoalService from './goal.service';
 import goalService from './goal.service';
 import Utility from 'framework/Utility';
+import toastService from 'app/toast.service';
 
 export default function GoalModal(props: any): any {
 
 
-    const showGoalModal = useSelector( (state:RootState) => { return state.weekState.showGoalModal } )
+    const showGoalModal = useSelector( (state:RootState) => { return state.weekState.showGoalModal } );
+    // after a goal is created we need to add it to the week. This state helps with steps.
+    const isNewGoalCreated = useSelector( (state:RootState) => { return state.weekState.isNewGoalCreated } ); 
 
-
-    const goalIdFromStore = useSelector((state: RootState) => { return state.goalState.goalId });
+    const goalId = useSelector((state: RootState) => { return state.goalState.id });
     const titleFromStore = useSelector((state: RootState) => { return state.goalState.title });
-    const plannedMinutesFromStore = useSelector((state: RootState) => { return state.goalState.plannedMinutes });
+    const totalMinutesFromStore = useSelector((state: RootState) => { return state.goalState.totalMinutes });
 
     const [weekDetails, setWeekDetails] = useState({});
-    const [goalId, setGoalId] = useState<string>(goalIdFromStore);
     const [title, setTitle] = useState<string>(titleFromStore);
-    const [plannedMinutes, setPlannedMinutes] = useState<number>(plannedMinutesFromStore);
-    const [plannedHours, setPlannedHours] = useState<number>(0);
+    const [totalMinutes, setTotalMinutes] = useState<number>(totalMinutesFromStore);
+    const [totalHours, setTotalHours] = useState<number>(0);
     const [availableMinutes, setAvailableMinutes] = useState<number>(0);
     const [availableHours, setAvailableHours] = useState<number>(0);
     
@@ -58,7 +59,13 @@ export default function GoalModal(props: any): any {
         //     setPlannedMinutes(existingGoal.plannedMinutes);
     
         // }
-        setPlannedHours(Utility.hoursFromMinutes(plannedMinutes));
+        setTotalHours(Utility.hoursFromMinutes(totalMinutes));
+
+        if (isNewGoalCreated) {
+            
+            submit();
+
+        }
     
     });
 
@@ -74,6 +81,7 @@ export default function GoalModal(props: any): any {
         // actionManager.dispatch(WeekActionType.SUBMIT_GOAL_FORM);
 
         // new goal or old goal?
+        console.log("goalId: " + goalId);
         if (!goalId) {
             // need to create the goal first.
             goalService.create({
@@ -85,11 +93,17 @@ export default function GoalModal(props: any): any {
 
                 categoryId: goalId,
                 title: title,
-                plannedMinutes: plannedMinutes
+                totalMinutes: totalMinutes
     
             };
+            try {
 
-            weekService.createGoal(weekDetails, {})
+                weekService.addGoal(weekDetails, goal);
+
+            } catch(e) {
+                toastService.error(e.message);
+            }
+
         }
 
 
@@ -129,7 +143,7 @@ export default function GoalModal(props: any): any {
                     <Container>
                         
                         <div className='text-info' style={{marginBottom: '0.5em', fontWeight:"bold", fontSize: '1.1rem'}}>
-                            Type title or select from favorites.
+                            Type title or select from favorites. {goalId}
                         </div>
                         <Row className='justify-content-around'>
                             <Card className='week-category-card' style={{width:'18rem'}}>
@@ -150,12 +164,12 @@ export default function GoalModal(props: any): any {
                                     
                                     <Form.Group>
                                         
-                                        <Form.Label>Allocate: ({plannedHours} of {availableHours} h)</Form.Label>
+                                        <Form.Label>Allocate: ({totalHours} of {availableHours} h)</Form.Label>
                                         <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
-                                            value={plannedMinutes}
+                                            value={totalMinutes}
                                             onChange={e => {
-                                                setPlannedMinutes(parseInt(e.target.value));
-                                                setPlannedHours(Utility.hoursFromMinutes(plannedMinutes));
+                                                setTotalMinutes(parseInt(e.target.value));
+                                                setTotalHours(Utility.hoursFromMinutes(totalMinutes));
                                             }}/>
                                     </Form.Group>
                                     

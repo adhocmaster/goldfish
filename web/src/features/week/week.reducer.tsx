@@ -26,13 +26,13 @@ export default function WeekReducer(state: any, action: any) {
         state = {...state, showGoalModal: false};
 
     }
-    if(action.type === WeekActionType.GOAL_ADDED) {
+    if(action.type === WeekActionType.GOAL_ADDED_TO_WEEK) {
 
-        console.log('GOAL_ADDED')
+        console.log('GOAL_ADDED_TO_WEEK')
         //  TODO update the category lists.
 
         //  then hide the goal modal
-        state = {...state, showGoalModal: false};
+        state = {...state, ...action.payload, showGoalModal: false};
 
     }
 

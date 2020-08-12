@@ -10,7 +10,7 @@ class Utility {
     }
 
     public getListRep(a: Array<any>) {
-        if (a && typeof a == "object") {
+        if (a && Array.isArray(a)) {
             return (
                 <>
                     {

@@ -22,6 +22,7 @@ class GoalService {
 
                 console.log("got goal");
                 let data = result.data;
+                // console.log(data);
                 actionManager.dispatch(WeekActionType.NEW_GOAL_ADDED, data, false);
 
 

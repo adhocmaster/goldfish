@@ -157,8 +157,9 @@ export class WeekController {
 
   @patch('/weeks/{id}', {
     responses: {
-      '204': {
+      '200': {
         description: 'Week PATCH success',
+        content: "hey"
       },
     },
   })
@@ -174,10 +175,11 @@ export class WeekController {
       },
     })
     week: Week,
-  ): Promise<void> {
+  ): Promise<any> {
 
     if (await this.weekRepository.canEdit(id, currentUserProfile[securityId])) {
       await this.weekRepository.updateById(id, week)
+      return this.weekRepository.findById(id);
     } else {
       throw new HttpErrors.Unauthorized("Week not accessible");
     }
@@ -186,7 +188,7 @@ export class WeekController {
 
   @put('/weeks/{id}', {
     responses: {
-      '204': {
+      '200': {
         description: 'Week PUT success',
       },
     },
