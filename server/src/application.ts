@@ -23,6 +23,8 @@ import {GoldfishDataSource} from './datasources';
 import CustomUserRepository from './repositories/user.repository';
 import { Bindings } from './bindings';
 import { accountActionSequence } from './user/action.sequence';
+import { Week } from './models';
+import { WeekService } from './services/week.service';
 
 export {ApplicationConfig};
 
@@ -68,6 +70,7 @@ export class ServerApplication extends BootMixin(
     this.bind(UserServiceBindings.USER_REPOSITORY).toClass(CustomUserRepository);
     this.bind(UserServiceBindings.USER_CREDENTIALS_REPOSITORY).toClass(UserCredentialsRepository);
     this.bind(Bindings.ACCOUNT_ACTION_SEQUENCE).to(accountActionSequence);
+    this.bind(Bindings.WEEK_SERVICE).toClass(WeekService);
 
   }
 }

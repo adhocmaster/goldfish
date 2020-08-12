@@ -10,6 +10,18 @@ export class CategorizedTasks extends Model {
         required: true
       })
     categoryId: string;
+    
+    @property({
+      type: 'date',
+      default: () => new Date(),
+    })
+    createdAt?: Date;
+  
+    @property({
+      type: 'date',
+      default: () => new Date(),
+    })
+    modifiedAt?: Date;
 
     @property({
         type: 'number',

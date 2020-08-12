@@ -25,12 +25,16 @@ import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import { inject } from '@loopback/core';
 import { UserServiceBindings } from '@loopback/authentication-jwt';
 import { CustomUserService } from '../services/user.service';
+import { Bindings } from '../bindings';
+import { WeekService } from '../services/week.service';
 
 @authenticate('jwt')
 export class WeekController {
   constructor(
     @repository(WeekRepository)
     public weekRepository : WeekRepository,
+    @inject(Bindings.WEEK_SERVICE)
+    public weekService : WeekService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService : CustomUserService
   ) {}
@@ -159,7 +163,11 @@ export class WeekController {
     responses: {
       '200': {
         description: 'Week PATCH success',
-        content: "hey"
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Week, {includeRelations: true}),
+          },
+        },
       },
     },
   })
@@ -175,14 +183,9 @@ export class WeekController {
       },
     })
     week: Week,
-  ): Promise<any> {
+  ): Promise<Week> {
 
-    if (await this.weekRepository.canEdit(id, currentUserProfile[securityId])) {
-      await this.weekRepository.updateById(id, week)
-      return this.weekRepository.findById(id);
-    } else {
-      throw new HttpErrors.Unauthorized("Week not accessible");
-    }
+    return this.weekService.updateById(currentUserProfile, id, week);
 
   }
 
@@ -190,6 +193,11 @@ export class WeekController {
     responses: {
       '200': {
         description: 'Week PUT success',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Week, {includeRelations: true}),
+          },
+        },
       },
     },
   })
@@ -198,10 +206,13 @@ export class WeekController {
     currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
     @requestBody() week: Week,
-  ): Promise<void> {
+  ): Promise<Week> {
     
+    week.modifiedAt = new Date();
+
     if (await this.weekRepository.canEdit(id, currentUserProfile[securityId])) {
       await this.weekRepository.replaceById(id, week);
+      return this.weekRepository.findById(id);
     } else {
       throw new HttpErrors.Unauthorized("Week not accessible");
     }

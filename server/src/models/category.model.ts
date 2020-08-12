@@ -28,6 +28,12 @@ export class Category extends Entity {
     default: '#aaaaaa',
   })
   color?: string;
+  
+  @property({
+    type: 'date',
+    default: () => new Date(),
+  })
+  createdAt?: Date;
 
   @hasMany(() => Item)
   items?: Item[];

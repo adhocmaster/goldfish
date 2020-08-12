@@ -6,3 +6,4 @@ export * from './item.controller';
 export * from './week.controller';
 export * from './category-item.controller';
 export * from './item-category.controller';
+export * from './categorizedTask.controller';

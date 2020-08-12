@@ -15,6 +15,18 @@ export class Week extends Entity {
     type: 'string',
   })
   userId?: string;
+  
+  @property({
+    type: 'date',
+    default: () => new Date(),
+  })
+  createdAt?: Date;
+
+  @property({
+    type: 'date',
+    default: () => new Date(),
+  })
+  modifiedAt?: Date;
 
   @property({
     type: 'string',
