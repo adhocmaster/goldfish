@@ -19,17 +19,27 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import GoalModal from 'features/goal/goal.component';
+import TaskComponent from 'features/goal/task.component';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import weekService from './week.service';
 import toastService from 'app/toast.service';
+import deepEqual from 'deep-equal';
 
 
 export default function WeekComponent( props: any ) {
 
+    let count = 0;
+    console.log("enterred week component");
 
     const goalAdded = useSelector( (state:RootState) => { return state.weekState.goalAdded } );
-    const weekDetails = weekService.getFromStore();
+    console.log("goalAdded:" + goalAdded);
+    // const weekUpdatedAt = useSelector( (state:RootState) => { return state.weekState.weekDetails.weekUpdatedAt } );
+    const weekDetailsFromStore = weekService.getFromStore();
+    // console.log("weekDetailsFromStore:" + weekDetailsFromStore);
+
+    const[weekDetails, setWeekDetails] = useState<any>(null);
+    const[rerender, setRerender] = useState(false);
 
     function getMenubar(props: any) {
         return (
@@ -167,8 +177,8 @@ export default function WeekComponent( props: any ) {
 
     function getGoalModal(props: any): any {
 
-        console.log("creating goal modal. checking week detauls");
-        console.log(weekDetails);
+        // console.log("creating goal modal. checking week detauls");
+        // console.log(weekDetails);
         return (
             <>
                 {<GoalModal weekDetails={weekDetails} />}
@@ -214,24 +224,11 @@ export default function WeekComponent( props: any ) {
     }
 
     function getNewTaskForm(categoryId: string) {
-        return (
-            <>
-                <Form.Group>
-                    <Form.Control as="textarea" rows={1} placeholder='Type title of the task'> 
 
-                    </Form.Control>
-                    <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
-                        value={totalMinutes}
-                        onChange={e => {
-                            setTotalMinutes(parseInt(e.target.value));
-                            setTotalHours(Utility.hoursFromMinutes(totalMinutes));
-                    }}/>
-                </Form.Group>
-                
-                <Button variant='secondary' size='sm' onClick={(e: any) => { e.preventDefault(); addTask(categoryId); }}>
-                    + ADD
-                </Button>
-            </>
+        if(!weekDetails || !categoryId) return;
+        // console.log(weekDetails);
+        return (
+            <TaskComponent weekDetails={weekDetails} goalId={categoryId} />
         );
     }
 
@@ -248,7 +245,7 @@ export default function WeekComponent( props: any ) {
                         
                     <Card.Body>
                         <div className='header'>
-                            <b>{categorizedTask.categoryId}</b>
+                            <b>{categorizedTask.title}</b>
                             <div className="float-right">
                                 4 of 22
                             </div>
@@ -272,7 +269,33 @@ export default function WeekComponent( props: any ) {
 
     useEffect(() => {
 
+        count = 1;
+        console.log("first render");
+        // if (!weekDetailsFromStore) {
+        // } 
         weekService.getById('5f311ccd8c32ed4bf89f9fc1', true);
+        setRerender(true);
+        // if (props.weekId) {
+        //     weekService.getById(props.weekId);
+        // } else if (props.startDate) {
+        //     weekService.getByStartDate(props.startDate);
+        // } else {
+        //     weekService.getClosestWeek();
+        // }
+
+    }, []);
+
+    useEffect(() => {
+
+        console.log("all render useEffect week component");
+        // console.log(weekDetails);
+        // console.log(weekDetailsFromStore);
+        // console.log("printed weekDetails and weekDetailsFromStore");
+        if (weekDetailsFromStore.id && !deepEqual(weekDetailsFromStore, weekDetails)) {
+            
+            console.log("calling setWeekDetails");
+            setWeekDetails(weekDetailsFromStore);
+        }
         // if (props.weekId) {
         //     weekService.getById(props.weekId);
         // } else if (props.startDate) {
@@ -282,6 +305,9 @@ export default function WeekComponent( props: any ) {
         // }
 
     });
+
+
+    console.log("after all useEffects");
     
     // console.log(weekDetails);
 
@@ -290,12 +316,17 @@ export default function WeekComponent( props: any ) {
             <Spinner animation="grow" />
         )
     }
+    // return(
+    //     <Spinner animation="grow" />
+    // )
+
+    console.log(weekDetails);
 
     return (
 
         <Container>
             {/* Week menu bar */}
-            { getMenubar(null) }
+            { getMenubar(weekDetails) }
             {/* Week cards */}
             <Row>
                 {/* Week Summary Card */}
@@ -304,26 +335,6 @@ export default function WeekComponent( props: any ) {
                 {/* Week Goal Cards */}
                 {getGoalCards()}
                     
-                <Card className='week-category-card'>
-                    
-                    <Card.Body>
-                        <div className='header'>
-                            <b>Guitar</b>
-                            <div className="float-right">
-                                4 of 22
-                            </div>
-                            <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
-                        </div>
-                        {
-                            getTaskComponent("some task")
-                        }
-                    </Card.Body>
-                    <Card.Footer>
-                        {
-                            getNewTaskForm("someid")
-                        }
-                    </Card.Footer>
-                </Card>
 
                 {/* New goal form */}
             </Row>

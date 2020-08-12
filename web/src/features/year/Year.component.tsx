@@ -104,6 +104,8 @@ export default class YearComponent extends ReduxUIComponent {
 
     // return JSX
     render(): any {
+
+        console.log("rendering year component");
         
         let date: Date = new Date();  
         // date.setDate(13);  

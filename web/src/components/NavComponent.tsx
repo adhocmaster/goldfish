@@ -14,6 +14,7 @@ import userService from 'features/user/user.service';
 function NavComponent() {
     const isLoggedIn = userService.isLoggedIn();
     const email = userService.getEmail();
+    console.log("Entered NavComponent");
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">

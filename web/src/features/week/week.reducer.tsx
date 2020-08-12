@@ -7,43 +7,49 @@ export default function WeekReducer(state: any, action: any) {
 
     if( state === undefined) {
         state = { 
-            id: null,
-            name: "Week 1",
-            dateStart: "2020-11-11",
-            days: 7
+            weekDetails: {
+
+                id: null,
+                name: "Week 1",
+                dateStart: "1000-11-11",
+                days: 7
+
+            }
         };
     }
 
-    if(action.type === WeekActionType.SHOW_GOAL_FORM) {
+    console.log(action.type);
 
-        console.log('SHOW_GOAL_FORM')
-        state = {...state, showGoalModal: true};
 
-    }
-
-    if(action.type === WeekActionType.HIDE_GOAL_FORM) {
-
-        state = {...state, showGoalModal: false};
-
-    }
-    if(action.type === WeekActionType.GOAL_ADDED_TO_WEEK) {
-
-        console.log('GOAL_ADDED_TO_WEEK')
-        //  TODO update the category lists.
-
-        //  then hide the goal modal
-        state = {...state, ...action.payload, showGoalModal: false};
-
-    }
-
+    let week:any = {};
     switch(action.type) {
 
         case WeekActionType.WEEK_FETCHED:
-            let week = action.payload;
+            week = action.payload;
+            // if( state.weekDetails ) {
+            //     week = {...state.weekDetails, ...week};
+            // }asd
+
             state = {...state, weekDetails: week}
             break;
         case WeekActionType.WEEK_ERROR:
             break;
+        case WeekActionType.GOAL_ADDED_TO_WEEK:
+            // console.log('GOAL_ADDED_TO_WEEK')
+            week = action.payload;
+            state = {...state, weekDetails: week, showGoalModal: false};
+            break;
+        case WeekActionType.SHOW_GOAL_FORM: 
+
+            // console.log('SHOW_GOAL_FORM')
+            state = {...state, showGoalModal: true};
+            break;
+        
+        case  WeekActionType.HIDE_GOAL_FORM:
+            state = {...state, showGoalModal: false};
+            break;
+        
+
 
     }
 

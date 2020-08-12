@@ -1,5 +1,3 @@
-import { Fragment } from "react";
-
 class ResponseProcessor {
 
     public getError(data: any) {

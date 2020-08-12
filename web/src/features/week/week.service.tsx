@@ -10,6 +10,7 @@ import { useSelector, shallowEqual } from 'react-redux';
 import deepEqual from 'deep-equal';
 import yearService from 'features/year/year.service';
 import Utility from 'framework/Utility';
+import goalService from 'features/goal/goal.service';
 
 class WeekService {
 
@@ -43,13 +44,13 @@ class WeekService {
 
     public getById(weekId: string, useCache = false) {
 
-        if (useCache && this.cache.get(weekId)) {
+        // if (useCache && this.cache.get(weekId)) {
             
-            const week = this.cache.get(weekId);
-            actionManager.dispatch(WeekActionType.WEEK_FETCHED, week, false);
-            return;
+        //     const week = this.cache.get(weekId);
+        //     actionManager.dispatch(WeekActionType.WEEK_FETCHED, week);
+        //     return;
 
-        }
+        // }
 
         axios.get(
             this.serviceUrl + '/' + weekId
@@ -136,6 +137,26 @@ class WeekService {
 
     }
 
+    public addTask(weekDetails: any, goalId: string, task: any) {
+
+        console.log(`adding task ${task} to ${goalId}`);
+
+        let goal = this.getGoal(weekDetails, goalId);
+        // 1. check hours
+        if( !goalService.hasEnoughTimeFoTask(goal, task) ) {
+            throw new Error(`You have ${goalService.getAvailableHours(goal)}, but your attempted to allocate ${Utility.hoursFromMinutes( task.totalMinutes )}`)
+        }
+
+        let updatedTasks = [task];
+        if (goal.tasks) {
+            updatedTasks = [...goal.tasks, task];
+        }
+        const clonedGoal = {...goal, tasks: updatedTasks};
+
+        this.addGoal(weekDetails, clonedGoal);
+
+    }
+
     public addGoal(weekDetails: any, goal: any) {
 
         // 1. check hours
@@ -147,11 +168,25 @@ class WeekService {
 
         const existingGoals = weekDetails.categorizedTasks;
         
-        const updatedGoals = [...existingGoals, goal];
+        const updatedGoals = [...this.getGoalsWithoutId(existingGoals, goal.categoryId), goal];
 
         const clonedWeek = {...weekDetails, categorizedTasks: updatedGoals};
 
         this.update(clonedWeek);
+
+    }
+
+    public getGoalsWithoutId(goals: any, goalId: string) {
+
+        let newArr = [];
+
+        for (let goal of goals) {
+            if (goal.categoryId != goalId) {
+                newArr.push(goal);
+            }
+        }
+
+        return newArr;
 
     }
 
@@ -171,7 +206,7 @@ class WeekService {
 
             if ( errors.length == 0 ) {
 
-                console.log("got week");
+                console.log("update: got week");
                 let data = result.data;
                 console.log(data);
                 // actionManager.dispatch(WeekActionType.WEEK_FETCHED, data, false);
@@ -216,6 +251,18 @@ class WeekService {
         const availableMinutes =  weekDetails.totalMinutes - weekDetails.plannedMinutes;
         // console.log("available minutes " + availableMinutes);
         return availableMinutes;
+    }
+
+    public getGoal(weekDetails: any, goalId: string) {
+
+        // console.log(typeof weekDetails.categorizedTasks);
+        for (let catTask of weekDetails.categorizedTasks) {
+            if (goalId === catTask.categoryId) {
+                return catTask;
+            }
+        }
+
+        return undefined;
     }
 
 }

@@ -24,7 +24,7 @@ export class Task extends Model {
       type: 'number',
       default: 0
     })
-    plannedMinutes?: number;
+    totalMinutes?: number;
 
     @property({
         type: 'number',

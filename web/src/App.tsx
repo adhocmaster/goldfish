@@ -26,7 +26,7 @@ function App() {
           <Route path="/login">
             <LoginComponent />
           </Route>
-          {
+          {/* {
               userService.isLoggedIn() &&
               <>
                 <Route path="/week">
@@ -38,11 +38,18 @@ function App() {
                 <Route path="/logout">
                   <LogoutComponent />
                 </Route>
-                <Route path="/year">
-                  <YearComponent />
-                </Route>
+
               </>
-          }
+          } */}
+          <Route path="/week">
+            <WeekComponent />
+          </Route>
+          <Route path="/settings">
+            <SettingsComponent />
+          </Route>
+          <Route path="/logout">
+            <LogoutComponent />
+          </Route>
           <Route path="/">
             <YearComponent />
           </Route>

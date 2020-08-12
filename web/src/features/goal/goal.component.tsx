@@ -24,6 +24,7 @@ import GoalService from './goal.service';
 import goalService from './goal.service';
 import Utility from 'framework/Utility';
 import toastService from 'app/toast.service';
+import deepEqual from 'deep-equal';
 
 export default function GoalModal(props: any): any {
 
@@ -46,8 +47,12 @@ export default function GoalModal(props: any): any {
 
     useEffect(() => {
 
-        setWeekDetails(props.weekDetails);
-        console.log(weekDetails);
+        console.log("initializing goal modal");
+        if ( !deepEqual(props.weekDetails, weekDetails)) {
+            
+            console.log("Calling setWeekDetails In Goal Modal");
+            setWeekDetails(props.weekDetails);
+        }
 
         setAvailableMinutes(weekService.getAvaiableMinutes(weekDetails));
         setAvailableHours(weekService.getAvailableHours(weekDetails));

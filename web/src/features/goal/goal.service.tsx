@@ -4,6 +4,7 @@ import ResponseProcessor from 'framework/ResponseProcessor';
 import { WeekActionType } from 'features/week/week.actions';
 import actionManager from 'framework/ActionManager';
 import toastService from 'app/toast.service';
+import Utility from 'framework/Utility';
 
 class GoalService {
 
@@ -45,11 +46,27 @@ class GoalService {
     public getAvaiableMinutes(goal: any) {
 
         // console.log("type of total minutes" + typeof weekDetails.totalMinutes);
-        const availableMinutes =  goal.totalMinutes - goal.plannedMinutes;
+        let availableMinutes = goal.totalMinutes;
+        if (goal.plannedMinutes)
+            availableMinutes =  goal.totalMinutes - goal.plannedMinutes;
         // console.log("available minutes " + availableMinutes);
         return availableMinutes;
     }
-    
+
+    public getAvailableHours(goal: any) {
+        return Utility.hoursFromMinutes(this.getAvaiableMinutes(goal));
+    }
+
+    public hasEnoughTimeFoTask(goal: any, task: any) {
+
+        
+        if (this.getAvaiableMinutes(goal) >= task.totalMinutes) {
+            return true;
+        }
+        return false;
+
+    }
+
 }
 
 export default new GoalService();

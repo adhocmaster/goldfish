@@ -12,18 +12,26 @@ import userService from 'features/user/user.service';
 
 
 
-store.subscribe(() => console.log("Index subscribe listens to everyone."));
+// store.subscribe(() => console.log("Index subscribe listens to everyone."));
 
+console.log("Starting App");
 
 actionManager.dispatch(ActionType.APP_STARTING);
 
 
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <Provider store={store}>
+//       <App />
+//     </Provider>
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );
+
 ReactDOM.render(
-  <React.StrictMode>
     <Provider store={store}>
       <App />
-    </Provider>
-  </React.StrictMode>,
+    </Provider>,
   document.getElementById('root')
 );
 

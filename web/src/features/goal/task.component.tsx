@@ -20,65 +20,83 @@ import { useSelector } from 'react-redux';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import weekService from 'features/week/week.service';
-import GoalService from './goal.service';
 import goalService from './goal.service';
 import Utility from 'framework/Utility';
 import toastService from 'app/toast.service';
 
 
-export default function GoalModal(props: any): any {
+export default function TaskComponent(props: any): any {
 
     
-    const goalId = useSelector((state: RootState) => { return state.taskState.id });
+    const taskNo = useSelector((state: RootState) => { return state.taskState.taskNo });
     const titleFromStore = useSelector((state: RootState) => { return state.taskState.title });
     const totalMinutesFromStore = useSelector((state: RootState) => { return state.taskState.totalMinutes });
 
-    const [weekDetails, setWeekDetails] = useState({});
+    // const [weekDetails, setWeekDetails] = useState({});
+    // const [goalId, setGoalId] = useState("");
     const [title, setTitle] = useState<string>(titleFromStore);
     const [totalMinutes, setTotalMinutes] = useState<number>(totalMinutesFromStore);
     const [totalHours, setTotalHours] = useState<number>(0);
+    const [availableMinutes, setAvailableMinutes] = useState<number>(0);
+    const [availableHours, setAvailableHours] = useState<number>(0);
+
+    const weekDetails = props.weekDetails;
+    const goalId = props.goalId;
+    const goal = weekService.getGoal(props.weekDetails, props.goalId);
 
     
     useEffect(() => {
 
-        setWeekDetails(props.weekDetails);
-        console.log(weekDetails);
+        // console.log(props);
+        // setWeekDetails(props.weekDetails);
+        // setGoalId(props.goalId);
+        // console.log(props.weekDetails);
+        // const goal = weekService.getGoal(props.weekDetails, props.goalId);
+        // console.log(goal);
 
-        setAvailableMinutes(weekService.getAvaiableMinutes(weekDetails));
-        setAvailableHours(weekService.getAvailableHours(weekDetails));
+        setAvailableMinutes(goalService.getAvaiableMinutes(goal));
+        setAvailableHours(Utility.hoursFromMinutes(availableMinutes));
 
-        // if (existingGoal) {
-
-        //     setGoalId(existingGoal.categoryId);
-        //     setTitle(existingGoal.title);
-        //     setPlannedMinutes(existingGoal.plannedMinutes);
-    
-        // }
-        setTotalHours(Utility.hoursFromMinutes(totalMinutes));
-
-        if (isNewGoalCreated) {
-            
-            submit();
-
-        }
-    
     });
 
+    function addTask() {
+
+        console.log("adding task to " + goalId);
+        let task = {
+            title: title,
+            totalMinutes: totalMinutes
+        }
+        weekService.addTask(weekDetails, goalId, task);
+
+    }
+
+
+    if (!weekDetails) {
+        return(
+            <Spinner animation="grow" />
+        )
+    }
     return (
         <>
             <Form.Group>
-                <Form.Control as="textarea" rows={1} placeholder='Type title of the task'> 
-
-                </Form.Control>
+                <Form.Control as="textarea" rows={1} placeholder='Type title of the task'                                 
+                    value={title}
+                    onChange={e => {
+                        setTitle(e.target.value);
+                    }}/>
+            </Form.Group>
+            <Form.Group>
+                
+                <Form.Label>Allocate: ({totalHours} of {availableHours} h)</Form.Label>
                 <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
                     value={totalMinutes}
                     onChange={e => {
                         setTotalMinutes(parseInt(e.target.value));
                         setTotalHours(Utility.hoursFromMinutes(totalMinutes));
-                }}/>
+                    }}/>
             </Form.Group>
             
-            <Button variant='secondary' size='sm' onClick={(e: any) => { e.preventDefault(); addTask(categoryId); }}>
+            <Button variant='secondary' size='sm' onClick={(e: any) => { e.preventDefault(); addTask(); }}>
                 + ADD
             </Button>
         </>

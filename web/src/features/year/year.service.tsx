@@ -21,7 +21,7 @@ class YearService {
 
     public getWeekDates(year: number) {
 
-        console.log("getting weeks for " + year);
+        // console.log("getting weeks for " + year);
         let startDate: Date = new Date(year + "-01-03");  
         startDate.setDate(1);
         startDate.setHours(0, 0, 0);
