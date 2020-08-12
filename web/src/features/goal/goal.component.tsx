@@ -52,10 +52,10 @@ export default function GoalModal(props: any): any {
             
             console.log("Calling setWeekDetails In Goal Modal");
             setWeekDetails(props.weekDetails);
+            setAvailableMinutes(weekService.getAvaiableMinutes(props.weekDetails));
+            setAvailableHours(weekService.getAvailableHours(props.weekDetails));
         }
 
-        setAvailableMinutes(weekService.getAvaiableMinutes(weekDetails));
-        setAvailableHours(weekService.getAvailableHours(weekDetails));
 
         // if (existingGoal) {
 

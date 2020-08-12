@@ -23,6 +23,7 @@ import weekService from 'features/week/week.service';
 import goalService from './goal.service';
 import Utility from 'framework/Utility';
 import toastService from 'app/toast.service';
+import deepEqual from 'deep-equal';
 
 
 export default function TaskComponent(props: any): any {
@@ -34,8 +35,8 @@ export default function TaskComponent(props: any): any {
 
     // const [weekDetails, setWeekDetails] = useState({});
     // const [goalId, setGoalId] = useState("");
-    const [title, setTitle] = useState<string>(titleFromStore);
-    const [totalMinutes, setTotalMinutes] = useState<number>(totalMinutesFromStore);
+    const [title, setTitle] = useState<string>("");
+    const [totalMinutes, setTotalMinutes] = useState<number>(0);
     const [totalHours, setTotalHours] = useState<number>(0);
     const [availableMinutes, setAvailableMinutes] = useState<number>(0);
     const [availableHours, setAvailableHours] = useState<number>(0);
@@ -53,9 +54,12 @@ export default function TaskComponent(props: any): any {
         // console.log(props.weekDetails);
         // const goal = weekService.getGoal(props.weekDetails, props.goalId);
         // console.log(goal);
+        const goalAvailableMinutes = goalService.getAvaiableMinutes(goal);
+        if (!deepEqual(availableMinutes, goalAvailableMinutes)) {
 
-        setAvailableMinutes(goalService.getAvaiableMinutes(goal));
-        setAvailableHours(Utility.hoursFromMinutes(availableMinutes));
+            setAvailableMinutes(goalService.getAvaiableMinutes(goal));
+            setAvailableHours(Utility.hoursFromMinutes(availableMinutes));
+        }
 
     });
 
