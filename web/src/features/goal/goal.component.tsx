@@ -264,7 +264,7 @@ export function GoalComponent(props: any): any {
                         <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
                     </div>
                     {
-                        getTaskComponents(goal.tasks)
+                        // getTaskComponents(goal.tasks)
                     }
                 </Card.Body>
                 <Card.Footer>
