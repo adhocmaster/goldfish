@@ -25,8 +25,9 @@ class Utility {
         }
     }
 
-    public hoursFromMinutes( minutes: number ) {
+    public hoursFromMinutes( minutes: number | undefined ) {
         
+        if (!minutes) { return 0 }
         return Math.round((minutes / 60 + Number.EPSILON) * 100) / 100;
 
     }

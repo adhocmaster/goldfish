@@ -43,6 +43,11 @@ code {
   color: black;
 }
 
+.week-loader {
+  margin-top: 30%;
+  color: white;
+}
+
 .week-category-card {
   width: 15rem;
   height: fit-content;

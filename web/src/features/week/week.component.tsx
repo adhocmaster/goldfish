@@ -25,6 +25,7 @@ import { WeekActionType } from 'features/week/week.actions';
 import weekService from './week.service';
 import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
+import Utility from 'framework/Utility';
 
 
 export default function WeekComponent( props: any ) {
@@ -34,11 +35,12 @@ export default function WeekComponent( props: any ) {
     const goalAdded = useSelector( (state:RootState) => { return state.weekState.goalAdded } );
     console.log("goalAdded:" + goalAdded);
     // const weekUpdatedAt = useSelector( (state:RootState) => { return state.weekState.weekDetails.weekUpdatedAt } );
-    const weekDetailsFromStore = weekService.getFromStore();
-    // console.log("weekDetailsFromStore:" + weekDetailsFromStore);
+    // const weekDetailsFromStore = weekService.getFromStore();
+    const weekDetails = weekService.getFromStore();
+    // console.log("WeekComponent: weekDetailsFromStore:");
+    // console.log(weekDetails);
 
-    const[weekDetails, setWeekDetails] = useState<any>(null);
-    const[rerender, setRerender] = useState(false);
+    // const[weekDetails, setWeekDetails] = useState<any>(null);
 
     function getMenubar(props: any) {
         return (
@@ -91,7 +93,7 @@ export default function WeekComponent( props: any ) {
     }
 
     function getSummaryCard(props: any) {
-
+        const progress = Utility.hoursFromMinutes(weekDetails.completedMinutes / weekDetails.totalMinutes);
         return (
 
             <Card className='week-category-card'>
@@ -99,7 +101,10 @@ export default function WeekComponent( props: any ) {
                 <Card.Body>
                     <div className='header'>
                         <b>Summary</b>
-                        <ProgressBar now={15} label={`${15}%`} variant="success" />
+                        <ProgressBar 
+                            min={5}
+                            now={progress} 
+                            label={`${ progress }%`} variant="success" />
                         <br></br>
                         <div className='form-row'>
                             <div className='col'>
@@ -117,7 +122,7 @@ export default function WeekComponent( props: any ) {
                                 Schedule type
                             </div>
                             <div className='col'>
-                            : Week day
+                            : {weekDetails.schedule}
                             </div>
                         </div>
                         <div className='form-row'>
@@ -125,7 +130,7 @@ export default function WeekComponent( props: any ) {
                                 Time in week
                             </div>
                             <div className='col'>
-                            : 60 h
+                                : { Utility.hoursFromMinutes(weekDetails.totalMinutes) } h
                             </div>
                         </div>
                         <div className='form-row'>
@@ -133,7 +138,7 @@ export default function WeekComponent( props: any ) {
                                 Available
                             </div>
                             <div className='col'>
-                            : 15 h
+                                : { Utility.hoursFromMinutes(weekDetails.totalMinutes -  weekDetails.plannedMinutes) } h
                             </div>
                         </div>
                         <div className='form-row'>
@@ -141,7 +146,7 @@ export default function WeekComponent( props: any ) {
                                 Planned
                             </div>
                             <div className='col'>
-                            : 40 h
+                                : { Utility.hoursFromMinutes(weekDetails.plannedMinutes) } h
                             </div>
                         </div>
                         <div className='form-row'>
@@ -149,7 +154,7 @@ export default function WeekComponent( props: any ) {
                                 Completed
                             </div>
                             <div className='col'>
-                                : 10.5 h
+                                : { Utility.hoursFromMinutes(weekDetails.completedMinutes) } h
                             </div>
                         </div>
                         <div className='form-row'>
@@ -157,7 +162,7 @@ export default function WeekComponent( props: any ) {
                                 Due
                             </div>
                             <div className='col text-danger'>
-                                : 29.5 h
+                                : { Utility.hoursFromMinutes(weekDetails.totalMinutes - weekDetails.completedMinutes) } h
                             </div>
                         </div>
                         <div className='form-row'>
@@ -165,7 +170,7 @@ export default function WeekComponent( props: any ) {
                                 Progress
                             </div>
                             <div className='col'>
-                                : 15%
+                                : { Utility.hoursFromMinutes(weekDetails.completedMinutes / weekDetails.totalMinutes) } h
                             </div>
                         </div>
                     </div>
@@ -202,7 +207,6 @@ export default function WeekComponent( props: any ) {
 
         console.log("WeekComponent: one time useEffect!");
         weekService.getById('5f311ccd8c32ed4bf89f9fc1', true);
-        setRerender(true);
 
     }, []);
 
@@ -213,11 +217,11 @@ export default function WeekComponent( props: any ) {
         // console.log(weekDetails);
         // console.log(weekDetailsFromStore);
         // console.log("printed weekDetails and weekDetailsFromStore");
-        if (weekDetailsFromStore.id && !deepEqual(weekDetailsFromStore, weekDetails)) {
+        // if (weekDetailsFromStore.id && !deepEqual(weekDetailsFromStore, weekDetails)) {
             
-            console.log("calling setWeekDetails");
-            setWeekDetails(weekDetailsFromStore);
-        }
+        //     console.log("calling setWeekDetails");
+        //     setWeekDetails(weekDetailsFromStore);
+        // }
 
     });
 
@@ -227,7 +231,11 @@ export default function WeekComponent( props: any ) {
 
     if (!weekDetails || !weekDetails.id) {
         return(
-            <Spinner animation="grow" />
+            <div className="d-flex flex-column justify-content-center align-items-center week-loader">
+                <div>. . . Loading your life . . .</div>
+                <br/>
+                <Spinner animation="grow" variant="warning" />
+            </div>
         )
     }
 

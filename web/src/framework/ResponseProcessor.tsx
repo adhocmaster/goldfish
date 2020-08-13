@@ -49,13 +49,18 @@ class ResponseProcessor {
             * is an instance of XMLHttpRequest in the browser and an instance
             * of http.ClientRequest in Node.js
             */
+            console.log(error);
+            console.log(error.config);
             console.log(error.request);
+            return["Couldn't connect to server. Check your connection or the server may be down."];
+            // return [];
+
         } else {
             // Something happened in setting up the request and triggered an Error
+            console.log(error);
             console.log('Error', error.message);
+            return[error.message];
         }
-        console.log(error.config);
-        console.log(error);
 
         return defaultErrors;
         

@@ -251,7 +251,7 @@ export function GoalComponent(props: any): any {
     let goal: any;
     for (goal of Object.values(goalStatesFromStore)) {
 
-        
+        const progress = Utility.hoursFromMinutes(goal.completedMinutes / goal.totalMinutes);
         cards.push(
             <Card className='week-category-card'>
                     
@@ -259,9 +259,9 @@ export function GoalComponent(props: any): any {
                     <div className='header'>
                         <b>{goal.title}</b>
                         <div className="float-right">
-                            4 of 22
+                        {Utility.hoursFromMinutes(goal.plannedMinutes)} of {Utility.hoursFromMinutes(goal.totalMinutes)}
                         </div>
-                        <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
+                        <ProgressBar now={progress} label={`${progress}%`} variant="info" />
                     </div>
                     {
                         getTaskComponents(goal.tasks)
