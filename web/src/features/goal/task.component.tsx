@@ -75,12 +75,6 @@ export default function TaskComponent(props: any): any {
 
     }
 
-
-    if (!weekDetails) {
-        return(
-            <Spinner animation="grow" />
-        )
-    }
     return (
         <>
             <Form.Group>

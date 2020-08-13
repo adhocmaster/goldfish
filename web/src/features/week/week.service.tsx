@@ -154,7 +154,7 @@ class WeekService {
         }
         const clonedGoal = {...goal, tasks: updatedTasks};
 
-        this.updateGoalOfWeek(weekDetails, clonedGoal);
+        this.updateGoalOfWeek(weekDetails, clonedGoal, clonedGoal);
 
     }
 
@@ -228,7 +228,7 @@ class WeekService {
 
     }
 
-    public updateGoalOfWeek(weekDetails: any, goal: any) {
+    public updateGoalOfWeek(weekDetails: any, goal: any, oldGoal: any) {
 
         // 1. check already existing
 
@@ -237,8 +237,6 @@ class WeekService {
             throw new Error(`Goal doesn't exist.`);
 
         }
-
-        const oldGoal:any = useSelector<any>((state:RootState) => state.weekState.goalStates?.[goal.id]);
 
         let availableMinutes = weekDetails.totalMinutes - weekDetails.plannedMinutes + oldGoal.totalMinutes;
 

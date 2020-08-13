@@ -29,8 +29,7 @@ import deepEqual from 'deep-equal';
 
 export default function WeekComponent( props: any ) {
 
-    let count = 0;
-    console.log("enterred week component");
+    console.log("WeekComponent: enterred");
 
     const goalAdded = useSelector( (state:RootState) => { return state.weekState.goalAdded } );
     console.log("goalAdded:" + goalAdded);
@@ -191,80 +190,8 @@ export default function WeekComponent( props: any ) {
         actionManager.dispatch(WeekActionType.SHOW_GOAL_FORM);
 
     }
-    // function getTaskComponent(task: any) {
-    //     return (
-            
-    //         <Card className='task-card' id={`task-${task.taskNo}`}>
-    //             <Card.Body>
-    //                 <Badge className='float-right'>--</Badge>
-    //                 <div>{task.title}</div>
-    //             </Card.Body>
-    //         </Card>
-    //     );
-    // }
-
-
-    // function getTaskComponents(tasks: any[]) {
-
-    //     let taskItems = [];
-    //     if (!tasks) {
-    //         return <></>;
-    //     }
-
-    //     for (let task of tasks) {
-    //         taskItems.push(getTaskComponent(task));
-    //     }
-
-    //     return taskItems;
-
-    // }
-
-    // function addTask(categoryId: string) {
-    //     toastService.message(`Going to add tasks soon under category ${categoryId}`);
-    // }
-
-    // function getNewTaskForm(categoryId: string) {
-
-    //     if(!weekDetails || !categoryId) return;
-    //     // console.log(weekDetails);
-    //     return (
-    //         <TaskComponent weekDetails={weekDetails} goalId={categoryId} />
-    //     );
-    // }
 
     function getGoalCards() {
-
-        // if(!weekDetails) return;
-
-        // let cards = [];
-        // for (let categorizedTask of weekDetails.categorizedTasks) {
-
-            
-        //     cards.push(
-        //         <Card className='week-category-card'>
-                        
-        //             <Card.Body>
-        //                 <div className='header'>
-        //                     <b>{categorizedTask.title}</b>
-        //                     <div className="float-right">
-        //                         4 of 22
-        //                     </div>
-        //                     <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
-        //                 </div>
-        //                 {
-        //                     getTaskComponents(categorizedTask.tasks)
-        //                 }
-        //             </Card.Body>
-        //             <Card.Footer>
-        //                 {
-        //                     getNewTaskForm(categorizedTask.categoryId)
-        //                 }
-        //             </Card.Footer>
-        //         </Card>
-
-        //     )
-        // }
-        // return cards;
 
         return (
             <GoalComponent />
@@ -273,25 +200,16 @@ export default function WeekComponent( props: any ) {
 
     useEffect(() => {
 
-        count = 1;
-        console.log("first render");
-        // if (!weekDetailsFromStore) {
-        // } 
+        console.log("WeekComponent: one time useEffect!");
         weekService.getById('5f311ccd8c32ed4bf89f9fc1', true);
         setRerender(true);
-        // if (props.weekId) {
-        //     weekService.getById(props.weekId);
-        // } else if (props.startDate) {
-        //     weekService.getByStartDate(props.startDate);
-        // } else {
-        //     weekService.getClosestWeek();
-        // }
 
     }, []);
 
     useEffect(() => {
 
-        console.log("all render useEffect week component");
+        console.log("WeekComponent: all render useEffect");
+        
         // console.log(weekDetails);
         // console.log(weekDetailsFromStore);
         // console.log("printed weekDetails and weekDetailsFromStore");
@@ -300,31 +218,21 @@ export default function WeekComponent( props: any ) {
             console.log("calling setWeekDetails");
             setWeekDetails(weekDetailsFromStore);
         }
-        // if (props.weekId) {
-        //     weekService.getById(props.weekId);
-        // } else if (props.startDate) {
-        //     weekService.getByStartDate(props.startDate);
-        // } else {
-        //     weekService.getClosestWeek();
-        // }
 
     });
 
 
-    console.log("after all useEffects");
+    console.log("WeekComponent: after all useEffects");
     
-    // console.log(weekDetails);
 
-    if (!weekDetails) {
+    if (!weekDetails || !weekDetails.id) {
         return(
             <Spinner animation="grow" />
         )
     }
-    // return(
-    //     <Spinner animation="grow" />
-    // )
 
-    console.log(weekDetails);
+    // console.log(weekDetails);
+    console.log("WeekComponent: rendering");
 
     return (
 

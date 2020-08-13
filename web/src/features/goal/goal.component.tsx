@@ -226,29 +226,30 @@ export default function GoalModal(props: any): any {
 
 export function GoalComponent(props: any): any {
 
-    console.log("enterred GoalComponent");
+    console.log("GoalComponent: enterred");
     const goalStatesFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.goalStates}, deepEqual);
+    const weekDetailsFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.weekDetails}, deepEqual);
     const weekIdFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.weekId }, shallowEqual);
     const [goals, setGoals] = useState<any>({});
     const [weekId, setWeekId] = useState<any>({});
-    console.log("goalStatesFromStore");
+    console.log("GoalComponent: goalStatesFromStore");
     console.log(goalStatesFromStore);
     useEffect(() => {
-        console.log("useEffect GoalComponent");
-        if( !deepEqual(goals, goalStatesFromStore)) {
-            console.log('calling setGoals');
-            setGoals(goalStatesFromStore);
-        }
+        console.log("GoalComponent: useEffect");
+        // if( !deepEqual(goals, goalStatesFromStore)) {
+        //     console.log('calling setGoals');
+        //     setGoals(goalStatesFromStore);
+        // }
 
-        if ( weekId != weekIdFromStore ) {
-            console.log('calling setWeekId');
-            setWeekId(weekIdFromStore);
-        }
+        // if ( weekId != weekIdFromStore ) {
+        //     console.log('calling setWeekId');
+        //     setWeekId(weekIdFromStore);
+        // }
     });
 
     let cards = [];
     let goal: any;
-    for (goal of Object.values(goals)) {
+    for (goal of Object.values(goalStatesFromStore)) {
 
         
         cards.push(
@@ -276,7 +277,7 @@ export function GoalComponent(props: any): any {
         )
     }
 
-    console.log("rendering GoalComponent");
+    console.log("GoalComponent: rendering");
     return cards;
 
     // **************************** functions **************************************//
@@ -319,7 +320,7 @@ export function GoalComponent(props: any): any {
         // if(!weekDetails || !categoryId) return;
         // console.log(weekDetails);
         return (
-            <TaskComponent weekId={weekId} goal={goal} />
+            <TaskComponent weekDetails={weekDetailsFromStore} goal={goal} />
         );
     }
 
