@@ -7,6 +7,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(30, 88, 110);
   font-size: 0.9rem;
+  width: max-content;
+}
+
+.App {
+  width: max-content;
+}
+
+.navbar {
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+.App .container:first-of-type {
+  padding: 80px 50px;
+  max-width: max-content;
+
+}
+
+.goalRow {
+  width: max-content;
+
 }
 .form-control {
   font-size: 1em;

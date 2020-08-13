@@ -248,7 +248,7 @@ export default function WeekComponent( props: any ) {
             {/* Week menu bar */}
             { getMenubar(weekDetails) }
             {/* Week cards */}
-            <Row className=''>
+            <Row className='goalRow'>
                 {/* Week Summary Card */}
                 { getSummaryCard(null) }
 
