@@ -34,6 +34,27 @@ export class WeekService {
 
     }
 
+    public async updateById(userProfile: UserProfile, id: string, week: Week) {
+
+        if (await this.weekRepository.canEdit(id, userProfile[securityId])) {
+
+            return await this.updateByIdWithoutSecurityCheck(id, week);
+
+        } else {
+            throw new HttpErrors.Unauthorized("Week not accessible");
+        }
+
+
+    }
+
+
+    private async updateByIdWithoutSecurityCheck(id: string, week: Week) {
+        week.modifiedAt = new Date();
+        this.reCalculateTImes(week); // TODO do this at client end.
+        await this.weekRepository.updateById(id, week);
+        return this.weekRepository.findById(id);
+    }
+
     protected reCalculateTImes(week: Week) {
 
         if (!week.categorizedTasks) {
@@ -55,27 +76,6 @@ export class WeekService {
         week.plannedMinutes = plannedMinutes;
         week.completedMinutes = completedMinutes;
 
-    }
-
-    public async updateById(userProfile: UserProfile, id: string, week: Week) {
-
-        if (await this.weekRepository.canEdit(id, userProfile[securityId])) {
-
-            return await this.updateByIdWithoutSecurityCheck(id, week);
-
-        } else {
-            throw new HttpErrors.Unauthorized("Week not accessible");
-        }
-
-
-    }
-
-
-    private async updateByIdWithoutSecurityCheck(id: string, week: Week) {
-        week.modifiedAt = new Date();
-        this.reCalculateTImes(week); // TODO do this at client end.
-        await this.weekRepository.updateById(id, week);
-        return this.weekRepository.findById(id);
     }
 
     public async addCategory(currentUserProfile: UserProfile, weekId: string, category: CategorizedTasks) {

@@ -137,11 +137,12 @@ class WeekService {
 
     }
 
-    public addTask(weekDetails: any, goalId: string, task: any) {
+    public addTask(weekDetails: any, goal: any, task: any) {
+
+
+        const goalId = goal.categoryId;
 
         console.log(`adding task ${task} to ${goalId}`);
-
-        let goal = this.getGoal(weekDetails, goalId);
         // 1. check hours
         if( !goalService.hasEnoughTimeFoTask(goal, task) ) {
             throw new Error(`You have ${goalService.getAvailableHours(goal)}, but your attempted to allocate ${Utility.hoursFromMinutes( task.totalMinutes )}`)
@@ -237,19 +238,14 @@ class WeekService {
 
         }
 
-        let otherGoals = this.getGoalsWithoutId(weekDetails.categorizedTasks, goal.id);
+        const oldGoal:any = useSelector<any>((state:RootState) => state.weekState.goalStates?.[goal.id]);
 
-        let otherGoalsTotalMinutes = this.getTotalMinutesOfGoals(otherGoals);
-
-        
+        let availableMinutes = weekDetails.totalMinutes - weekDetails.plannedMinutes + oldGoal.totalMinutes;
 
         // 2. check hours
-        if( this.hasEnoughTimeForGoal(weekDetails, goal) ) {
+        if( availableMinutes < goal.totalMinutes ) {
 
-            let otherGoals = this.getGoalsWithoutId(weekDetails.categorizedTasks, goal.id);
-            let otherGoalsTotalMinutes = this.getTotalMinutesOfGoals(otherGoals);
-
-            throw new Error(`You have ${weekDetails.totalMinutes - otherGoalsTotalMinutes}, but your attempted to allocate ${Utility.hoursFromMinutes( goal.totalMinutes )}`);
+            throw new Error(`You have ${Utility.hoursFromMinutes(availableMinutes)}h available, but your attempted to allocate ${Utility.hoursFromMinutes( goal.totalMinutes )}h`);
         }
 
         
@@ -426,9 +422,10 @@ class WeekService {
 
     public getAvaiableMinutes(weekDetails: any) {
 
-        let plannedMinutes = this.getTotalMinutesOfGoals(weekDetails.categorizedTasks);
-        // console.log("type of total minutes" + typeof weekDetails.totalMinutes);
-        const availableMinutes =  weekDetails.totalMinutes - plannedMinutes;
+        // let plannedMinutes = this.getTotalMinutesOfGoals(weekDetails.categorizedTasks);
+        // // console.log("type of total minutes" + typeof weekDetails.totalMinutes);
+        // const availableMinutes =  weekDetails.totalMinutes - plannedMinutes;
+        const availableMinutes =  weekDetails.totalMinutes - weekDetails.plannedMinutes;
         // console.log("available minutes " + availableMinutes);
         return availableMinutes;
 

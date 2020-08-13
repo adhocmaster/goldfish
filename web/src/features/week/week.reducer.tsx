@@ -11,6 +11,7 @@ export default function WeekReducer(state: any, action: any) {
 
     if( state === undefined) {
         state = { 
+            weekId: null,
             weekDetails: {
 
                 id: null,
@@ -18,7 +19,8 @@ export default function WeekReducer(state: any, action: any) {
                 dateStart: "1000-11-11",
                 days: 7
 
-            }
+            },
+            goalStates: {}
         };
     }
 
@@ -31,13 +33,15 @@ export default function WeekReducer(state: any, action: any) {
 
         case WeekActionType.WEEK_FETCHED:
             week = action.payload;
+            reCalculateTImes(week);
             
             goalStates = createGoalStatesFromArr(week.categorizedTasks);
 
             state = {
-                ...state, 
+                ...state,
+                weekId: week.id, 
                 weekDetails: getWeekDetails(week),
-                ...goalStates
+                goalStates: goalStates,
             }
 
             break;
@@ -52,11 +56,13 @@ export default function WeekReducer(state: any, action: any) {
 
             // When a goal is added to week, some properties to the week changes. So, we need to change weekDetails
             week = action.payload;
+            reCalculateTImes(week);
             goalStates = createGoalStatesFromArr(week.categorizedTasks);
             state = {
                 ...state, 
+                weekId: week.id, 
                 weekDetails: getWeekDetails(week),
-                ...goalStates,
+                goalStates: goalStates,
                 showGoalModal: false
             }
 
@@ -77,7 +83,8 @@ export default function WeekReducer(state: any, action: any) {
     return state;
 
     function getWeekDetails(week: any) {
-        return _.omit(week, ['categorizedTasks']);
+        // return _.omit(week, ['categorizedTasks']);
+        return week;
     }
 
 
@@ -88,8 +95,7 @@ export default function WeekReducer(state: any, action: any) {
         let goalStates = {};
 
         for (let goal of goals) {
-            let goalId = goal.categoryId;
-            goalStates = {...goalStates, goalId: goal};
+            goalStates = {...goalStates, ...createGoalState(goal)};
         }
 
         return goalStates;
@@ -99,7 +105,34 @@ export default function WeekReducer(state: any, action: any) {
     function createGoalState(goal: any) {
 
         let goalId = goal.categoryId;
-        return { goalId: goal };
+        let obj: { [key: string]: any } = {}
+        obj[goalId] = goal;
+
+        return obj;
+
+    }
+
+    
+    function reCalculateTImes(week: any) {
+
+        if (!week.categorizedTasks) {
+            return;
+        }
+
+        let plannedMinutes = 0;
+        let completedMinutes = 0;
+
+        let catIndex: number;
+        for (catIndex = 0; catIndex < week.categorizedTasks?.length; ++catIndex) {
+
+            let catTasks = week.categorizedTasks[catIndex];
+            plannedMinutes += catTasks.totalMinutes ?? 0;
+            completedMinutes += catTasks.completedMinutes ?? 0;
+
+        }
+
+        week.plannedMinutes = plannedMinutes;
+        week.completedMinutes = completedMinutes;
 
     }
 }

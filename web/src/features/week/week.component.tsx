@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import GoalModal from 'features/goal/goal.component';
+import GoalModal, { GoalComponent } from 'features/goal/goal.component';
 import TaskComponent from 'features/goal/task.component';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
@@ -191,80 +191,84 @@ export default function WeekComponent( props: any ) {
         actionManager.dispatch(WeekActionType.SHOW_GOAL_FORM);
 
     }
-    function getTaskComponent(task: any) {
-        return (
+    // function getTaskComponent(task: any) {
+    //     return (
             
-            <Card className='task-card' id={`task-${task.taskNo}`}>
-                <Card.Body>
-                    <Badge className='float-right'>--</Badge>
-                    <div>{task.title}</div>
-                </Card.Body>
-            </Card>
-        );
-    }
+    //         <Card className='task-card' id={`task-${task.taskNo}`}>
+    //             <Card.Body>
+    //                 <Badge className='float-right'>--</Badge>
+    //                 <div>{task.title}</div>
+    //             </Card.Body>
+    //         </Card>
+    //     );
+    // }
 
 
-    function getTaskComponents(tasks: any[]) {
+    // function getTaskComponents(tasks: any[]) {
 
-        let taskItems = [];
-        if (!tasks) {
-            return <></>;
-        }
+    //     let taskItems = [];
+    //     if (!tasks) {
+    //         return <></>;
+    //     }
 
-        for (let task of tasks) {
-            taskItems.push(getTaskComponent(task));
-        }
+    //     for (let task of tasks) {
+    //         taskItems.push(getTaskComponent(task));
+    //     }
 
-        return taskItems;
+    //     return taskItems;
 
-    }
+    // }
 
-    function addTask(categoryId: string) {
-        toastService.message(`Going to add tasks soon under category ${categoryId}`);
-    }
+    // function addTask(categoryId: string) {
+    //     toastService.message(`Going to add tasks soon under category ${categoryId}`);
+    // }
 
-    function getNewTaskForm(categoryId: string) {
+    // function getNewTaskForm(categoryId: string) {
 
-        if(!weekDetails || !categoryId) return;
-        // console.log(weekDetails);
-        return (
-            <TaskComponent weekDetails={weekDetails} goalId={categoryId} />
-        );
-    }
+    //     if(!weekDetails || !categoryId) return;
+    //     // console.log(weekDetails);
+    //     return (
+    //         <TaskComponent weekDetails={weekDetails} goalId={categoryId} />
+    //     );
+    // }
 
     function getGoalCards() {
 
-        if(!weekDetails) return;
+        // if(!weekDetails) return;
 
-        let cards = [];
-        for (let categorizedTask of weekDetails.categorizedTasks) {
+        // let cards = [];
+        // for (let categorizedTask of weekDetails.categorizedTasks) {
 
             
-            cards.push(
-                <Card className='week-category-card'>
+        //     cards.push(
+        //         <Card className='week-category-card'>
                         
-                    <Card.Body>
-                        <div className='header'>
-                            <b>{categorizedTask.title}</b>
-                            <div className="float-right">
-                                4 of 22
-                            </div>
-                            <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
-                        </div>
-                        {
-                            getTaskComponents(categorizedTask.tasks)
-                        }
-                    </Card.Body>
-                    <Card.Footer>
-                        {
-                            getNewTaskForm(categorizedTask.categoryId)
-                        }
-                    </Card.Footer>
-                </Card>
+        //             <Card.Body>
+        //                 <div className='header'>
+        //                     <b>{categorizedTask.title}</b>
+        //                     <div className="float-right">
+        //                         4 of 22
+        //                     </div>
+        //                     <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
+        //                 </div>
+        //                 {
+        //                     getTaskComponents(categorizedTask.tasks)
+        //                 }
+        //             </Card.Body>
+        //             <Card.Footer>
+        //                 {
+        //                     getNewTaskForm(categorizedTask.categoryId)
+        //                 }
+        //             </Card.Footer>
+        //         </Card>
 
-            )
-        }
-        return cards;
+        //     )
+        // }
+        // return cards;
+
+        return (
+            <GoalComponent />
+        )
     }
 
     useEffect(() => {

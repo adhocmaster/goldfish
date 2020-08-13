@@ -16,7 +16,7 @@ import Spinner from 'react-bootstrap/Spinner';
 
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import weekService from 'features/week/week.service';
@@ -25,6 +25,7 @@ import goalService from './goal.service';
 import Utility from 'framework/Utility';
 import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
+import TaskComponent from './task.component';
 
 export default function GoalModal(props: any): any {
 
@@ -220,4 +221,106 @@ export default function GoalModal(props: any): any {
             </Modal>
         </>
     );
+}
+
+
+export function GoalComponent(props: any): any {
+
+    console.log("enterred GoalComponent");
+    const goalStatesFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.goalStates}, deepEqual);
+    const weekIdFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.weekId }, shallowEqual);
+    const [goals, setGoals] = useState<any>({});
+    const [weekId, setWeekId] = useState<any>({});
+    console.log("goalStatesFromStore");
+    console.log(goalStatesFromStore);
+    useEffect(() => {
+        console.log("useEffect GoalComponent");
+        if( !deepEqual(goals, goalStatesFromStore)) {
+            console.log('calling setGoals');
+            setGoals(goalStatesFromStore);
+        }
+
+        if ( weekId != weekIdFromStore ) {
+            console.log('calling setWeekId');
+            setWeekId(weekIdFromStore);
+        }
+    });
+
+    let cards = [];
+    let goal: any;
+    for (goal of Object.values(goals)) {
+
+        
+        cards.push(
+            <Card className='week-category-card'>
+                    
+                <Card.Body>
+                    <div className='header'>
+                        <b>{goal.title}</b>
+                        <div className="float-right">
+                            4 of 22
+                        </div>
+                        <ProgressBar now={(11*100)/22} label={`${(11*100)/22}%`} variant="info" />
+                    </div>
+                    {
+                        getTaskComponents(goal.tasks)
+                    }
+                </Card.Body>
+                <Card.Footer>
+                    {
+                        getNewTaskForm(weekId, goal)
+                    }
+                </Card.Footer>
+            </Card>
+
+        )
+    }
+
+    console.log("rendering GoalComponent");
+    return cards;
+
+    // **************************** functions **************************************//
+    
+    function getTaskComponent(task: any) {
+        return (
+            
+            <Card className='task-card' id={`task-${task.taskNo}`}>
+                <Card.Body>
+                    <Badge className='float-right'>--</Badge>
+                    <div>{task.title}</div>
+                </Card.Body>
+            </Card>
+        );
+    }
+
+
+    function getTaskComponents(tasks: any[]) {
+
+        let taskItems = [];
+        if (!tasks) {
+            return <></>;
+        }
+
+        for (let task of tasks) {
+            taskItems.push(getTaskComponent(task));
+        }
+
+        return taskItems;
+
+    }
+
+    function addTask(categoryId: string) {
+        toastService.message(`Going to add tasks soon under category ${categoryId}`);
+    }
+
+    function getNewTaskForm(weekId: string, goal: any) {
+
+
+        // if(!weekDetails || !categoryId) return;
+        // console.log(weekDetails);
+        return (
+            <TaskComponent weekId={weekId} goal={goal} />
+        );
+    }
+
 }

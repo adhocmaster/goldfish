@@ -42,8 +42,9 @@ export default function TaskComponent(props: any): any {
     const [availableHours, setAvailableHours] = useState<number>(0);
 
     const weekDetails = props.weekDetails;
-    const goalId = props.goalId;
-    const goal = weekService.getGoal(props.weekDetails, props.goalId);
+    // const goal = weekService.getGoal(props.weekDetails, props.goalId);
+    const goal = props.goal;
+    const goalId = goal.categoryId;
 
     
     useEffect(() => {
@@ -70,7 +71,7 @@ export default function TaskComponent(props: any): any {
             title: title,
             totalMinutes: totalMinutes
         }
-        weekService.addTask(weekDetails, goalId, task);
+        weekService.addTask(weekDetails, goal, task);
 
     }
 
