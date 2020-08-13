@@ -119,14 +119,42 @@ export class WeekService {
 
     }
 
+    public reCalculateCategoryTimes(category: CategorizedTasks) {
+
+        
+        if(!category.tasks) {
+            return;
+        }
+
+        let plannedMinutes = 0;
+        let completedMinutes = 0;
+
+        let taskIndex: number;
+        for (taskIndex = 0; taskIndex < category.tasks?.length; ++taskIndex) {
+
+            let task = category.tasks[taskIndex];
+            plannedMinutes += task.totalMinutes ?? 0;
+            completedMinutes += task.completedMinutes ?? 0;
+
+        }
+
+        category.plannedMinutes = plannedMinutes;
+        category.completedMinutes = completedMinutes;
+
+    }
+
     public async updateCategory(currentUserProfile: UserProfile, weekId: string, category: CategorizedTasks) {
         
         if (await this.weekRepository.canEdit(weekId, currentUserProfile[securityId])) {
 
             let week = await this.weekRepository.findById(weekId);
+
+            // this.reCalculateCategoryTimes(category); offloaded goal hour calculations to client end.
+            // replaces existing category with the input category.
             if (week.categorizedTasks) {
 
                 let catIndex: number;
+
                 for (catIndex = 0; catIndex < week.categorizedTasks?.length; ++catIndex) {
         
                     let existingCat = week.categorizedTasks[catIndex];

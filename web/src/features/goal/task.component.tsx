@@ -49,17 +49,14 @@ export default function TaskComponent(props: any): any {
     
     useEffect(() => {
 
-        // console.log(props);
-        // setWeekDetails(props.weekDetails);
-        // setGoalId(props.goalId);
-        // console.log(props.weekDetails);
-        // const goal = weekService.getGoal(props.weekDetails, props.goalId);
-        // console.log(goal);
         const goalAvailableMinutes = goalService.getAvaiableMinutes(goal);
+        // console.log(`Task component: goalAvailableMinutes: ${goal.title} ` + goalAvailableMinutes);
+        // console.log(`Task component: availableMinutes: ${goal.title} ` + availableMinutes);
+        // console.log(`Task component: availableHours: ${goal.title} ` + availableHours);
         if (!deepEqual(availableMinutes, goalAvailableMinutes)) {
 
             setAvailableMinutes(goalService.getAvaiableMinutes(goal));
-            setAvailableHours(Utility.hoursFromMinutes(availableMinutes));
+            setAvailableHours(Utility.hoursFromMinutes(goalAvailableMinutes));
         }
 
     });
@@ -71,7 +68,12 @@ export default function TaskComponent(props: any): any {
             title: title,
             totalMinutes: totalMinutes
         }
-        weekService.addTask(weekDetails, goal, task);
+        try {
+
+            weekService.addTask(weekDetails, goal, task);
+        } catch (error) {
+            toastService.error(error.message);
+        }
 
     }
 

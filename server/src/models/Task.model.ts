@@ -19,6 +19,12 @@ export class Task extends Model {
       type: 'boolean', default: false
     })
     isDone?: boolean;
+
+    // dummy tasks are for recoding hours only.
+    @property({
+      type: 'boolean', default: false
+    })
+    isDummy?: boolean;
     
     @property({
       type: 'number',

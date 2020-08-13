@@ -259,9 +259,9 @@ export function GoalComponent(props: any): any {
                     <div className='header'>
                         <b>{goal.title}</b>
                         <div className="float-right">
-                        {Utility.hoursFromMinutes(goal.plannedMinutes)} of {Utility.hoursFromMinutes(goal.totalMinutes)}
+                        {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
                         </div>
-                        <ProgressBar now={progress} label={`${progress}%`} variant="info" />
+                        <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
                     </div>
                     {
                         getTaskComponents(goal.tasks)
