@@ -153,32 +153,150 @@ class WeekService {
         }
         const clonedGoal = {...goal, tasks: updatedTasks};
 
-        this.addGoal(weekDetails, clonedGoal);
+        this.updateGoalOfWeek(weekDetails, clonedGoal);
 
     }
 
-    public addGoal(weekDetails: any, goal: any) {
+    public addGoalToWeek(weekDetails: any, goal: any) {
 
-        // 1. check hours
+        // 1. check already existing
+
+        if (this.goalAlreadyExists(weekDetails, goal)) {
+            
+            throw new Error(`Goal already exists.`);
+
+        }
+        // 2. check hours
         if( !this.hasEnoughTimeForGoal(weekDetails, goal) ) {
-            throw new Error(`You have ${this.getAvailableHours(weekDetails)}, but your attempted to allocate ${Utility.hoursFromMinutes( goal.totalMinutes )}`)
+            throw new Error(`You have ${this.getAvailableHours(weekDetails)}, but your attempted to allocate ${Utility.hoursFromMinutes( goal.totalMinutes )}`);
         }
 
+        axios.post(
+
+            this.serviceUrl + '/category/' + weekDetails.id, 
+            goal
+
+        ).then( (result) => {
+
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("update: got week after adding goal.");
+                let data = result.data;
+                console.log(data);
+                // actionManager.dispatch(WeekActionType.WEEK_FETCHED, data, false);
+                actionManager.dispatch(WeekActionType.GOAL_ADDED_TO_WEEK, data);
 
 
-        const existingGoals = weekDetails.categorizedTasks;
-        
-        const updatedGoals = [...this.getGoalsWithoutId(existingGoals, goal.categoryId), goal];
+            } else {
 
-        const clonedWeek = {...weekDetails, categorizedTasks: updatedGoals};
+                actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+                toastService.error(errors);
 
-        this.update(clonedWeek);
+            }
+
+        }).catch((error) => {
+            
+            const errors = ResponseProcessor.getHTTPError(error);
+            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+            toastService.error(errors);
+        });
+
+
+
 
     }
+
+    public goalAlreadyExists(weekDetails: any, goal: any) {
+
+        if (!weekDetails.categorizedTasks) {
+            return false;
+        }
+
+        for (let existingCat  of weekDetails.categorizedTasks) {
+
+            if (existingCat.categoryId ==  goal.categoryId) {
+                return true;
+            }
+            
+        }
+
+        return false;
+
+    }
+
+    public updateGoalOfWeek(weekDetails: any, goal: any) {
+
+        // 1. check already existing
+
+        if (!this.goalAlreadyExists(weekDetails, goal)) {
+            
+            throw new Error(`Goal doesn't exist.`);
+
+        }
+
+        let otherGoals = this.getGoalsWithoutId(weekDetails.categorizedTasks, goal.id);
+
+        let otherGoalsTotalMinutes = this.getTotalMinutesOfGoals(otherGoals);
+
+        
+
+        // 2. check hours
+        if( this.hasEnoughTimeForGoal(weekDetails, goal) ) {
+
+            let otherGoals = this.getGoalsWithoutId(weekDetails.categorizedTasks, goal.id);
+            let otherGoalsTotalMinutes = this.getTotalMinutesOfGoals(otherGoals);
+
+            throw new Error(`You have ${weekDetails.totalMinutes - otherGoalsTotalMinutes}, but your attempted to allocate ${Utility.hoursFromMinutes( goal.totalMinutes )}`);
+        }
+
+        
+        axios.patch(
+
+            this.serviceUrl + '/category/' + weekDetails.id, 
+            goal
+
+        ).then( (result) => {
+
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("update: got week after adding goal.");
+                let data = result.data;
+                console.log(data);
+                // actionManager.dispatch(WeekActionType.WEEK_FETCHED, data, false);
+                actionManager.dispatch(WeekActionType.GOAL_UPDATED_OF_WEEK, data);
+
+
+            } else {
+
+                actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+                toastService.error(errors);
+
+            }
+
+        }).catch((error) => {
+            
+            const errors = ResponseProcessor.getHTTPError(error);
+            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+            toastService.error(errors);
+        });
+
+    }
+
+
 
     public getGoalsWithoutId(goals: any, goalId: string) {
 
-        let newArr = [];
+        let newArr: any[] = [];
+
+        if(!goals) {
+            return newArr;
+        }
 
         for (let goal of goals) {
             if (goal.categoryId != goalId) {
@@ -189,6 +307,63 @@ class WeekService {
         return newArr;
 
     }
+    
+    public getTotalMinutesOfGoals(goals: any[]) {
+
+        let total = 0;
+
+        if(!goals) { return total; }
+
+        for (let goal of goals) {
+            total += goal.totalMinutes;
+        }
+
+        return total;
+    }
+
+    public getPlannedMinutesOfGoals(goals: any[]) {
+
+        let total = 0;
+
+        if(!goals) { return total; }
+
+        for (let goal of goals) {
+            total += goal.plannedMinutes;
+        }
+
+        return total;
+    }
+
+    public getCompletedMinutesOfGoals(goals: any[]) {
+
+        let total = 0;
+
+        if(!goals) { return total; }
+
+        for (let goal of goals) {
+            total += goal.completedMinutes;
+        }
+
+        return total;
+    }
+
+    // public addGoal2(weekDetails: any, goal: any) {
+
+    //     // 1. check hours
+    //     if( !this.hasEnoughTimeForGoal(weekDetails, goal) ) {
+    //         throw new Error(`You have ${this.getAvailableHours(weekDetails)}, but your attempted to allocate ${Utility.hoursFromMinutes( goal.totalMinutes )}`)
+    //     }
+
+    //     const existingGoals = weekDetails.categorizedTasks;
+        
+    //     const updatedGoals = [...this.getGoalsWithoutId(existingGoals, goal.categoryId), goal];
+
+    //     const clonedWeek = {...weekDetails, categorizedTasks: updatedGoals};
+
+    //     this.update(clonedWeek);
+
+    // }
+    
 
     public update(weekDetails: any) {
         
@@ -232,7 +407,11 @@ class WeekService {
 
     public hasEnoughTimeForGoal(weekDetails: any, goal: any) {
 
-        if (this.getAvaiableMinutes(weekDetails) >= goal.totalMinutes) {
+        
+        let otherGoals = this.getGoalsWithoutId(weekDetails.categorizedTasks, goal.id);
+        let otherGoalsTotalMinutes = this.getTotalMinutesOfGoals(otherGoals);
+
+        if (weekDetails.totalMinutes >= goal.totalMinutes + otherGoalsTotalMinutes) {
             return true;
         }
 
@@ -247,10 +426,12 @@ class WeekService {
 
     public getAvaiableMinutes(weekDetails: any) {
 
+        let plannedMinutes = this.getTotalMinutesOfGoals(weekDetails.categorizedTasks);
         // console.log("type of total minutes" + typeof weekDetails.totalMinutes);
-        const availableMinutes =  weekDetails.totalMinutes - weekDetails.plannedMinutes;
+        const availableMinutes =  weekDetails.totalMinutes - plannedMinutes;
         // console.log("available minutes " + availableMinutes);
         return availableMinutes;
+
     }
 
     public getGoal(weekDetails: any, goalId: string) {

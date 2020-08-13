@@ -103,7 +103,7 @@ export default function GoalModal(props: any): any {
             };
             try {
 
-                weekService.addGoal(weekDetails, goal);
+                weekService.addGoalToWeek(weekDetails, goal);
 
             } catch(e) {
                 toastService.error(e.message);

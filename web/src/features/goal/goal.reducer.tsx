@@ -16,8 +16,8 @@ export default function GoalReducer(state: any, action: any) {
     if(action.type === WeekActionType.NEW_GOAL_ADDED) {
         
         console.log("Handling NEW_GOAL_ADDED in goal reducer");
-        action.payload.isNewGoalCreated = true;
-        state = {...state, ...action.payload};
+        // action.payload.isNewGoalCreated = true;
+        state = {...state, ...action.payload, isNewGoalCreated: true};
         console.log(state);
 
     }
