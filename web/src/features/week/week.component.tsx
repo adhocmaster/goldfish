@@ -37,6 +37,7 @@ export default function WeekComponent( props: any ) {
     // const weekUpdatedAt = useSelector( (state:RootState) => { return state.weekState.weekDetails.weekUpdatedAt } );
     // const weekDetailsFromStore = weekService.getFromStore();
     const weekDetails = weekService.getFromStore();
+    const [taskView, setTaskView] = useState("unchecked");
     // console.log("WeekComponent: weekDetailsFromStore:");
     // console.log(weekDetails);
 
@@ -55,10 +56,10 @@ export default function WeekComponent( props: any ) {
                     </div>
                     <div className='p-2'>
                         
-                        <b>Schedule based on: </b>
+                        <b>Schedule: Weekdays</b>
                         
                     </div>
-                    <div className='p-2'>
+                    {/* <div className='p-2'>
                         
                         <Form.Check
                             name="scheduleType"
@@ -84,9 +85,27 @@ export default function WeekComponent( props: any ) {
                             id='schedule-type-3'
                         />
                         
-                    </div>
+                    </div> */}
                     <Button variant='info' size='sm' onClick={() => showGoalModal(null)}>+ NEW GOAL &nbsp;</Button>
                     { getGoalModal(null) }
+                    <div className='p-2'>
+                        
+                        <b>View: </b>
+                        
+                    </div>
+                    <div className='p-2'>
+                        
+                        <Form.Check 
+                            type="switch"
+                            id="custom-switch"
+                            label="Task view"
+                            value={taskView}
+                            onChange={(e: any) => {
+                                setTaskView(e.target.value);
+                            }}
+                        />
+                        
+                    </div>
                 </div>
             </Row>
         );
@@ -96,7 +115,7 @@ export default function WeekComponent( props: any ) {
         const progress = Utility.hoursFromMinutes(weekDetails.completedMinutes / weekDetails.totalMinutes);
         return (
 
-            <Card className='week-category-card'>
+            <Card className='week-category-card d-lg-block d-md-none'>
                     
                 <Card.Body>
                     <div className='header'>
@@ -199,7 +218,7 @@ export default function WeekComponent( props: any ) {
     function getGoalCards() {
 
         return (
-            <GoalComponent />
+            <GoalComponent taskView={taskView} />
         )
     }
 
@@ -253,7 +272,17 @@ export default function WeekComponent( props: any ) {
                 { getSummaryCard(null) }
 
                 {/* Week Goal Cards */}
-                {getGoalCards()}
+                <div className="d-flex goalCardsContainer col-lg-9 col-md-12">
+
+                    { getGoalCards() }
+
+                </div>
+                
+                {/* <Container className='goalCardsContainer'>
+                    <Row>
+                        { getGoalCards() }
+                    </Row>
+                </Container> */}
                     
 
                 {/* New goal form */}

@@ -48,11 +48,21 @@ code {
   color: white;
 }
 
+.goalCardsContainer {
+  flex-wrap: wrap;
+}
+
 .week-category-card {
   width: 15rem;
   height: fit-content;
   margin: 5px;
   background-color: #f3f3f3;
+}
+@media (max-width: 992px) {
+  
+  .week-category-card {
+    width: 12rem;
+  }
 }
 
 .week-category-card .card-body{

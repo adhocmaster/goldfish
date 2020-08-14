@@ -27,6 +27,9 @@ import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
 import TaskComponent from './task.component';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusSquare, faPlusCircle, faList } from '@fortawesome/free-solid-svg-icons';
+
 export default function GoalModal(props: any): any {
 
 
@@ -227,6 +230,7 @@ export default function GoalModal(props: any): any {
 export function GoalComponent(props: any): any {
 
     console.log("GoalComponent: enterred");
+    console.log(props);
     const goalStatesFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.goalStates}, deepEqual);
     const weekDetailsFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.weekDetails}, deepEqual);
     const weekIdFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.weekId }, shallowEqual);
@@ -245,11 +249,25 @@ export function GoalComponent(props: any): any {
         //     console.log('calling setWeekId');
         //     setWeekId(weekIdFromStore);
         // }
+    
     });
 
     let cards = [];
     let goal: any;
+
+
     for (goal of Object.values(goalStatesFromStore)) {
+        
+        let goldCardView: any;
+        if (props.taskView == "checked" ) {
+
+            goldCardView = getTaskComponent(goal.tasks);
+
+        } else {
+
+            goldCardView = getNonTaskComponent(goal.tasks);
+
+        }
 
         const progress = Utility.hoursFromMinutes(goal.completedMinutes / goal.totalMinutes);
         cards.push(
@@ -259,16 +277,18 @@ export function GoalComponent(props: any): any {
                     <div className='header'>
                         <b>{goal.title}</b>
                         <div className="float-right">
-                        {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
+                            {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
+                            
                         </div>
                         <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
                     </div>
                     {
-                        // getTaskComponents(goal.tasks)
+                        goldCardView
                     }
                 </Card.Body>
                 <Card.Footer>
                     {
+                        props.taskView == "checked" &&
                         getNewTaskForm(weekId, goal)
                     }
                 </Card.Footer>
@@ -280,7 +300,50 @@ export function GoalComponent(props: any): any {
     console.log("GoalComponent: rendering");
     return cards;
 
-    // **************************** functions **************************************//
+    // **************************** funct+ions **************************************//
+    
+
+    function getNonTaskComponent(tasks: any[]) {
+        return (
+            <Container>
+                <Row style={{justifyContent: "center"}}>
+                    <div className='p-2'>
+                        
+                        <Button variant="link" size="lg">
+                            <FontAwesomeIcon icon={faPlusCircle} size="lg" color={"#ff9999"}/>
+    
+                        </Button>
+                    </div>
+                    <div className='p-2'>
+                        
+                        <Button variant="link" size="lg">
+                            <FontAwesomeIcon icon={faList} size="lg" color={"#ff9999"}/>
+    
+                        </Button>
+                    </div>
+    
+                </Row>
+    
+            </Container>
+
+        ) 
+    }
+
+    function getTaskView(tasks: any[], taskView: string ) {
+
+        let taskItems = [];
+        if (!tasks) {
+            return <></>;
+        }
+        
+
+        for (let task of tasks) {
+            taskItems.push(getTaskComponent(task));
+        }
+
+        return taskItems;
+
+    }
     
     function getTaskComponent(task: any) {
         return (
@@ -294,21 +357,6 @@ export function GoalComponent(props: any): any {
         );
     }
 
-
-    function getTaskComponents(tasks: any[]) {
-
-        let taskItems = [];
-        if (!tasks) {
-            return <></>;
-        }
-
-        for (let task of tasks) {
-            taskItems.push(getTaskComponent(task));
-        }
-
-        return taskItems;
-
-    }
 
     function addTask(categoryId: string) {
         toastService.message(`Going to add tasks soon under category ${categoryId}`);
