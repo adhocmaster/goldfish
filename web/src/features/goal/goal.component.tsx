@@ -1,4 +1,4 @@
-import { faList, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faList, faPlusCircle, faMinusSquare, faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
@@ -188,8 +188,10 @@ export default function GoalComponent(props: any): any {
         }
         
 
+        let taskIndex = 0;
         for (let task of tasks) {
-            taskViews.push(getTaskView(task));
+            taskViews.push(getTaskView(task, taskIndex));
+            ++taskIndex;
         }
 
         return (
@@ -218,23 +220,64 @@ export default function GoalComponent(props: any): any {
 
     }
     
-    function getTaskView(task: any) {
+    function getTaskView(task: any, taskIndex: number) {
+
+        if (task.isDummy) {
+            return getDummyTaskCard(task, taskIndex);
+        }
+
+        return getTaskCard(task, taskIndex);
+
+    }
+
+
+    function getDummyTaskCard(task: any, taskIndex: number) {
+        
+        const title = <em>Unplanned goal hours</em>;
         return (
-            
-            <Card className='task-card' id={`task-${task.taskNo}`}>
+
+            <Card className='task-card' id={`task-${taskIndex}`}>
                 <Card.Body>
-                    <Badge className='float-right'>--</Badge>
-                    <div>{task.title}</div>
+                    <Button variant="light"  size='sm'  className='float-right'
+                        onClick={(e: any) => {
+                            toastService.message("Task to be deleted");
+                            removeTask(taskIndex);
+                        }}
+                    > <FontAwesomeIcon icon={faMinusSquare} color={"#ff8888"} />
+                    </Button>
+                    <div onClick={(e: any) => {toastService.message("Editing task is coming soon.")}}>{title}</div>
                 </Card.Body>
             </Card>
-        );
+        )
     }
 
 
+    function getTaskCard(task: any, taskIndex: number) {
+        
+        const title = task.title;
+        return (
 
-    function addTask(categoryId: string) {
-        toastService.message(`Going to add tasks soon under category ${categoryId}`);
+            <Card className='task-card' id={`task-${taskIndex}`}>
+                <Card.Body>
+                    <Button variant="light"  size='sm'  className='float-right'
+                        onClick={(e: any) => {
+                            toastService.message("Task options");
+                            // removeTask(taskIndex);
+                        }}
+                    > 
+                        <FontAwesomeIcon icon={faEllipsisV} color={"#ff8888"} />
+                    </Button>
+                    <div onClick={(e: any) => {toastService.message("Editing task is coming soon.")}}>{title}</div>
+                </Card.Body>
+            </Card>
+        )
     }
+
+    function removeTask(index: number) {
+
+        goalService.removeTaskById(weekDetailsFromStore, goal, index);
+    }
+
 
     function getNewTaskForm(weekId: string, goal: any) {
 

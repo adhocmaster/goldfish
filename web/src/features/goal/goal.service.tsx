@@ -79,6 +79,23 @@ class GoalService {
         });
 
     }
+
+    public removeTaskById(weekDetails: any, goal: any, index: number) {
+
+        toastService.message("Removign task at index: " + index);
+
+        if( !goal.tasks ) { return }
+
+        const clonedTasks = [...goal.tasks];
+
+        clonedTasks.splice(index, 1); // removed one item from index.
+
+        const clonedGoal = {...goal, tasks: clonedTasks};
+
+        this.updateByClonedGoal(weekDetails, clonedGoal)
+
+
+    }
     
     public addTask(weekDetails: any, goal: any, task: any) {
 
@@ -101,11 +118,19 @@ class GoalService {
         }
         const clonedGoal = {...goal, tasks: updatedTasks};
 
+        this.updateByClonedGoal(weekDetails, clonedGoal);
+
+    }
+
+    public updateByClonedGoal(weekDetails: any, clonedGoal: any) {
+        
         this.reCalculateGoalTimes(clonedGoal);
 
         weekService.updateGoalOfWeek(weekDetails, clonedGoal, clonedGoal);
 
     }
+
+
     public reCalculateGoalTimes(goal: any) {
 
         
