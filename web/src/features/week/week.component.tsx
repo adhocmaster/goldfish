@@ -1,33 +1,23 @@
-import React, { useEffect } from 'react';
-import ReduxUIComponent from '../../framework/ReduxUIComponent';
-import { RootState, store } from '../../app/store';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
+import GoalComponents from 'features/goal/goal.components';
+import GoalModal from 'features/goal/goal.modal';
+import { WeekActionType } from 'features/week/week.actions';
+import actionManager from 'framework/ActionManager';
+import Utility from 'framework/Utility';
+import React, { useEffect, useState } from 'react';
+import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Badge from 'react-bootstrap/Badge';
-import Alert from 'react-bootstrap/ProgressBar';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import FormControl from 'react-bootstrap/FormControl';
-import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
-
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
-
-import GoalModal from 'features/goal/goal.modal';
-import GoalComponents from 'features/goal/goal.components';
-
-import TaskComponent from 'features/goal/task.component';
-import actionManager from 'framework/ActionManager';
-import { WeekActionType } from 'features/week/week.actions';
+import { shallowEqual, useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
 import weekService from './week.service';
-import toastService from 'app/toast.service';
-import deepEqual from 'deep-equal';
-import Utility from 'framework/Utility';
+
+
+
 
 
 export default function WeekComponent( props: any ) {

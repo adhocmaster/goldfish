@@ -1,16 +1,14 @@
-import axios from 'axios';
-import ResponseProcessor from 'framework/ResponseProcessor';
-import actionManager from 'framework/ActionManager';
-import config from 'framework/Configuration';
-import { ActionType } from 'app/actionTypes';
-import { WeekActionType } from 'features/week/week.actions';
 import { RootState } from 'app/store';
 import toastService from 'app/toast.service';
-import { useSelector, shallowEqual } from 'react-redux';
+import axios from 'axios';
 import deepEqual from 'deep-equal';
+import { WeekActionType } from 'features/week/week.actions';
 import yearService from 'features/year/year.service';
+import actionManager from 'framework/ActionManager';
+import config from 'framework/Configuration';
+import ResponseProcessor from 'framework/ResponseProcessor';
 import Utility from 'framework/Utility';
-import goalService from 'features/goal/goal.service';
+import { useSelector } from 'react-redux';
 
 class WeekService {
 

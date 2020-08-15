@@ -1,29 +1,13 @@
-import React, { useEffect } from 'react';
-import ReduxUIComponent from '../../framework/ReduxUIComponent';
-import { RootState, store } from '../../app/store';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Badge from 'react-bootstrap/Badge';
-import Alert from 'react-bootstrap/ProgressBar';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import FormControl from 'react-bootstrap/FormControl';
-import Modal from 'react-bootstrap/Modal';
-import Spinner from 'react-bootstrap/Spinner';
-
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import actionManager from 'framework/ActionManager';
-import { WeekActionType } from 'features/week/week.actions';
-import weekService from 'features/week/week.service';
-import goalService from './goal.service';
-import Utility from 'framework/Utility';
 import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
+import Utility from 'framework/Utility';
+import React, { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
+import goalService from './goal.service';
+
 
 
 export default function TaskComponent(props: any): any {

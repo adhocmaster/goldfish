@@ -1,11 +1,11 @@
-import { WeekRepository } from '../repositories';
-import { repository } from '@loopback/repository';
-import { inject } from '@loopback/core';
 import { UserServiceBindings } from '@loopback/authentication-jwt';
-import { CustomUserService } from './user.service';
-import { SecurityBindings, securityId, UserProfile } from '@loopback/security';
-import { CategorizedTasks, Week } from '../models';
+import { inject } from '@loopback/core';
+import { repository } from '@loopback/repository';
 import { HttpErrors } from '@loopback/rest';
+import { securityId, UserProfile } from '@loopback/security';
+import { CategorizedTasks, Week } from '../models';
+import { WeekRepository } from '../repositories';
+import { CustomUserService } from './user.service';
 
 export class WeekService {
 

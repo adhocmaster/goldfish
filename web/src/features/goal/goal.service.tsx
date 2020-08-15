@@ -1,11 +1,11 @@
+import toastService from 'app/toast.service';
 import axios from 'axios';
+import { WeekActionType } from 'features/week/week.actions';
+import weekService from 'features/week/week.service';
+import actionManager from 'framework/ActionManager';
 import config from "framework/Configuration";
 import ResponseProcessor from 'framework/ResponseProcessor';
-import { WeekActionType } from 'features/week/week.actions';
-import actionManager from 'framework/ActionManager';
-import toastService from 'app/toast.service';
 import Utility from 'framework/Utility';
-import weekService from 'features/week/week.service';
 
 class GoalService {
 
