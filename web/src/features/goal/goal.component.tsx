@@ -35,6 +35,7 @@ export default function GoalComponent(props: any): any {
 
     console.log(props.goal.categoryId + " GoalComponent: enterred");
     // console.log(props);
+    const minMinutes = 30;
     const goalStatesFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.goalStates}, deepEqual);
     const weekDetailsFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.weekDetails}, deepEqual);
     const weekIdFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.weekId }, shallowEqual);
@@ -43,7 +44,9 @@ export default function GoalComponent(props: any): any {
     const [weekId, setWeekId] = useState<any>({});
     const [isTaskView, setTaskView] = useState<boolean>(false);
     const [isLocalTaskView, setLocalTaskView] = useState<boolean| undefined>(undefined);
-    const [newCompleteMinutes, setNewCompleteMinutes] = useState(0);
+    const [recordMinutes, setRecordMinutes] = useState(0);
+
+    console.log(goal.categoryId + " GoalComponent: recordMinutes" + recordMinutes);
 
     const taskListRef = createRef<HTMLDivElement>();
 
@@ -126,15 +129,15 @@ export default function GoalComponent(props: any): any {
     function getNonTaskComponent(goal: any) {
         let tasks:[] = goal.tasks;
 
-        let goalAvailableMinutes = goal.totalMinutes - goal.completedMinutes - goal.plannedMinutes;
+        let goalAvailableMinutes = goalService.getGoalAvailableMinutes(goal);
         if (!goalAvailableMinutes) goalAvailableMinutes = 0;
         let goalAvailableHours = Utility.hoursFromMinutes(goalAvailableMinutes);
         let goalTotalHours = Utility.hoursFromMinutes(goal.totalHours);
-        let completedHours = Utility.hoursFromMinutes(goal.completedMinutes + newCompleteMinutes);
+        let completedHours = Utility.hoursFromMinutes(goal.completedMinutes + recordMinutes);
 
         let plannedTaskHourMessage = <span>No planned tasks.</span>;
         if (goal.plannedMinutes && goal.plannedMinutes != 0) {
-            plannedTaskHourMessage = <span>{Utility.hoursFromMinutes(goal.plannedMinutes)} h planned in tasks.</span>;
+            plannedTaskHourMessage = <span><b>{Utility.hoursFromMinutes(goal.plannedMinutes)} h</b> planned in tasks.</span>;
         }
 
         return (
@@ -144,18 +147,31 @@ export default function GoalComponent(props: any): any {
 
                         <Form.Group>
                     
-                            <Form.Label>I have done more: ({completedHours} of {goalAvailableHours} h)
+                            <Form.Label>I have done more:
                             </Form.Label>
-                            <Form.Control type="range" min={30} max={goalAvailableMinutes} step={30}                                          
-                                value={newCompleteMinutes}
+                            <Form.Control type="range" min={0} max={goalAvailableMinutes} step={minMinutes}                                          
+                                value={recordMinutes}
                                 onChange={e => {
-                                    setNewCompleteMinutes(parseInt(e.target.value));
+                                    let newMinutes = parseInt(e.target.value);
+                                    console.log(newMinutes);
+                                    setRecordMinutes(newMinutes);
                                 }}/>
                         </Form.Group>
                         
-                        <Button variant="light" size="sm">
-                            <FontAwesomeIcon icon={faPlusCircle} color={"#44aa77"}/> Record hours
-                        </Button>
+                        <Button variant="light" size="sm"
+
+                            onClick={(e: any) => {
+                                try {
+                                    setRecordMinutes(0);
+                                    goalService.recordHours(weekDetailsFromStore, goal, recordMinutes);
+                                } catch (error) {
+                                    toastService.error(error.message);
+                                }
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faPlusCircle} color={"#44aa77"}/> Record hours (<b>{Utility.hoursFromMinutes(recordMinutes)}</b>/{goalAvailableHours} h)
+                        </Button> 
+                        
                     </div>
                     <div className='p-2'>
                         
@@ -181,7 +197,7 @@ export default function GoalComponent(props: any): any {
     function getTaskComponent(goal: any) {
         let tasks:[] = goal.tasks;
 
-        if (!tasks) {return}
+        if (!tasks) {tasks = []}
 
         let taskViews = [];
         if (!tasks) {
@@ -214,21 +230,6 @@ export default function GoalComponent(props: any): any {
                 <div>
                     {taskViews}
 
-                </div>
-                <div className='d-flex p-2'>
-                        
-                    <Button variant="light" size="sm"
-
-                        onClick={(e: any) => {
-                            setLocalTaskView(false);
-                            // taskListRef.current?.set
-                            
-                        }}
-                    
-                    >
-                    <FontAwesomeIcon icon={faList} color={"#ff8888"}/> Hide Tasks
-
-                    </Button>
                 </div>
             </div>);
 

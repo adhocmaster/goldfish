@@ -4,14 +4,19 @@ import { property } from '@loopback/repository';
 export class Task extends Model {
 
     @property({
+      type: 'date',
+      default: () => new Date(),
+    })
+    createdAt?: Date;
+    
+    @property({
         type: 'string',
         required: true
       })
     title: string;
 
     @property({
-      type: 'number',
-      required: true
+      type: 'number', default: 0
     })
     taskNo: number;
 

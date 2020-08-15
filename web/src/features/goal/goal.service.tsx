@@ -68,6 +68,18 @@ class GoalService {
 
     }
     
+    public recordHours(weekDetails: any, goal: any, recordMinutes: number) {
+
+        this.addTask(weekDetails, goal, {
+            title: "NA", 
+            isDummy: true,
+            isDone: true,
+            totalMinutes: recordMinutes,
+            completedMinutes: recordMinutes
+        });
+
+    }
+    
     public addTask(weekDetails: any, goal: any, task: any) {
 
 
@@ -98,6 +110,8 @@ class GoalService {
 
         
         if(!goal.tasks) {
+            goal.plannedMinutes = 0;
+            goal.completedMinutes = 0;
             return;
         }
 
@@ -115,6 +129,21 @@ class GoalService {
 
         goal.plannedMinutes = plannedMinutes;
         goal.completedMinutes = completedMinutes;
+
+    }
+
+    public getGoalAvailableMinutes(goal: any) {
+
+        
+        if(!goal.tasks) {
+            return goal.totalMinutes;
+        }
+        this.reCalculateGoalTimes(goal);
+        return goal.totalMinutes - goal.plannedMinutes;
+
+    }
+
+    public completeTask(weekDetails: any, goal: any, taskIndex: number) {
 
     }
     

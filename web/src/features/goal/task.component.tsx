@@ -29,6 +29,7 @@ import deepEqual from 'deep-equal';
 export default function TaskComponent(props: any): any {
 
     
+    const minMinutes = 30;
     const taskNo = useSelector((state: RootState) => { return state.taskState.taskNo });
     const titleFromStore = useSelector((state: RootState) => { return state.taskState.title });
     const totalMinutesFromStore = useSelector((state: RootState) => { return state.taskState.totalMinutes });
@@ -37,9 +38,7 @@ export default function TaskComponent(props: any): any {
     // const [goalId, setGoalId] = useState("");
     const [title, setTitle] = useState<string>("");
     const [totalMinutes, setTotalMinutes] = useState<number>(0);
-    const [totalHours, setTotalHours] = useState<number>(0);
     const [availableMinutes, setAvailableMinutes] = useState<number>(0);
-    const [availableHours, setAvailableHours] = useState<number>(0);
 
     const weekDetails = props.weekDetails;
     // const goal = weekService.getGoal(props.weekDetails, props.goalId);
@@ -56,7 +55,6 @@ export default function TaskComponent(props: any): any {
         if (!deepEqual(availableMinutes, goalAvailableMinutes)) {
 
             setAvailableMinutes(goalService.getAvaiableMinutes(goal));
-            setAvailableHours(Utility.hoursFromMinutes(goalAvailableMinutes));
         }
 
     });
@@ -88,12 +86,11 @@ export default function TaskComponent(props: any): any {
             </Form.Group>
             <Form.Group>
                 
-                <Form.Label>Allocate: ({totalHours} of {availableHours} h)</Form.Label>
-                <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
+                <Form.Label>Allocate: ({Utility.hoursFromMinutes(totalMinutes)} of {Utility.hoursFromMinutes(availableMinutes)} h)</Form.Label>
+                <Form.Control type="range" min={0} max={availableMinutes} step={minMinutes}                                          
                     value={totalMinutes}
                     onChange={e => {
                         setTotalMinutes(parseInt(e.target.value));
-                        setTotalHours(Utility.hoursFromMinutes(totalMinutes));
                     }}/>
             </Form.Group>
             
