@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import GoalModal from 'features/goal/goal.component';
+import GoalModal from 'features/goal/goal.components';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import toastService from 'app/toast.service';

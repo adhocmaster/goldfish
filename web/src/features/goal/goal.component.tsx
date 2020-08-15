@@ -30,294 +30,131 @@ import TaskComponent from './task.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusSquare, faPlusCircle, faList } from '@fortawesome/free-solid-svg-icons';
 
-export default function GoalModal(props: any): any {
 
+export default function GoalComponent(props: any): any {
 
-    const showGoalModal = useSelector( (state:RootState) => { return state.weekState.showGoalModal } );
-    // after a goal is created we need to add it to the week. This state helps with steps.
-    const isNewGoalCreated = useSelector( (state:RootState) => { return state.weekState.isNewGoalCreated } ); 
-
-    const goalId = useSelector((state: RootState) => { return state.goalState.id });
-    const titleFromStore = useSelector((state: RootState) => { return state.goalState.title });
-    const totalMinutesFromStore = useSelector((state: RootState) => { return state.goalState.totalMinutes });
-
-    const [weekDetails, setWeekDetails] = useState({});
-    const [title, setTitle] = useState<string>(titleFromStore);
-    const [totalMinutes, setTotalMinutes] = useState<number>(totalMinutesFromStore);
-    const [totalHours, setTotalHours] = useState<number>(0);
-    const [availableMinutes, setAvailableMinutes] = useState<number>(0);
-    const [availableHours, setAvailableHours] = useState<number>(0);
-    
-
-    useEffect(() => {
-
-        console.log("initializing goal modal");
-        if ( !deepEqual(props.weekDetails, weekDetails)) {
-            
-            console.log("Calling setWeekDetails In Goal Modal");
-            setWeekDetails(props.weekDetails);
-            setAvailableMinutes(weekService.getAvaiableMinutes(props.weekDetails));
-            setAvailableHours(weekService.getAvailableHours(props.weekDetails));
-        }
-
-
-        // if (existingGoal) {
-
-        //     setGoalId(existingGoal.categoryId);
-        //     setTitle(existingGoal.title);
-        //     setPlannedMinutes(existingGoal.plannedMinutes);
-    
-        // }
-        setTotalHours(Utility.hoursFromMinutes(totalMinutes));
-
-        if (isNewGoalCreated) {
-            
-            submit();
-
-        }
-    
-    });
-
-    function hide() {
-
-        actionManager.dispatch(WeekActionType.HIDE_GOAL_FORM);
-
-    }
-
-    function submit() {
-
-        //  user service to submit. dispatch actions based on the result.
-        // actionManager.dispatch(WeekActionType.SUBMIT_GOAL_FORM);
-
-        // new goal or old goal?
-        console.log("goalId: " + goalId);
-        if (!goalId) {
-            // need to create the goal first.
-            goalService.create({
-                title: title
-            })
-        } else {
-            // we have a goal id. Gotta add/update to the week.
-            let goal = { 
-
-                categoryId: goalId,
-                title: title,
-                totalMinutes: totalMinutes
-    
-            };
-            try {
-
-                weekService.addGoalToWeek(weekDetails, goal);
-
-            } catch(e) {
-                toastService.error(e.message);
-            }
-
-        }
-
-
-
-        // weekService.createGoal(weekDetails,);
-
-    }
-
-    function onHide() {
-        
-        actionManager.dispatch(WeekActionType.HIDE_GOAL_FORM);
-
-    }
-    
-
-    function getFavoriteComponent() {
-        return (
-            
-            <Card className='task-card favorite'>
-                <Card.Body>
-                    <div>{`<<`} Guitar</div>
-                </Card.Body>
-            </Card>
-        );
-    }
-
-    if (!weekDetails) {
-        return(
-            <Spinner animation="grow" />
-        )
-    }
-
-    return (
-        <>
-            <Modal show={showGoalModal} onHide={() => onHide()} dialogClassName="goal-modal">
-                <Modal.Body>
-                    <Container>
-                        
-                        <div className='text-info' style={{marginBottom: '0.5em', fontWeight:"bold", fontSize: '1.1rem'}}>
-                            Type title or select from favorites. {goalId}
-                        </div>
-                        <Row className='justify-content-around'>
-                            <Card className='week-category-card' style={{width:'18rem'}}>
-                                
-                                <Card.Body>
-                                    
-                                    <div className='text-info' style={{marginBottom: '0.5em'}}>
-                                    </div>
-                                    <Form.Group>
-                                        <Form.Label>Title</Form.Label>
-                                        <Form.Control type="text" placeholder='Type title of the goal'                                         
-                                            value={title}
-                                            onChange={e => {
-                                                setTitle(e.target.value);
-                                            }}
-                                        />
-                                    </Form.Group>
-                                    
-                                    <Form.Group>
-                                        
-                                        <Form.Label>Allocate: ({totalHours} of {availableHours} h)</Form.Label>
-                                        <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
-                                            value={totalMinutes}
-                                            onChange={e => {
-                                                setTotalMinutes(parseInt(e.target.value));
-                                                setTotalHours(Utility.hoursFromMinutes(totalMinutes));
-                                            }}/>
-                                    </Form.Group>
-                                    
-                                    <Form.Group>
-                                        <Form.Check
-                                            name="addToFavorite"
-                                            inline
-                                            label="Add to Favorites"
-                                            type='checkbox'
-                                            id='schedule-type-1'
-                                        />
-                                    </Form.Group>
-            
-                                </Card.Body>
-                            </Card>
-                            <Card className='week-category-card'>
-                                    
-                                <Card.Body>
-                                    
-                                    <div className='header'>
-                                        <b>Pick from Favorites</b>
-                                        <div className="float-right">
-                                            4 of 22
-                                        </div>
-                                        { getFavoriteComponent() }
-                                    </div>
-                                    
-                                </Card.Body>
-                            </Card>
-
-                        </Row>
-                    </Container>
-
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button size='sm' variant="secondary" onClick={() => hide()}>
-                    Close
-                    </Button>
-                    <Button size='sm' variant="primary" onClick={() => submit()}>
-                    Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    );
-}
-
-
-export function GoalComponent(props: any): any {
-
-    console.log("GoalComponent: enterred");
-    console.log(props);
+    console.log(props.goal.categoryId + " GoalComponent: enterred");
+    // console.log(props);
     const goalStatesFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.goalStates}, deepEqual);
     const weekDetailsFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.weekDetails}, deepEqual);
     const weekIdFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.weekId }, shallowEqual);
-    const [goals, setGoals] = useState<any>({});
+    const taskViewFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.taskView }, shallowEqual);
+    const [goal, setGoal] = useState<any>(props.goal);
     const [weekId, setWeekId] = useState<any>({});
-    console.log("GoalComponent: goalStatesFromStore");
-    console.log(goalStatesFromStore);
-    useEffect(() => {
-        console.log("GoalComponent: useEffect");
-        // if( !deepEqual(goals, goalStatesFromStore)) {
-        //     console.log('calling setGoals');
-        //     setGoals(goalStatesFromStore);
-        // }
+    const [isTaskView, setTaskView] = useState<boolean>(false);
+    const [isLocalTaskView, setLocalTaskView] = useState<boolean>(false);
 
-        // if ( weekId != weekIdFromStore ) {
-        //     console.log('calling setWeekId');
-        //     setWeekId(weekIdFromStore);
-        // }
+    // console.log(goal.categoryId + " GoalComponent: goalStatesFromStore");
+    // console.log(goalStatesFromStore);
+    useEffect(() => {
+        // console.log(goal.categoryId + " GoalComponent: useEffect");
+        // console.log(goal.categoryId + " GoalComponent: isTaskView: " + isTaskView);
+        // console.log(goal.categoryId + " GoalComponent: taskViewFromStore: " + taskViewFromStore);
+        // console.log(goal.categoryId + " GoalComponent: isLocalTaskView: " + isLocalTaskView);
+
+        // if localTaskView is true, isTaskView is true, if not synch with taskViewFromStore
+
+        if (isLocalTaskView && !isTaskView) {
+
+            // console.log(goal.categoryId + " GoalComponent: setTaskView to true");
+            setTaskView(true);
+
+        } else if (!isLocalTaskView && isTaskView != taskViewFromStore) {
+
+            // console.log(goal.categoryId + " GoalComponent: setTaskView from taskViewFromStore");
+            setTaskView(taskViewFromStore);
+            
+        }
+
+
+        if (!deepEqual(goal, goalStatesFromStore[goal.categoryId])) {
+            // console.log(goal.categoryId + " GoalComponent: setGoal");
+            setGoal(goal);
+        }
     
     });
 
     let cards = [];
-    let goal: any;
 
 
-    for (goal of Object.values(goalStatesFromStore)) {
-        
-        let goldCardView: any;
-        if (props.taskView == "checked" ) {
+    let goldCardView: any;
+    if (isTaskView) {
 
-            goldCardView = getTaskComponent(goal.tasks);
+        goldCardView = getTaskComponent(goal);
 
-        } else {
+    } else {
 
-            goldCardView = getNonTaskComponent(goal.tasks);
+        goldCardView = getNonTaskComponent(goal);
 
-        }
-
-        const progress = Utility.hoursFromMinutes(goal.completedMinutes / goal.totalMinutes);
-        cards.push(
-            <Card className='week-category-card'>
-                    
-                <Card.Body>
-                    <div className='header'>
-                        <b>{goal.title}</b>
-                        <div className="float-right">
-                            {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
-                            
-                        </div>
-                        <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
-                    </div>
-                    {
-                        goldCardView
-                    }
-                </Card.Body>
-                <Card.Footer>
-                    {
-                        props.taskView == "checked" &&
-                        getNewTaskForm(weekId, goal)
-                    }
-                </Card.Footer>
-            </Card>
-
-        )
     }
 
-    console.log("GoalComponent: rendering");
-    return cards;
+    const progress = Utility.hoursFromMinutes(goal.completedMinutes / goal.totalMinutes);
+    console.log(goal.categoryId + " GoalComponent: rendering");
+    return (
+        <Card className='week-category-card'>
+                
+            <Card.Body>
+                <div className='header'>
+                    <b>{goal.title}</b>
+                    <div className="float-right">
+                        {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
+                        
+                    </div>
+                    <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
+                </div>
+                {
+                    goldCardView
+                }
+            </Card.Body>
+            <Card.Footer>
+                {
+                    isTaskView &&
+                    getNewTaskForm(weekId, goal)
+                }
+            </Card.Footer>
+        </Card>
+
+    )
 
     // **************************** funct+ions **************************************//
     
 
-    function getNonTaskComponent(tasks: any[]) {
+    function getNonTaskComponent(goal: any) {
+        let tasks:[] = goal.tasks;
+
+        let availableMinutes = goal.totalMinutes - goal.completedMinutes;
+        let availableHours = Utility.hoursFromMinutes(availableMinutes);
+
         return (
             <Container>
                 <Row style={{justifyContent: "center"}}>
                     <div className='p-2'>
+
+                        <Form.Group>
+                    
+                            {/* <Form.Label>I have done more!: ({totalHours} of {availableHours} h)</Form.Label>
+                            <Form.Control type="range" min={30} max={availableHours} step={30}                                          
+                                value={totalMinutes}
+                                onChange={e => {
+                                    setTotalMinutes(parseInt(e.target.value));
+                                    setTotalHours(Utility.hoursFromMinutes(totalMinutes));
+                                }}/> */}
+                        </Form.Group>
                         
-                        <Button variant="link" size="lg">
-                            <FontAwesomeIcon icon={faPlusCircle} size="lg" color={"#ff9999"}/>
-    
+                        <Button variant="light" >
+                            <FontAwesomeIcon icon={faPlusCircle} color={"#ff8888"}/> Record hours
                         </Button>
                     </div>
                     <div className='p-2'>
                         
-                        <Button variant="link" size="lg">
-                            <FontAwesomeIcon icon={faList} size="lg" color={"#ff9999"}/>
+                        <Button variant="light"
+
+                            onClick={(e: any) => {
+                                setLocalTaskView(true)
+                            }}
+                        
+                        >
+                        <FontAwesomeIcon icon={faList} color={"#ff8888"}/> Record Tasks
     
                         </Button>
                     </div>
@@ -328,24 +165,27 @@ export function GoalComponent(props: any): any {
 
         ) 
     }
+    
+    function getTaskComponent(goal: any) {
+        let tasks:[] = goal.tasks;
 
-    function getTaskView(tasks: any[], taskView: string ) {
+        if (!tasks) {return}
 
-        let taskItems = [];
+        let taskViews = [];
         if (!tasks) {
             return <></>;
         }
         
 
         for (let task of tasks) {
-            taskItems.push(getTaskComponent(task));
+            taskViews.push(getTaskView(task));
         }
 
-        return taskItems;
+        return taskViews;
 
     }
     
-    function getTaskComponent(task: any) {
+    function getTaskView(task: any) {
         return (
             
             <Card className='task-card' id={`task-${task.taskNo}`}>
@@ -356,6 +196,7 @@ export function GoalComponent(props: any): any {
             </Card>
         );
     }
+
 
 
     function addTask(categoryId: string) {

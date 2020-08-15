@@ -20,7 +20,8 @@ export default function WeekReducer(state: any, action: any) {
                 days: 7
 
             },
-            goalStates: {}
+            goalStates: {},
+            taskView: true
         };
     }
 
@@ -76,6 +77,12 @@ export default function WeekReducer(state: any, action: any) {
         
         case  WeekActionType.HIDE_GOAL_FORM:
             state = {...state, showGoalModal: false};
+            break;
+            
+        
+        case  WeekActionType.SET_TASK_VIEW:
+            
+            state = {...state, taskView: action.payload.taskView};
             break;
 
     }

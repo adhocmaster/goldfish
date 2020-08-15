@@ -16,9 +16,11 @@ import Spinner from 'react-bootstrap/Spinner';
 
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 
-import GoalModal, { GoalComponent } from 'features/goal/goal.component';
+import GoalModal from 'features/goal/goal.modal';
+import GoalComponents from 'features/goal/goal.components';
+
 import TaskComponent from 'features/goal/task.component';
 import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
@@ -33,17 +35,22 @@ export default function WeekComponent( props: any ) {
     console.log("WeekComponent: enterred");
 
     const goalAdded = useSelector( (state:RootState) => { return state.weekState.goalAdded } );
+    const taskViewFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.taskView }, shallowEqual);
     console.log("goalAdded:" + goalAdded);
     // const weekUpdatedAt = useSelector( (state:RootState) => { return state.weekState.weekDetails.weekUpdatedAt } );
     // const weekDetailsFromStore = weekService.getFromStore();
     const weekDetails = weekService.getFromStore();
-    const [taskView, setTaskView] = useState("unchecked");
+    const [taskView, setTaskView] = useState<boolean>(false);
     // console.log("WeekComponent: weekDetailsFromStore:");
     // console.log(weekDetails);
 
     // const[weekDetails, setWeekDetails] = useState<any>(null);
 
     function getMenubar(props: any) {
+        let taskViewChecked = "";
+        if (taskView) {
+            taskViewChecked = "checked";
+        }
         return (
 
             <Row>
@@ -99,9 +106,11 @@ export default function WeekComponent( props: any ) {
                             type="switch"
                             id="custom-switch"
                             label="Task view"
-                            value={taskView}
+                            checked={taskView}
                             onChange={(e: any) => {
-                                setTaskView(e.target.value);
+
+                                actionManager.dispatch(WeekActionType.SET_TASK_VIEW, { taskView: e.target.checked });
+
                             }}
                         />
                         
@@ -218,7 +227,7 @@ export default function WeekComponent( props: any ) {
     function getGoalCards() {
 
         return (
-            <GoalComponent taskView={taskView} />
+            <GoalComponents taskView={taskView} />
         )
     }
 
@@ -241,7 +250,12 @@ export default function WeekComponent( props: any ) {
         //     console.log("calling setWeekDetails");
         //     setWeekDetails(weekDetailsFromStore);
         // }
-
+        console.log("WeekComponent: all render useEffect taskView: " + taskView);
+        console.log("WeekComponent: all render useEffect taskViewFromStore: " + taskViewFromStore);
+        if (taskView != taskViewFromStore ) {
+            console.log("WeekComponent: setTaskView");
+            setTaskView(taskViewFromStore);
+        }
     });
 
 
