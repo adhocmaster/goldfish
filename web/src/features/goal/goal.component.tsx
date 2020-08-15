@@ -141,55 +141,52 @@ export default function GoalComponent(props: any): any {
         }
 
         return (
-            <Container>
-                <Row>
-                    <div className='p-2'>
+            <div>
+                <div className='p-2'>
 
-                        <Form.Group>
+                    <Form.Group>
+                
+                        <Form.Label>I have done more:
+                        </Form.Label>
+                        <Form.Control type="range" min={0} max={goalAvailableMinutes} step={minMinutes}                                         
+                            value={recordMinutes}
+                            onChange={e => {
+                                let newMinutes = parseInt(e.target.value);
+                                console.log(newMinutes);
+                                setRecordMinutes(newMinutes);
+                            }}/>
+                    </Form.Group>
                     
-                            <Form.Label>I have done more:
-                            </Form.Label>
-                            <Form.Control type="range" min={0} max={goalAvailableMinutes} step={minMinutes}                                          
-                                value={recordMinutes}
-                                onChange={e => {
-                                    let newMinutes = parseInt(e.target.value);
-                                    console.log(newMinutes);
-                                    setRecordMinutes(newMinutes);
-                                }}/>
-                        </Form.Group>
-                        
-                        <Button variant="light" size="sm"
+                    <Button variant="light" size="sm"
 
-                            onClick={(e: any) => {
-                                try {
-                                    setRecordMinutes(0);
-                                    goalService.recordHours(weekDetailsFromStore, goal, recordMinutes);
-                                } catch (error) {
-                                    toastService.error(error.message);
-                                }
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faPlusCircle} color={"#44aa77"}/> Record hours (<b>{Utility.hoursFromMinutes(recordMinutes)}</b>/{goalAvailableHours} h)
-                        </Button> 
-                        
-                    </div>
-                    <div className='p-2'>
-                        
-                        <Button variant="light" size="sm"
+                        onClick={(e: any) => {
+                            try {
+                                setRecordMinutes(0);
+                                goalService.recordHours(weekDetailsFromStore, goal, recordMinutes);
+                            } catch (error) {
+                                toastService.error(error.message);
+                            }
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faPlusCircle} color={"#44aa77"}/> Record hours (<b>{Utility.hoursFromMinutes(recordMinutes)}</b>/{goalAvailableHours} h)
+                    </Button> 
+                    
+                </div>
+                <div className='p-2'>
+                    
+                    <Button variant="light" size="sm"
 
-                            onClick={(e: any) => {
-                                setLocalTaskView(true)
-                            }}
-                        
-                        >
-                            <FontAwesomeIcon icon={faList} color={"#888888"}/> {plannedTaskHourMessage}
+                        onClick={(e: any) => {
+                            setLocalTaskView(true)
+                        }}
+                    
+                    >
+                        <FontAwesomeIcon icon={faList} color={"#888888"}/> {plannedTaskHourMessage}
+
+                    </Button>
+                </div>
     
-                        </Button>
-                    </div>
-    
-                </Row>
-    
-            </Container>
+            </div>
 
         ) 
     }
