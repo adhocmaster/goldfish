@@ -137,52 +137,6 @@ class WeekService {
 
     }
 
-    public addTask(weekDetails: any, goal: any, task: any) {
-
-
-        const goalId = goal.categoryId;
-
-        console.log(`adding task ${task} to ${goalId}`);
-        // 1. check hours
-        if( !goalService.hasEnoughTimeFoTask(goal, task) ) {
-            throw new Error(`You have ${goalService.getAvailableHours(goal)}, but your attempted to allocate ${Utility.hoursFromMinutes( task.totalMinutes )}`)
-        }
-
-        let updatedTasks = [task];
-        if (goal.tasks) {
-            updatedTasks = [...goal.tasks, task];
-        }
-        const clonedGoal = {...goal, tasks: updatedTasks};
-
-        this.reCalculateGoalTimes(clonedGoal);
-
-        this.updateGoalOfWeek(weekDetails, clonedGoal, clonedGoal);
-
-    }
-    
-    public reCalculateGoalTimes(goal: any) {
-
-        
-        if(!goal.tasks) {
-            return;
-        }
-
-        let plannedMinutes = 0;
-        let completedMinutes = 0;
-
-        let taskIndex: number;
-        for (taskIndex = 0; taskIndex < goal.tasks?.length; ++taskIndex) {
-
-            let task = goal.tasks[taskIndex];
-            plannedMinutes += task.totalMinutes ?? 0;
-            completedMinutes += task.completedMinutes ?? 0;
-
-        }
-
-        goal.plannedMinutes = plannedMinutes;
-        goal.completedMinutes = completedMinutes;
-
-    }
 
     public addGoalToWeek(weekDetails: any, goal: any) {
 

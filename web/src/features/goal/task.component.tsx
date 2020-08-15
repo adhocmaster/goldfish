@@ -70,7 +70,7 @@ export default function TaskComponent(props: any): any {
         }
         try {
 
-            weekService.addTask(weekDetails, goal, task);
+            goalService.addTask(weekDetails, goal, task);
         } catch (error) {
             toastService.error(error.message);
         }

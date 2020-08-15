@@ -24,8 +24,8 @@ export default function ToastComponent(props: any) {
         <Toast show={show} onClose={() => toastService.clearMessage()}>
             <Toast.Header>
                 <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-                <strong className="mr-auto">Echo</strong>
-                <small>11 mins ago</small>
+                <strong className="mr-auto">Assist</strong>
+                <small>says:</small>
             </Toast.Header>
             <Toast.Body>{toastMessage}</Toast.Body>
         </Toast>
@@ -46,10 +46,10 @@ export function ToastErrorComponent(props: any) {
         <Toast show={show} onClose={() => toastService.clearError()}>
             <Toast.Header>
                 <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
-                <strong className="mr-auto">Echo</strong>
-                <small>11 mins ago</small>
+                <strong className="mr-auto">Assist</strong>
+                <small className="text-danger">complains:</small>
             </Toast.Header>
-            <Toast.Body>{toastMessage}</Toast.Body>
+            <Toast.Body className="text-danger">{toastMessage}</Toast.Body>
         </Toast>
     );
 

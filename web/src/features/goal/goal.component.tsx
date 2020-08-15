@@ -127,9 +127,15 @@ export default function GoalComponent(props: any): any {
         let tasks:[] = goal.tasks;
 
         let goalAvailableMinutes = goal.totalMinutes - goal.completedMinutes - goal.plannedMinutes;
+        if (!goalAvailableMinutes) goalAvailableMinutes = 0;
         let goalAvailableHours = Utility.hoursFromMinutes(goalAvailableMinutes);
         let goalTotalHours = Utility.hoursFromMinutes(goal.totalHours);
         let completedHours = Utility.hoursFromMinutes(goal.completedMinutes + newCompleteMinutes);
+
+        let plannedTaskHourMessage = <span>No planned tasks.</span>;
+        if (goal.plannedMinutes && goal.plannedMinutes != 0) {
+            plannedTaskHourMessage = <span>{Utility.hoursFromMinutes(goal.plannedMinutes)} h planned in tasks.</span>;
+        }
 
         return (
             <Container>
@@ -138,28 +144,29 @@ export default function GoalComponent(props: any): any {
 
                         <Form.Group>
                     
-                            <Form.Label>I have done more!: ({completedHours} of {goalAvailableHours} h)</Form.Label>
-                            <Form.Control type="range" min={30} max={goalAvailableHours} step={30}                                          
+                            <Form.Label>I have done more: ({completedHours} of {goalAvailableHours} h)
+                            </Form.Label>
+                            <Form.Control type="range" min={30} max={goalAvailableMinutes} step={30}                                          
                                 value={newCompleteMinutes}
                                 onChange={e => {
                                     setNewCompleteMinutes(parseInt(e.target.value));
                                 }}/>
                         </Form.Group>
                         
-                        <Button variant="light" >
-                            <FontAwesomeIcon icon={faPlusCircle} color={"#ff8888"}/> Record hours
+                        <Button variant="light" size="sm">
+                            <FontAwesomeIcon icon={faPlusCircle} color={"#44aa77"}/> Record hours
                         </Button>
                     </div>
                     <div className='p-2'>
                         
-                        <Button variant="light"
+                        <Button variant="light" size="sm"
 
                             onClick={(e: any) => {
                                 setLocalTaskView(true)
                             }}
                         
                         >
-                        <FontAwesomeIcon icon={faList} color={"#ff8888"}/> Manage Tasks
+                            <FontAwesomeIcon icon={faList} color={"#888888"}/> {plannedTaskHourMessage}
     
                         </Button>
                     </div>
@@ -189,9 +196,9 @@ export default function GoalComponent(props: any): any {
         return (
             <div ref={taskListRef}>
             
-                <div className='d-flex p-2 justify-content-center'>
+                <div className='d-flex p-2'>
                         
-                    <Button variant="light"
+                    <Button variant="light" size="sm"
 
                         onClick={(e: any) => {
                             setLocalTaskView(false);
@@ -207,6 +214,21 @@ export default function GoalComponent(props: any): any {
                 <div>
                     {taskViews}
 
+                </div>
+                <div className='d-flex p-2'>
+                        
+                    <Button variant="light" size="sm"
+
+                        onClick={(e: any) => {
+                            setLocalTaskView(false);
+                            // taskListRef.current?.set
+                            
+                        }}
+                    
+                    >
+                    <FontAwesomeIcon icon={faList} color={"#ff8888"}/> Hide Tasks
+
+                    </Button>
                 </div>
             </div>);
 

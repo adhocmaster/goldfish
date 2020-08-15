@@ -5,6 +5,7 @@ import { WeekActionType } from 'features/week/week.actions';
 import actionManager from 'framework/ActionManager';
 import toastService from 'app/toast.service';
 import Utility from 'framework/Utility';
+import weekService from 'features/week/week.service';
 
 class GoalService {
 
@@ -66,6 +67,57 @@ class GoalService {
         return false;
 
     }
+    
+    public addTask(weekDetails: any, goal: any, task: any) {
+
+
+        const goalId = goal.categoryId;
+
+        console.log(`adding task ${task} to ${goalId}`);
+        // 1. check hours
+        if( task.totalMinutes < 30 ) {
+            throw new Error(`Minimum task time is half an hour, but your attempted to allocate ${Utility.hoursFromMinutes( task.totalMinutes )} h`)
+        }
+
+        if( !this.hasEnoughTimeFoTask(goal, task) ) {
+            throw new Error(`You have ${this.getAvailableHours(goal)}, but your attempted to allocate ${Utility.hoursFromMinutes( task.totalMinutes )} h`)
+        }
+
+        let updatedTasks = [task];
+        if (goal.tasks) {
+            updatedTasks = [...goal.tasks, task];
+        }
+        const clonedGoal = {...goal, tasks: updatedTasks};
+
+        this.reCalculateGoalTimes(clonedGoal);
+
+        weekService.updateGoalOfWeek(weekDetails, clonedGoal, clonedGoal);
+
+    }
+    public reCalculateGoalTimes(goal: any) {
+
+        
+        if(!goal.tasks) {
+            return;
+        }
+
+        let plannedMinutes = 0;
+        let completedMinutes = 0;
+
+        let taskIndex: number;
+        for (taskIndex = 0; taskIndex < goal.tasks?.length; ++taskIndex) {
+
+            let task = goal.tasks[taskIndex];
+            plannedMinutes += task.totalMinutes ?? 0;
+            completedMinutes += task.completedMinutes ?? 0;
+
+        }
+
+        goal.plannedMinutes = plannedMinutes;
+        goal.completedMinutes = completedMinutes;
+
+    }
+    
 
 }
 
