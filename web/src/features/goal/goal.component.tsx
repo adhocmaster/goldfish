@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, createRef } from 'react';
 import ReduxUIComponent from '../../framework/ReduxUIComponent';
 import { RootState, store } from '../../app/store';
 import Container from 'react-bootstrap/Container';
@@ -42,10 +42,12 @@ export default function GoalComponent(props: any): any {
     const [goal, setGoal] = useState<any>(props.goal);
     const [weekId, setWeekId] = useState<any>({});
     const [isTaskView, setTaskView] = useState<boolean>(false);
-    const [isLocalTaskView, setLocalTaskView] = useState<boolean>(false);
+    const [isLocalTaskView, setLocalTaskView] = useState<boolean| undefined>(undefined);
+
+    const taskListRef = createRef<HTMLDivElement>();
 
     // console.log(goal.categoryId + " GoalComponent: goalStatesFromStore");
-    // console.log(goalStatesFromStore);
+    // console.log(goalStatesFromStore[goal.categoryId]);
     useEffect(() => {
         // console.log(goal.categoryId + " GoalComponent: useEffect");
         // console.log(goal.categoryId + " GoalComponent: isTaskView: " + isTaskView);
@@ -54,23 +56,24 @@ export default function GoalComponent(props: any): any {
 
         // if localTaskView is true, isTaskView is true, if not synch with taskViewFromStore
 
-        if (isLocalTaskView && !isTaskView) {
+        if (isLocalTaskView === undefined) {
 
-            // console.log(goal.categoryId + " GoalComponent: setTaskView to true");
-            setTaskView(true);
+            if (isTaskView != taskViewFromStore) {
+    
+                // console.log(goal.categoryId + " GoalComponent: setTaskView from taskViewFromStore");
+                setTaskView(taskViewFromStore);
+                
+            }
 
-        } else if (!isLocalTaskView && isTaskView != taskViewFromStore) {
-
-            // console.log(goal.categoryId + " GoalComponent: setTaskView from taskViewFromStore");
-            setTaskView(taskViewFromStore);
-            
+        } else if (isLocalTaskView !== isTaskView) {
+            setTaskView(isLocalTaskView);
         }
-
 
         if (!deepEqual(goal, goalStatesFromStore[goal.categoryId])) {
             // console.log(goal.categoryId + " GoalComponent: setGoal");
-            setGoal(goal);
+            setGoal(goalStatesFromStore[goal.categoryId]);
         }
+
     
     });
 
@@ -80,7 +83,7 @@ export default function GoalComponent(props: any): any {
     let goldCardView: any;
     if (isTaskView) {
 
-        goldCardView = getTaskComponent(goal);
+        goldCardView = <>{getTaskComponent(goal)} </>;
 
     } else {
 
@@ -181,7 +184,29 @@ export default function GoalComponent(props: any): any {
             taskViews.push(getTaskView(task));
         }
 
-        return taskViews;
+        return (
+            <div ref={taskListRef}>
+            
+                <div className='d-flex p-2 justify-content-center'>
+                        
+                    <Button variant="light"
+
+                        onClick={(e: any) => {
+                            setLocalTaskView(false);
+                            // taskListRef.current?.set
+                            
+                        }}
+                    
+                    >
+                    <FontAwesomeIcon icon={faList} color={"#ff8888"}/> Hide Tasks
+
+                    </Button>
+                </div>
+                <div>
+                    {taskViews}
+
+                </div>
+            </div>);
 
     }
     
