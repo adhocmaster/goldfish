@@ -43,6 +43,7 @@ export default function GoalComponent(props: any): any {
     const [weekId, setWeekId] = useState<any>({});
     const [isTaskView, setTaskView] = useState<boolean>(false);
     const [isLocalTaskView, setLocalTaskView] = useState<boolean| undefined>(undefined);
+    const [newCompleteMinutes, setNewCompleteMinutes] = useState(0);
 
     const taskListRef = createRef<HTMLDivElement>();
 
@@ -125,23 +126,24 @@ export default function GoalComponent(props: any): any {
     function getNonTaskComponent(goal: any) {
         let tasks:[] = goal.tasks;
 
-        let availableMinutes = goal.totalMinutes - goal.completedMinutes;
-        let availableHours = Utility.hoursFromMinutes(availableMinutes);
+        let goalAvailableMinutes = goal.totalMinutes - goal.completedMinutes - goal.plannedMinutes;
+        let goalAvailableHours = Utility.hoursFromMinutes(goalAvailableMinutes);
+        let goalTotalHours = Utility.hoursFromMinutes(goal.totalHours);
+        let completedHours = Utility.hoursFromMinutes(goal.completedMinutes + newCompleteMinutes);
 
         return (
             <Container>
-                <Row style={{justifyContent: "center"}}>
+                <Row>
                     <div className='p-2'>
 
                         <Form.Group>
                     
-                            {/* <Form.Label>I have done more!: ({totalHours} of {availableHours} h)</Form.Label>
-                            <Form.Control type="range" min={30} max={availableHours} step={30}                                          
-                                value={totalMinutes}
+                            <Form.Label>I have done more!: ({completedHours} of {goalAvailableHours} h)</Form.Label>
+                            <Form.Control type="range" min={30} max={goalAvailableHours} step={30}                                          
+                                value={newCompleteMinutes}
                                 onChange={e => {
-                                    setTotalMinutes(parseInt(e.target.value));
-                                    setTotalHours(Utility.hoursFromMinutes(totalMinutes));
-                                }}/> */}
+                                    setNewCompleteMinutes(parseInt(e.target.value));
+                                }}/>
                         </Form.Group>
                         
                         <Button variant="light" >
@@ -157,7 +159,7 @@ export default function GoalComponent(props: any): any {
                             }}
                         
                         >
-                        <FontAwesomeIcon icon={faList} color={"#ff8888"}/> Record Tasks
+                        <FontAwesomeIcon icon={faList} color={"#ff8888"}/> Manage Tasks
     
                         </Button>
                     </div>

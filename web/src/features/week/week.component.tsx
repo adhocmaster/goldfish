@@ -108,7 +108,7 @@ export default function WeekComponent( props: any ) {
                             label="Task view"
                             checked={taskView}
                             onChange={(e: any) => {
-
+                                // console.log("WeekComponent: taskView dispatching: " + e.target.checked );
                                 actionManager.dispatch(WeekActionType.SET_TASK_VIEW, { taskView: e.target.checked });
 
                             }}

@@ -21,7 +21,7 @@ export default function WeekReducer(state: any, action: any) {
 
             },
             goalStates: {},
-            taskView: true
+            taskView: false
         };
     }
 
@@ -82,6 +82,7 @@ export default function WeekReducer(state: any, action: any) {
         
         case  WeekActionType.SET_TASK_VIEW:
             
+            // console.log("WeekReducer: taskView dispatched: " + action.payload.taskView);
             state = {...state, taskView: action.payload.taskView};
             break;
 
