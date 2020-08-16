@@ -48,7 +48,7 @@ export class WeekService {
     }
 
 
-    private async updateByIdWithoutSecurityCheck(id: string, week: Week) {
+    private async updateByIdWithoutSecurityCheck(id: string, week: Week): Promise<Week> {
         week.modifiedAt = new Date();
         this.reCalculateTImes(week); // TODO do this at client end.
         await this.weekRepository.updateById(id, week);
@@ -78,7 +78,7 @@ export class WeekService {
 
     }
 
-    public async addCategory(currentUserProfile: UserProfile, weekId: string, category: CategorizedTasks) {
+    public async addCategory(currentUserProfile: UserProfile, weekId: string, category: CategorizedTasks): Promise<Week> {
         
         if (await this.weekRepository.canEdit(weekId, currentUserProfile[securityId])) {
 
@@ -104,6 +104,40 @@ export class WeekService {
             throw new HttpErrors.Unauthorized("Week not accessible");
         }
 
+    }
+
+    public async removeCategory(currentUserProfile: UserProfile, weekId: string, categoryId: string): Promise<Week> {
+        
+        
+        if (await this.weekRepository.canEdit(weekId, currentUserProfile[securityId])) {
+
+            let week = await this.weekRepository.findById(weekId);
+            if (week.categorizedTasks) {
+
+                let foundIndex = -1;
+
+                for (let catIndex = 0; catIndex < week.categorizedTasks.length; ++ catIndex) {
+                    let categorizedTasks = week.categorizedTasks[catIndex];
+                    if ( categorizedTasks.categoryId == categoryId ) {
+                        foundIndex = catIndex;
+                        break;
+                    }
+                }
+
+                if (foundIndex > -1) {
+                    week.categorizedTasks.splice(foundIndex, 1);
+                }
+                return await this.updateByIdWithoutSecurityCheck(weekId, week);
+            } else {
+
+                return this.weekRepository.findById(weekId);
+
+            }
+
+
+        } else {
+            throw new HttpErrors.Unauthorized("Week not accessible");
+        }
     }
 
     public categoryAlreadyExists(week: Week, category: CategorizedTasks) {

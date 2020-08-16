@@ -112,7 +112,7 @@ class WeekService {
             let weekStart = weeks[index].start;
             if (
                 weekStart.getDate() == date.getDate() 
-                &&  weekStart.getMonth() == date.getMonth() 
+                && weekStart.getMonth() == date.getMonth() 
                 && weekStart.getFullYear() == date.getFullYear()
                 ){
                 return index;
@@ -173,22 +173,13 @@ class WeekService {
                 // actionManager.dispatch(WeekActionType.WEEK_FETCHED, data, false);
                 actionManager.dispatch(WeekActionType.GOAL_ADDED_TO_WEEK, data);
 
-
             } else {
-
-                actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-                toastService.error(errors);
-
+                this.handleDataError(errors);
             }
 
         }).catch((error) => {
-            
-            const errors = ResponseProcessor.getHTTPError(error);
-            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-            toastService.error(errors);
+            this.handleHttpError(error);
         });
-
-
 
     }
 
@@ -227,21 +218,12 @@ class WeekService {
 
 
             } else {
-
-                actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-                toastService.error(errors);
-
+                this.handleDataError(errors);
             }
 
         }).catch((error) => {
-            
-            const errors = ResponseProcessor.getHTTPError(error);
-            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-            toastService.error(errors);
+            this.handleHttpError(error);
         });
-
-
-
 
     }
 
@@ -317,7 +299,45 @@ class WeekService {
 
     }
 
+    public removeGoalFromWeek(weekId: any, goalId: any) {
 
+        axios.delete(
+
+            this.serviceUrl + '/category/' + weekId + '/' + goalId, 
+
+        ).then( (result) => {
+
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("update: got week after adding goal.");
+                // let data = result.data;
+                // console.log(data);
+                actionManager.dispatch(WeekActionType.GOAL_REMOVED_FROM_WEEK, result.data);
+
+
+            } else {
+                this.handleDataError(errors);
+            }
+
+        }).catch((error) => {
+            this.handleHttpError(error);
+        });
+
+    }
+
+    private handleDataError(errors: any[]) {
+        actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+        toastService.error(errors);
+    }
+
+    private handleHttpError(error: any) {
+        const errors = ResponseProcessor.getHTTPError(error);
+        actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+        toastService.error(errors);
+    }
 
     public getGoalsWithoutId(goals: any, goalId: string) {
 

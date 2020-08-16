@@ -103,6 +103,12 @@ code {
   color: #dddddd;
 }
 
+.btn-goal-cross {
+  background: #404040;
+}
+.btn-goal-cross:hover {
+  background: #333333;
+}
 .record-form {
   border-bottom: 1px dashed #cccccc;
 }

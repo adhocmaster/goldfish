@@ -70,6 +70,22 @@ export default function WeekReducer(state: any, action: any) {
 
             break;
 
+        case WeekActionType.GOAL_REMOVED_FROM_WEEK:
+
+            // When a goal is added to week, some properties to the week changes. So, we need to change weekDetails
+            week = action.payload;
+            reCalculateTImes(week);
+            goalStates = createGoalStatesFromArr(week.categorizedTasks);
+            state = {
+                ...state, 
+                weekId: week.id, 
+                weekDetails: getWeekDetails(week),
+                goalStates: goalStates,
+                showGoalModal: false
+            }
+
+            break;
+
         case WeekActionType.SHOW_GOAL_FORM: 
 
             // console.log('SHOW_GOAL_FORM')
@@ -123,8 +139,6 @@ export default function WeekReducer(state: any, action: any) {
 
     
     function reCalculateTImes(week: any) {
-
-        
 
         if (!week.categorizedTasks) {
             return;

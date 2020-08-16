@@ -155,5 +155,23 @@ export class CategorizedTaskController {
 
     }
 
+    @del('/weeks/category/{weekId}/{id}', {
+        responses: {
+            '200': {
+                description: 'Week model instance',
+                content: { 'application/json': { schema: getModelSchemaRef(Week) } },
+            },
+        },
+    })
+    async deleteById(
+        @inject(SecurityBindings.USER)
+        currentUserProfile: UserProfile,
+        @param.path.string('weekId') weekId: string,
+        @param.path.string('id') categoryId: string
+    ): Promise<Week> {
+        
+      return this.weekService.removeCategory(currentUserProfile, weekId, categoryId);
+    }
+
 
 }

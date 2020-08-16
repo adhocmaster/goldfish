@@ -1,10 +1,9 @@
-import { faList, faPlusCircle, faMinusSquare, faEllipsisH, faEllipsisV, faCheckSquare, faCross, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare, faList, faPlusCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
 import Utility from 'framework/Utility';
 import React, { createRef, useEffect, useState } from 'react';
-import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -13,7 +12,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import goalService from './goal.service';
 import TaskComponent from './task.component';
-import Dropdown from 'react-bootstrap/Dropdown';
+import weekService from 'features/week/week.service';
 
 
 
@@ -25,10 +24,9 @@ export default function GoalComponent(props: any): any {
     const minMinutes = 30;
     const goalStatesFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.goalStates}, deepEqual);
     const weekDetailsFromStore: any = useSelector<any>((state:RootState) => { return state.weekState.weekDetails}, deepEqual);
-    const weekIdFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.weekId }, shallowEqual);
+    const weekId: any = useSelector<any>((state:RootState) => {  return state.weekState.weekId }, shallowEqual);
     const taskViewFromStore: any = useSelector<any>((state:RootState) => {  return state.weekState.taskView }, shallowEqual);
     const [goal, setGoal] = useState<any>(props.goal);
-    const [weekId, setWeekId] = useState<any>({});
     const [isTaskView, setTaskView] = useState<boolean>(false);
     const [isLocalTaskView, setLocalTaskView] = useState<boolean| undefined>(undefined);
     const [recordMinutes, setRecordMinutes] = useState(0);
@@ -114,6 +112,13 @@ export default function GoalComponent(props: any): any {
         const progress = Utility.getPercentage(goal.completedMinutes, goal.totalMinutes);
         return (
             <Card.Header className='non-task-header'>
+                <Button variant='link' className="float-right btn-goal-cross" size="sm"
+                    onClick={(e: any) => {
+                        removeGoal(goal.categoryId);
+                    }}                 
+                >
+                    <FontAwesomeIcon icon={faTimes} color={"#888888"}/>
+                </Button>
                 <div className='header'>
                     <div className='title'>{goal.title}</div>
                     <div className="progress-numeric">
@@ -296,7 +301,7 @@ export default function GoalComponent(props: any): any {
                     <Button variant="light"  size='sm'  className='float-right'
                         onClick={(e: any) => {
                             toastService.message("Task options");
-                            // removeTask(taskIndex);
+                            removeTask(taskIndex);
                         }}
                     > 
                         <FontAwesomeIcon icon={faTimes} color={"#ff8888"} />
@@ -309,17 +314,6 @@ export default function GoalComponent(props: any): any {
                     > 
                         <FontAwesomeIcon icon={faCheckSquare} color={"#cccccc"} />
                     </Button>
-                    {/* <Dropdown  className='float-right'>
-                        <Dropdown.Toggle variant="light" id="dropdown-basic" size='sm'>
-                            <FontAwesomeIcon icon={faEllipsisV} color={"#ff8888"} />
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown> */}
                     <div onClick={(e: any) => {toastService.message("Editing task is coming soon.")}}>{title}</div>
                 </Card.Body>
             </Card>
@@ -329,6 +323,10 @@ export default function GoalComponent(props: any): any {
     function removeTask(index: number) {
 
         goalService.removeTaskById(weekDetailsFromStore, goal, index);
+    }
+
+    function removeGoal(goalId: string) {
+        weekService.removeGoalFromWeek(weekId, goalId);
     }
 
 

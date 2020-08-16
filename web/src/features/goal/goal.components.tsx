@@ -73,7 +73,7 @@ export default function GoalComponents(props: any): any {
     for (goal of Object.values(goalStatesFromStore)) {
         
         const progress = Utility.hoursFromMinutes(goal.completedMinutes / goal.totalMinutes);
-        cards.push(<GoalComponent goal={goal} />)
+        cards.push(<GoalComponent goal={goal} key={goal.categoryId} />)
     }
 
     console.log("GoalComponents: rendering");
