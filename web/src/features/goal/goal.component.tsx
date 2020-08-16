@@ -232,14 +232,12 @@ export default function GoalComponent(props: any): any {
         return (
             <div ref={taskListRef}>
             
-                <div className='d-flex p-2'>
+                <div className='d-flex p-2 justify-content-center'>
                         
                     <Button variant="light" size="sm"
 
                         onClick={(e: any) => {
-                            setLocalTaskView(false);
-                            // taskListRef.current?.set
-                            
+                            setLocalTaskView(false);                            
                         }}
                     
                     >
@@ -258,15 +256,15 @@ export default function GoalComponent(props: any): any {
     function getTaskView(task: any, taskIndex: number) {
 
         if (task.isDummy) {
-            return getDummyTaskCard(task, taskIndex);
+            return getDummyTaskRow(task, taskIndex);
         }
 
-        return getTaskCard(task, taskIndex);
+        return getTaskRow(task, taskIndex);
 
     }
 
 
-    function getDummyTaskCard(task: any, taskIndex: number) {
+    function getDummyTaskRow(task: any, taskIndex: number) {
         
         const title = <em>Unplanned goal hours</em>;
         return (
@@ -278,7 +276,7 @@ export default function GoalComponent(props: any): any {
                             toastService.message("Task to be deleted");
                             removeTask(taskIndex);
                         }}
-                    > <FontAwesomeIcon icon={faTimes} color={"#ff8888"} />
+                    > <FontAwesomeIcon icon={faTimes} color={"#bbbbbb"} />
                     </Button>
                     <div onClick={(e: any) => {toastService.message("Editing task is coming soon.")}}>{title}</div>
                 </Card.Body>
@@ -287,32 +285,32 @@ export default function GoalComponent(props: any): any {
     }
 
 
-    function getTaskCard(task: any, taskIndex: number) {
+    function getTaskRow(task: any, taskIndex: number) {
         
         const title = task.title;
         let taskClass = "";
+        let doneBtnColor = "#bbbbbb"
         if (task.isDone) {
             taskClass = "task-done";
+            doneBtnColor = "#777777"
         }
         return (
 
-            <Card className='task-card taskClass' id={`task-${taskIndex}`}>
+            <Card className={`task-card ${taskClass}`} id={`task-${taskIndex}`}>
                 <Card.Body>
                     <Button variant="light"  size='sm'  className='float-right'
                         onClick={(e: any) => {
-                            toastService.message("Task options");
                             removeTask(taskIndex);
                         }}
                     > 
-                        <FontAwesomeIcon icon={faTimes} color={"#ff8888"} />
+                        <FontAwesomeIcon icon={faTimes} color={"#bbbbbb"} />
                     </Button>
                     <Button variant="light"  size='sm'  className='float-right'
                         onClick={(e: any) => {
-                            toastService.message("Implement task done.");
-                            // removeTask(taskIndex);
+                            completeTask(taskIndex);
                         }}
                     > 
-                        <FontAwesomeIcon icon={faCheckSquare} color={"#cccccc"} />
+                        <FontAwesomeIcon icon={faCheckSquare} color={doneBtnColor} />
                     </Button>
                     <div onClick={(e: any) => {toastService.message("Editing task is coming soon.")}}>{title}</div>
                 </Card.Body>
@@ -323,6 +321,11 @@ export default function GoalComponent(props: any): any {
     function removeTask(index: number) {
 
         goalService.removeTaskById(weekDetailsFromStore, goal, index);
+    }
+
+    function completeTask(index: number) {
+
+        goalService.completeTask(weekDetailsFromStore, goal, index);
     }
 
     function removeGoal(goalId: string) {

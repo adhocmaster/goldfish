@@ -127,11 +127,15 @@ code {
 }
 
 .dummy-task-card, .task-done {
+  background: #f9f9f9;
+  border: 0;
   color:#cccccc;
+  font-style: italic;
 }
 
 .week-category-card .card-footer{
   background-color: #dddddd;
+  padding-bottom: 1em;
 }
 
 .task-card .task-card-options:hover {

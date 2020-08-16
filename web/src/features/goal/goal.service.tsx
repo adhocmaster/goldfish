@@ -122,6 +122,26 @@ class GoalService {
 
     }
 
+    public completeTask(weekDetails: any, goal: any, index: number) {
+
+        // toastService.message("Removign task at index: " + index);
+
+        if( !goal.tasks ) { return }
+
+        const clonedTasks = [...goal.tasks];
+        const clonedTask = {...clonedTasks[index]}
+        
+        clonedTask.isDone = true;
+        clonedTask.completedMinutes = clonedTask.totalMinutes;
+
+        clonedTasks[index] = clonedTask;
+
+        const clonedGoal = {...goal, tasks: clonedTasks};
+
+        this.updateByClonedGoal(weekDetails, clonedGoal)
+
+    }
+
     public updateByClonedGoal(weekDetails: any, clonedGoal: any) {
         
         this.reCalculateGoalTimes(clonedGoal);
@@ -168,9 +188,6 @@ class GoalService {
 
     }
 
-    public completeTask(weekDetails: any, goal: any, taskIndex: number) {
-
-    }
     
 
 }
