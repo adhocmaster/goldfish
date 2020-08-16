@@ -1,9 +1,13 @@
+import { ActionType } from "app/actionTypes";
+import { Redirect } from "react-router-dom";
+
 export default function userReducer(state: any, action: any) {
 
     if( state === undefined) {
         state = { 
-            users: [], 
-            count: 0
+            email: undefined,
+            name: undefined,
+            accountErrors: []
         };
     }
 

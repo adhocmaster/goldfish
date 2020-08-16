@@ -8,13 +8,14 @@ import {
   Link
 } from "react-router-dom";
 import NavComponent from './components/NavComponent';
-import LoginComponent from './account/LoginComponent';
-import LogoutComponent from './account/LogoutComponent';
+import LoginComponent from './account/login.component';
+import LogoutComponent from './account/logout.component';
 import SettingsComponent from 'account/settings.component';
 import YearComponent from './features/year/year.component';
 import WeekComponent from 'features/week/week.component';
 import userService from 'features/user/user.service';
 import ToastComponent, { ToastErrorComponent } from 'components/toast.component';
+import SignupComponent from 'account/signup.component';
 
 
 function App() {
@@ -25,6 +26,9 @@ function App() {
         <Switch>
           <Route path="/login">
             <LoginComponent />
+          </Route>
+          <Route path="/signup">
+            <SignupComponent  />
           </Route>
           {/* {
               userService.isLoggedIn() &&

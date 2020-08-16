@@ -7,8 +7,12 @@ import { RootState } from 'app/store';
 import { shallowEqual, useSelector } from 'react-redux';
 import cookies from 'framework/Cookie';
 import { Redirect } from 'react-router-dom';
+import config from 'framework/Configuration';
+import toastService from 'app/toast.service';
 
 class UserService {
+
+    serviceUrl = config.getBackend() + "/users";
 
     constructor() {
 
@@ -48,7 +52,8 @@ class UserService {
 
     public login(email: string, password:string) {
 
-        axios.post("http://localhost:4000/users/login", {
+        axios.post(
+            this.serviceUrl + "/login", {
 
                 email: email,
                 password: password
@@ -119,6 +124,53 @@ class UserService {
     }
 
 
+
+    public signup(name: string, email: string, password:string) {
+
+        axios.post(
+            this.serviceUrl + "/signup", {
+
+                name: name,
+                email: email,
+                password: password
+
+            }).then(response => {
+
+                // console.log(result);
+
+                const errors = ResponseProcessor.getError(response.data);
+
+                if ( errors.length == 0 ) {
+
+                    console.log("USER CREATED");
+                    actionManager.dispatch(ActionType.ACCOUNT_CREATED, response.data);
+
+
+                } else {
+
+                    this.handleDataError(errors);
+
+                }
+
+            }).catch(error => {
+            
+                this.handleHttpError(error);
+            }
+        );
+    }
+
+    
+    private handleDataError(errors: any[]) {
+        actionManager.dispatch(ActionType.ACCOUNT_ERROR, errors, true);
+        toastService.error(errors);
+
+    }
+
+    private handleHttpError(error: any) {
+        const errors = ResponseProcessor.getHTTPError(error);
+        actionManager.dispatch(ActionType.ACCOUNT_ERROR, errors, true);
+        toastService.error(errors);
+    }
 
 }
 
