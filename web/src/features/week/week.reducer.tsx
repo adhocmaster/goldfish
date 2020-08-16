@@ -3,6 +3,7 @@ import actionManager from 'framework/ActionManager';
 import { WeekActionType } from 'features/week/week.actions';
 import toastService from 'app/toast.service';
 import _ from 'lodash'
+import goalService from 'features/goal/goal.service';
 
 
 export default function WeekReducer(state: any, action: any) {
@@ -123,6 +124,8 @@ export default function WeekReducer(state: any, action: any) {
     
     function reCalculateTImes(week: any) {
 
+        
+
         if (!week.categorizedTasks) {
             return;
         }
@@ -134,6 +137,7 @@ export default function WeekReducer(state: any, action: any) {
         for (catIndex = 0; catIndex < week.categorizedTasks?.length; ++catIndex) {
 
             let catTasks = week.categorizedTasks[catIndex];
+            goalService.reCalculateGoalTimes(catTasks);
             plannedMinutes += catTasks.totalMinutes ?? 0;
             completedMinutes += catTasks.completedMinutes ?? 0;
 

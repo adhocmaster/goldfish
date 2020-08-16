@@ -149,6 +149,8 @@ export class CategorizedTaskController {
         categorizedTasks.categoryId = savedCategory.id;
         categorizedTasks.title = savedCategory.title;
         categorizedTasks.totalMinutes = totalMinutes;
+        // categorizedTasks.plannedMinutes = 0;
+        // categorizedTasks.completedMinutes = 0;
         return this.weekService.addCategory(currentUserProfile, weekId, categorizedTasks);
 
     }

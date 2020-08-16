@@ -82,7 +82,9 @@ export default function GoalComponent(props: any): any {
 
     }
 
-    const progress = Utility.hoursFromMinutes(goal.completedMinutes / goal.totalMinutes);
+    const progress = Utility.getPercentage(goal.completedMinutes, goal.totalMinutes);
+    console.log(goal.categoryId + " completedMinutes: " + goal.completedMinutes);
+    console.log(goal.categoryId + " totalMinutes: " + goal.totalMinutes);
     console.log(goal.categoryId + " GoalComponent: rendering");
     return (
         <Card className='week-category-card'>
@@ -148,7 +150,7 @@ export default function GoalComponent(props: any): any {
 
                         onClick={(e: any) => {
                             try {
-                                setRecordMinutes(0);
+                                setRecordMinutes(0); // state changes here.
                                 goalService.recordHours(weekDetailsFromStore, goal, recordMinutes);
                             } catch (error) {
                                 toastService.error(error.message);

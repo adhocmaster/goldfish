@@ -32,6 +32,14 @@ class Utility {
 
     }
 
+    public getPercentage(value: number | undefined, of: number | undefined) {
+
+        if (of && of > 0)
+            return (value ?? 0) * 100 / of;
+        
+        return 0;
+    }
+
 }
 
 export default new Utility();

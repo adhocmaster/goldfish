@@ -163,7 +163,7 @@ class GoalService {
         if(!goal.tasks) {
             return goal.totalMinutes;
         }
-        this.reCalculateGoalTimes(goal);
+        // this.reCalculateGoalTimes(goal); // cannot change state here.
         return goal.totalMinutes - goal.plannedMinutes;
 
     }
