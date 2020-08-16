@@ -115,6 +115,72 @@ export default function GoalComponent(props: any): any {
     // **************************** funct+ions **************************************//
     
 
+    // function getNonTaskComponent(goal: any) {
+    //     let tasks:[] = goal.tasks;
+
+    //     let goalAvailableMinutes = goalService.getGoalAvailableMinutes(goal);
+    //     if (!goalAvailableMinutes) goalAvailableMinutes = 0;
+    //     let goalAvailableHours = Utility.hoursFromMinutes(goalAvailableMinutes);
+    //     let goalTotalHours = Utility.hoursFromMinutes(goal.totalHours);
+    //     let completedHours = Utility.hoursFromMinutes(goal.completedMinutes + recordMinutes);
+
+    //     let plannedTaskHourMessage = <span>No planned tasks.</span>;
+    //     if (goal.plannedMinutes && goal.plannedMinutes != 0) {
+    //         plannedTaskHourMessage = <span><b>{Utility.hoursFromMinutes(goal.plannedMinutes)} h</b> planned in tasks.</span>;
+    //     }
+
+    //     return (
+    //         <div>
+    //             <div className='p-2'>
+
+    //                 <Form.Group>
+                
+    //                     <Form.Label>I have done more:
+    //                     </Form.Label>
+    //                     <Form.Control type="range" min={0} max={goalAvailableMinutes} step={minMinutes}                                         
+    //                         value={recordMinutes}
+    //                         onChange={e => {
+    //                             let newMinutes = parseInt(e.target.value);
+    //                             console.log(newMinutes);
+    //                             setRecordMinutes(newMinutes);
+    //                         }}/>
+    //                 </Form.Group>
+                    
+    //                 <Button variant="light" size="sm"
+
+    //                     onClick={(e: any) => {
+    //                         try {
+    //                             setRecordMinutes(0); // state changes here.
+    //                             goalService.recordHours(weekDetailsFromStore, goal, recordMinutes);
+    //                         } catch (error) {
+    //                             toastService.error(error.message);
+    //                         }
+    //                     }}
+    //                 >
+    //                     <FontAwesomeIcon icon={faPlusCircle} color={"#44aa77"}/> Record hours (<b>{Utility.hoursFromMinutes(recordMinutes)}</b>/{goalAvailableHours} h)
+    //                 </Button> 
+                    
+    //             </div>
+    //             <div className='p-2'>
+                    
+    //                 <Button variant="light" size="sm"
+
+    //                     onClick={(e: any) => {
+    //                         setLocalTaskView(true)
+    //                     }}
+                    
+    //                 >
+    //                     <FontAwesomeIcon icon={faList} color={"#888888"}/> {plannedTaskHourMessage}
+
+    //                 </Button>
+    //             </div>
+    
+    //         </div>
+
+    //     ) 
+    // }
+    
+
     function getNonTaskComponent(goal: any) {
         let tasks:[] = goal.tasks;
 
@@ -179,7 +245,6 @@ export default function GoalComponent(props: any): any {
 
         ) 
     }
-    
     function getTaskComponent(goal: any) {
         let tasks:[] = goal.tasks;
 
