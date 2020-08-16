@@ -9,7 +9,13 @@ export class CategorizedTasks extends Model {
         type: 'string',
         required: true
       })
-    categoryId: string;
+    categoryId?: string;
+
+    @property({
+      type: 'string',
+      required: true,
+    })
+    title?: string;
     
     @property({
       type: 'date',

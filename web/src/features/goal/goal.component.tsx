@@ -13,6 +13,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import goalService from './goal.service';
 import TaskComponent from './task.component';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 
 
@@ -267,6 +268,17 @@ export default function GoalComponent(props: any): any {
                     > 
                         <FontAwesomeIcon icon={faEllipsisV} color={"#ff8888"} />
                     </Button>
+                    {/* <Dropdown>
+                        <Dropdown.Toggle variant="light" id="dropdown-basic">
+                            <FontAwesomeIcon icon={faEllipsisV} color={"#ff8888"} />
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown> */}
                     <div onClick={(e: any) => {toastService.message("Editing task is coming soon.")}}>{title}</div>
                 </Card.Body>
             </Card>

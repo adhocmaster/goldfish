@@ -93,9 +93,11 @@ export default function GoalModal(props: any): any {
         console.log("goalId: " + goalId);
         if (!goalId) {
             // need to create the goal first.
-            goalService.create({
-                title: title
-            })
+            // goalService.create({
+            //     title: title
+            // })
+            
+            weekService.createAndAddGoalToCategory(weekDetails, {title: title}, totalMinutes);
         } else {
             // we have a goal id. Gotta add/update to the week.
             let goal = { 
@@ -174,7 +176,7 @@ export default function GoalModal(props: any): any {
                                     <Form.Group>
                                         
                                         <Form.Label>Allocate: ({totalHours} of {availableHours} h)</Form.Label>
-                                        <Form.Control type="range" min={30} max={availableMinutes} step={30}                                          
+                                        <Form.Control type="range" min={0} max={availableMinutes} step={30}                                          
                                             value={totalMinutes}
                                             onChange={e => {
                                                 setTotalMinutes(parseInt(e.target.value));

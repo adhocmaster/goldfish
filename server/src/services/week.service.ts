@@ -88,6 +88,11 @@ export class WeekService {
                 if (this.categoryAlreadyExists(week, category)) {
                     throw new HttpErrors.Conflict("Category already exists in the week.");
                 }
+
+                if (! category.tasks ) {
+                    category.tasks = []
+                }
+                
                 week.categorizedTasks?.push(category);
             }
             else

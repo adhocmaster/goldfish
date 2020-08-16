@@ -135,6 +135,63 @@ class WeekService {
 
     }
 
+    public createAndAddGoalToCategory(weekDetails: any, goal: any, totalMinutes: number) {
+
+        // 1. check already existing
+
+        let timedGoal = {...goal, totalMinutes: totalMinutes};
+
+        if (this.goalAlreadyExists(weekDetails, timedGoal)) {
+            
+            throw new Error(`Goal already exists.`);
+
+        }
+        // 2. check hours
+        if( timedGoal.totalMinutes < 30) {
+            throw new Error(`Minimum amount of time is half an hour, but your attempted to allocate ${Utility.hoursFromMinutes( timedGoal.totalMinutes )}`);
+        }
+        
+        if( !this.hasEnoughTimeForGoal(weekDetails, timedGoal) ) {
+            throw new Error(`You have ${this.getAvailableHours(weekDetails)}, but your attempted to allocate ${Utility.hoursFromMinutes( timedGoal.totalMinutes )}`);
+        }
+
+        axios.post(
+
+            this.serviceUrl + '/new-category/' + weekDetails.id + '/' + totalMinutes, 
+            goal
+
+        ).then( (result) => {
+
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("update: got week after creating new goal.");
+                let data = result.data;
+                console.log(data);
+                // actionManager.dispatch(WeekActionType.WEEK_FETCHED, data, false);
+                actionManager.dispatch(WeekActionType.GOAL_ADDED_TO_WEEK, data);
+
+
+            } else {
+
+                actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+                toastService.error(errors);
+
+            }
+
+        }).catch((error) => {
+            
+            const errors = ResponseProcessor.getHTTPError(error);
+            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+            toastService.error(errors);
+        });
+
+
+
+    }
+
 
     public addGoalToWeek(weekDetails: any, goal: any) {
 
