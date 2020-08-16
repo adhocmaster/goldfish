@@ -70,7 +70,7 @@ export default function TaskComponent(props: any): any {
             </Form.Group>
             <Form.Group>
                 
-                <Form.Label>Allocate: ({Utility.hoursFromMinutes(totalMinutes)} of {Utility.hoursFromMinutes(availableMinutes)} h)</Form.Label>
+                <Form.Label>Time: ({Utility.hoursFromMinutes(totalMinutes)} of {Utility.hoursFromMinutes(availableMinutes)} h)</Form.Label>
                 <Form.Control type="range" min={0} max={availableMinutes} step={minMinutes}                                          
                     value={totalMinutes}
                     onChange={e => {

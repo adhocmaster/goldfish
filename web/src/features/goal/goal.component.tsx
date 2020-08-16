@@ -1,4 +1,4 @@
-import { faList, faPlusCircle, faMinusSquare, faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faList, faPlusCircle, faMinusSquare, faEllipsisH, faEllipsisV, faCheckSquare, faCross, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
@@ -72,32 +72,27 @@ export default function GoalComponent(props: any): any {
 
 
     let goldCardView: any;
+    let cardHeader: any;
     if (isTaskView) {
 
         goldCardView = <>{getTaskComponent(goal)} </>;
+        cardHeader = getTaskHeader(goal);
 
     } else {
 
         goldCardView = getNonTaskComponent(goal);
+        cardHeader = getNonTaskHeader(goal);
 
     }
 
-    const progress = Utility.getPercentage(goal.completedMinutes, goal.totalMinutes);
     console.log(goal.categoryId + " completedMinutes: " + goal.completedMinutes);
     console.log(goal.categoryId + " totalMinutes: " + goal.totalMinutes);
     console.log(goal.categoryId + " GoalComponent: rendering");
     return (
         <Card className='week-category-card'>
+            {cardHeader}
                 
             <Card.Body>
-                <div className='header'>
-                    <b>{goal.title}</b>
-                    <div className="float-right">
-                        {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
-                        
-                    </div>
-                    <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
-                </div>
                 {
                     goldCardView
                 }
@@ -115,70 +110,23 @@ export default function GoalComponent(props: any): any {
     // **************************** funct+ions **************************************//
     
 
-    // function getNonTaskComponent(goal: any) {
-    //     let tasks:[] = goal.tasks;
+    function getNonTaskHeader(goal: any) {
+        const progress = Utility.getPercentage(goal.completedMinutes, goal.totalMinutes);
+        return (
+            <Card.Header className='non-task-header'>
+                <div className='header'>
+                    <div className='title'>{goal.title}</div>
+                    <div className="progress-numeric">
+                        {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
+                        
+                    </div>
+                    <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
+                </div>
 
-    //     let goalAvailableMinutes = goalService.getGoalAvailableMinutes(goal);
-    //     if (!goalAvailableMinutes) goalAvailableMinutes = 0;
-    //     let goalAvailableHours = Utility.hoursFromMinutes(goalAvailableMinutes);
-    //     let goalTotalHours = Utility.hoursFromMinutes(goal.totalHours);
-    //     let completedHours = Utility.hoursFromMinutes(goal.completedMinutes + recordMinutes);
+            </Card.Header>
+        );
 
-    //     let plannedTaskHourMessage = <span>No planned tasks.</span>;
-    //     if (goal.plannedMinutes && goal.plannedMinutes != 0) {
-    //         plannedTaskHourMessage = <span><b>{Utility.hoursFromMinutes(goal.plannedMinutes)} h</b> planned in tasks.</span>;
-    //     }
-
-    //     return (
-    //         <div>
-    //             <div className='p-2'>
-
-    //                 <Form.Group>
-                
-    //                     <Form.Label>I have done more:
-    //                     </Form.Label>
-    //                     <Form.Control type="range" min={0} max={goalAvailableMinutes} step={minMinutes}                                         
-    //                         value={recordMinutes}
-    //                         onChange={e => {
-    //                             let newMinutes = parseInt(e.target.value);
-    //                             console.log(newMinutes);
-    //                             setRecordMinutes(newMinutes);
-    //                         }}/>
-    //                 </Form.Group>
-                    
-    //                 <Button variant="light" size="sm"
-
-    //                     onClick={(e: any) => {
-    //                         try {
-    //                             setRecordMinutes(0); // state changes here.
-    //                             goalService.recordHours(weekDetailsFromStore, goal, recordMinutes);
-    //                         } catch (error) {
-    //                             toastService.error(error.message);
-    //                         }
-    //                     }}
-    //                 >
-    //                     <FontAwesomeIcon icon={faPlusCircle} color={"#44aa77"}/> Record hours (<b>{Utility.hoursFromMinutes(recordMinutes)}</b>/{goalAvailableHours} h)
-    //                 </Button> 
-                    
-    //             </div>
-    //             <div className='p-2'>
-                    
-    //                 <Button variant="light" size="sm"
-
-    //                     onClick={(e: any) => {
-    //                         setLocalTaskView(true)
-    //                     }}
-                    
-    //                 >
-    //                     <FontAwesomeIcon icon={faList} color={"#888888"}/> {plannedTaskHourMessage}
-
-    //                 </Button>
-    //             </div>
-    
-    //         </div>
-
-    //     ) 
-    // }
+    }
     
 
     function getNonTaskComponent(goal: any) {
@@ -197,12 +145,10 @@ export default function GoalComponent(props: any): any {
 
         return (
             <div>
-                <div className='p-2'>
+                <div className='p-2 record-form'>
 
                     <Form.Group>
                 
-                        <Form.Label>I have done more:
-                        </Form.Label>
                         <Form.Control type="range" min={0} max={goalAvailableMinutes} step={minMinutes}                                         
                             value={recordMinutes}
                             onChange={e => {
@@ -244,6 +190,22 @@ export default function GoalComponent(props: any): any {
             </div>
 
         ) 
+    }
+
+    function getTaskHeader(goal: any) {
+        const progress = Utility.getPercentage(goal.completedMinutes, goal.totalMinutes);
+        return (
+            <Card.Header>
+                <div className='header'>
+                    <b>{goal.title}</b>
+                    <div className="float-right">
+                        {Utility.hoursFromMinutes(goal.completedMinutes)}/{Utility.hoursFromMinutes(goal.totalMinutes)} h
+                        
+                    </div>
+                    <ProgressBar min={5} now={progress} label={`${progress}%`} variant="info" />
+                </div>
+            </Card.Header>
+        );
     }
     function getTaskComponent(goal: any) {
         let tasks:[] = goal.tasks;
@@ -304,14 +266,14 @@ export default function GoalComponent(props: any): any {
         const title = <em>Unplanned goal hours</em>;
         return (
 
-            <Card className='task-card' id={`task-${taskIndex}`}>
+            <Card className='task-card dummy-task-card' id={`task-${taskIndex}`}>
                 <Card.Body>
                     <Button variant="light"  size='sm'  className='float-right'
                         onClick={(e: any) => {
                             toastService.message("Task to be deleted");
                             removeTask(taskIndex);
                         }}
-                    > <FontAwesomeIcon icon={faMinusSquare} color={"#ff8888"} />
+                    > <FontAwesomeIcon icon={faTimes} color={"#ff8888"} />
                     </Button>
                     <div onClick={(e: any) => {toastService.message("Editing task is coming soon.")}}>{title}</div>
                 </Card.Body>
@@ -323,9 +285,13 @@ export default function GoalComponent(props: any): any {
     function getTaskCard(task: any, taskIndex: number) {
         
         const title = task.title;
+        let taskClass = "";
+        if (task.isDone) {
+            taskClass = "task-done";
+        }
         return (
 
-            <Card className='task-card' id={`task-${taskIndex}`}>
+            <Card className='task-card taskClass' id={`task-${taskIndex}`}>
                 <Card.Body>
                     <Button variant="light"  size='sm'  className='float-right'
                         onClick={(e: any) => {
@@ -333,10 +299,18 @@ export default function GoalComponent(props: any): any {
                             // removeTask(taskIndex);
                         }}
                     > 
-                        <FontAwesomeIcon icon={faEllipsisV} color={"#ff8888"} />
+                        <FontAwesomeIcon icon={faTimes} color={"#ff8888"} />
                     </Button>
-                    {/* <Dropdown>
-                        <Dropdown.Toggle variant="light" id="dropdown-basic">
+                    <Button variant="light"  size='sm'  className='float-right'
+                        onClick={(e: any) => {
+                            toastService.message("Implement task done.");
+                            // removeTask(taskIndex);
+                        }}
+                    > 
+                        <FontAwesomeIcon icon={faCheckSquare} color={"#cccccc"} />
+                    </Button>
+                    {/* <Dropdown  className='float-right'>
+                        <Dropdown.Toggle variant="light" id="dropdown-basic" size='sm'>
                             <FontAwesomeIcon icon={faEllipsisV} color={"#ff8888"} />
                         </Dropdown.Toggle>
 

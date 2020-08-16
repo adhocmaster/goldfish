@@ -57,6 +57,7 @@ code {
   height: fit-content;
   margin: 5px;
   background-color: #f3f3f3;
+  border: 0;
 }
 @media (max-width: 992px) {
   
@@ -89,9 +90,27 @@ code {
 
 }
 
+.week-category-card .non-task-header {
+  text-align: center;
+  background-color: #444444;
+  color: #aaaaaa;
+}
+
+.non-task-header .title {
+  padding-top: 30px;
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #dddddd;
+}
+
+.record-form {
+  border-bottom: 1px dashed #cccccc;
+}
+
 .task-card {
   margin-top: 0.5rem;
   color: #666666;
+  font-size: 0.9em;
 }
 .task-card:hover {
   background-color: #fff5ec;
@@ -99,6 +118,14 @@ code {
 
 .task-card .card-body, .week-category-card .card-footer{
   padding: 0.3rem 0.5rem 0.4rem 0.5rem;
+}
+
+.dummy-task-card, .task-done {
+  color:#cccccc;
+}
+
+.week-category-card .card-footer{
+  background-color: #dddddd;
 }
 
 .task-card .task-card-options:hover {
