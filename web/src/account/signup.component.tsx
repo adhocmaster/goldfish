@@ -50,11 +50,11 @@ export default function SignupComponent(props: any) {
                         <Card.Body>
                             <Card.Title>Sign up</Card.Title>
                             <Form>
-                                <Form.Group controlId="formEmail">
+                                <Form.Group controlId="formName">
                                     <Form.Control type="text" placeholder="Name"
                                         value={name}
                                         onChange={e => {
-                                            setemail(e.target.value);
+                                            setName(e.target.value);
                                         }} />
                                     <Form.Text className="text-muted">
                                     </Form.Text>

@@ -35,7 +35,7 @@ export default function LoginComponent(props: any) {
 
     if (userService.isLoggedIn()) {
 
-        return (<Redirect to="/week"></Redirect>);
+        return (<Redirect to="/account-wizard"></Redirect>);
 
     }
 

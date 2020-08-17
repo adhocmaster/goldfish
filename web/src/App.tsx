@@ -7,15 +7,16 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import NavComponent from './components/NavComponent';
+import NavComponent from './app/nav.component';
 import LoginComponent from './account/login.component';
 import LogoutComponent from './account/logout.component';
 import SettingsComponent from 'account/settings.component';
 import YearComponent from './features/year/year.component';
 import WeekComponent from 'features/week/week.component';
 import userService from 'features/user/user.service';
-import ToastComponent, { ToastErrorComponent } from 'components/toast.component';
+import ToastComponent, { ToastErrorComponent } from 'app/toast.component';
 import SignupComponent from 'account/signup.component';
+import AccountWizardComponent from 'account/accountWizard.component';
 
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
           </Route>
           <Route path="/signup">
             <SignupComponent  />
+          </Route>
+          <Route path="/account-wizard">
+            <AccountWizardComponent  />
           </Route>
           {/* {
               userService.isLoggedIn() &&

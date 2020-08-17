@@ -12,7 +12,7 @@ import {
 } from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {model, property, repository} from '@loopback/repository';
-import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
+import {get, getModelSchemaRef, post, requestBody, HttpErrors} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
@@ -67,12 +67,7 @@ export class UserController {
         content: {
           'application/json': {
             schema: {
-              type: 'object',
-              properties: {
-                token: {
-                  type: 'string',
-                },
-              },
+              type: 'object'
             },
           },
         },
@@ -81,7 +76,7 @@ export class UserController {
   })
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
-  ): Promise<{token: string}> {
+  ): Promise<any> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
     // convert a User object into a UserProfile object (reduced set of properties)
@@ -89,7 +84,9 @@ export class UserController {
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
-    return {token};
+    // const user = await this.userRepository.findById(userProfile[securityId]);
+    const userWithAuth = {...user, authToken: token};
+    return _.omit(userWithAuth, ["password"]);
   }
 
   @authenticate('jwt')
@@ -131,7 +128,7 @@ export class UserController {
   }
 
 
-  @post('/signup', {
+  @post('/users/signup', {
     responses: {
       '200': {
         description: 'User',
@@ -168,6 +165,44 @@ export class UserController {
     // await this.userRepository.userCredentials(savedUser.id).create({password});
 
     return savedUser;
+  }
+
+
+  @authenticate('jwt')
+  @post('/users/next-action', {
+    responses: {
+      '200': {
+        description: 'User',
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': CustomUser,
+            },
+          },
+        },
+      },
+    },
+  })
+  async nextAction(
+    
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+  ): Promise<any> {
+
+    let user = await this.userRepository.findById(currentUserProfile[securityId]);
+
+    if( !user ) {
+      throw new HttpErrors.NotFound("user not found with id: " + currentUserProfile[securityId]);
+    }
+
+    console.log(user);
+    user.nextAction = this.accountActionSequence.next(user.nextAction);
+    this.userRepository.updateById(user.id, user);
+
+    console.log(user);
+
+    return _.omit(user, ["password"]);
+
   }
 
 

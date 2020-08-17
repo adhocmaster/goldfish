@@ -1,5 +1,3 @@
-import { ActionType } from "app/actionTypes";
-import { Redirect } from "react-router-dom";
 
 export default function userReducer(state: any, action: any) {
 

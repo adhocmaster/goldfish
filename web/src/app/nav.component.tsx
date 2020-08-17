@@ -52,7 +52,10 @@ function NavComponent() {
                                         
                     <Nav className="justify-content-end">
                         <Nav.Item>
-                            <Nav.Link href="/login">login</Nav.Link>
+                            <Nav.Link href="/signup">Sign up</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link href="/login">Login</Nav.Link>
                         </Nav.Item>
                     </Nav>
 

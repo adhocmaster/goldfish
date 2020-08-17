@@ -7,4 +7,10 @@ export enum ActionType {
     TOAST = 'TOAST',
     TOAST_ERROR = 'TOAST_ERROR',
     LOG_OUT = 'LOG_OUT',
+    NEXT_ACTION = 'NEXT_ACTION',
+    NEXT_ACTION_HIW = "how-it-works",
+    NEXT_ACTION_DG = "default-goals",
+    NEXT_ACTION_DWT= "default-week-template",
+    NEXT_ACTION_DWS = "default-week-schedule" 
+
 }

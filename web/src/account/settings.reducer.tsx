@@ -9,26 +9,14 @@ export default function SettingsReducer(state: any, action: any) {
         'authToken': null,
         'email': null,
         'isLoggedIn': false,
-        name: undefined,
-        accountErrors: []
+        name: undefined
     };
 
     if ( state === undefined ) {
         state = initialState;
     }
 
-    if (action.type == ActionType.ACCOUNT_LOGGEDIN) {
-
-        let credentials = action.payload;
-
-
-        return Object.assign({}, state, {
-            'authToken': credentials['authToken'],
-            'email': credentials['email'],
-            'isLoggedIn': true
-        });
-
-    } else if (action.type == ActionType.APP_STARTING) {
+    if (action.type == ActionType.APP_STARTING) {
 
         state = {...state, ...userService.fromCookie()};
 
@@ -44,6 +32,13 @@ export default function SettingsReducer(state: any, action: any) {
     }
 
     switch(action.type) {
+        case ActionType.ACCOUNT_LOGGEDIN:
+            let userWithAuthToken = action.payload;
+            userService.updateAxiosHeader(userWithAuthToken.authToken);
+            return { ...state, 
+                ...userWithAuthToken,
+                'isLoggedIn': true
+            };
 
         case ActionType.ACCOUNT_ERROR:
 
@@ -60,7 +55,10 @@ export default function SettingsReducer(state: any, action: any) {
             break;
         
         case ActionType.ACCOUNT_CREATED:
-            state = {...state, ...action.payload};
+        case ActionType.NEXT_ACTION:
+            console.log("SettingsReducer: action payload: ");
+            console.log(action.payload);
+            state = {...state, accountErrors: undefined, ...action.payload};
             break;
 
     }

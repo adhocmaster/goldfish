@@ -7,6 +7,6 @@ import userService from 'features/user/user.service';
 export default function LogoutComponent(props: any) {
 
     userService.logout();
-    return (<Redirect to="/"></Redirect>);
+    return (<Redirect to="/login"></Redirect>);
 
 }

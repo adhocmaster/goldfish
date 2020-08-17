@@ -4,19 +4,30 @@ export class ActionSequence {
     #first: string;
     constructor(first: string, map?: Map<string, string | undefined>) {
 
+        this.map = new Map();
+
         if (map) {
-            for (let key in map) {
-                this.map.set(key, map.get(key));
+            for (let [key, value] of map) {
+                this.map.set(key, value);
             }
         } else {
             this.map = new Map();
         }
         this.#first = first;
 
+        console.log(map);
+
+        console.log(this.map);
+
     }
 
-    next(action: string) {
-        if (action in this.map) {
+    next(action: string | undefined) { 
+
+        if(!action) {
+            return this.first();
+        }
+
+        if (this.map.has(action)) {
             return this.map.get(action);
         }
         return undefined;
@@ -28,7 +39,8 @@ export class ActionSequence {
 }
 
 let accountActionMap = new Map([
-    [ "how-it-works", "default-week-template" ],
+    [ "how-it-works", "default-goals" ],
+    [ "default-goals", "default-week-template" ],
     [ "default-week-template", "default-week-schedule" ],
     [ "default-week-schedule", undefined ]
 ])

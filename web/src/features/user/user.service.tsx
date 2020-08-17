@@ -17,6 +17,18 @@ class UserService {
     constructor() {
 
     }
+    
+    private handleDataError(errors: any[]) {
+        actionManager.dispatch(ActionType.ACCOUNT_ERROR, errors, true);
+        toastService.error(errors);
+
+    }
+
+    private handleHttpError(error: any) {
+        const errors = ResponseProcessor.getHTTPError(error);
+        actionManager.dispatch(ActionType.ACCOUNT_ERROR, errors, true);
+        toastService.error(errors);
+    }
 
     public isLoggedIn() {
 
@@ -32,14 +44,21 @@ class UserService {
 
     public fromCookie() {
 
-        
-        this.updateAxiosHeader(cookies.get('authToken'));
 
-        return  {
-            'authToken': cookies.get('authToken'),
-            'email': cookies.get('email'),
+        const userInfo = cookies.get("userInfo");
+
+        if (!userInfo) {
+            return {'isLoggedIn': false};
+        }
+        this.updateAxiosHeader(userInfo.authToken);
+
+        let state =  {
             'isLoggedIn': cookies.get('isLoggedIn')
         };
+
+        state = {...state, ...userInfo}
+
+        return state;
 
     }
 
@@ -67,13 +86,13 @@ class UserService {
                 if ( errors.length == 0 ) {
 
                     console.log("got token");
-                    let token = result.data.token;
-                    cookies.set('authToken', token, {'path': '/', 'maxAge': 3600*24*7});
-                    cookies.set('email', email, {'path': '/', 'maxAge': 3600*24*7});
+                    let userWithAuthToken = result.data;
+                    let token = userWithAuthToken.authToken;
+                    cookies.set('userInfo', userWithAuthToken, {'path': '/', 'maxAge': 3600*24*7});
                     cookies.set('isLoggedIn', true, {'path': '/', 'maxAge': 3600*24*7});
 
                     this.updateAxiosHeader(token);
-                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, {'authToken': token, 'email': email}, false);
+                    actionManager.dispatch(ActionType.ACCOUNT_LOGGEDIN, userWithAuthToken, false);
 
 
                 } else {
@@ -98,16 +117,15 @@ class UserService {
 
     private removeFromCookie() {
 
-        cookies.remove('authToken');
-        cookies.remove('email');
+        cookies.remove('userInfo');
         cookies.remove('isLoggedIn');
 
     }
 
-    private updateAxiosHeader(token: string | undefined) {
+    public updateAxiosHeader(token: string | undefined) {
 
         console.log("setting axios header to token: " + token);
-        if (token) {
+        if (token !== undefined) {
 
             axios.interceptors.request.use(req => {
                 req.headers.authorization = `Bearer ${token}`;
@@ -159,18 +177,35 @@ class UserService {
         );
     }
 
-    
-    private handleDataError(errors: any[]) {
-        actionManager.dispatch(ActionType.ACCOUNT_ERROR, errors, true);
-        toastService.error(errors);
+    public nextAction() {
 
+        axios.post(
+            this.serviceUrl + "/next-action",
+            {},
+        ).then(response => {
+
+
+            const errors = ResponseProcessor.getError(response.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("USER CREATED");
+                actionManager.dispatch(ActionType.NEXT_ACTION, response.data);
+
+
+            } else {
+
+                this.handleDataError(errors);
+
+            }
+
+        }).catch(error => {
+        
+            this.handleHttpError(error);
+        }
+    );
     }
 
-    private handleHttpError(error: any) {
-        const errors = ResponseProcessor.getHTTPError(error);
-        actionManager.dispatch(ActionType.ACCOUNT_ERROR, errors, true);
-        toastService.error(errors);
-    }
 
 }
 

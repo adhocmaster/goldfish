@@ -14,6 +14,7 @@ import { Redirect } from 'react-router-dom';
 import Utility from 'framework/Utility';
 
 import userService from 'features/user/user.service';
+import { ActionType } from 'app/actionTypes';
 
 export default function AccountWizardComponent(props: any) {
 
@@ -22,82 +23,113 @@ export default function AccountWizardComponent(props: any) {
     const [email, setemail] = useState("");
     const [password, setPassword] = useState("");
 
+    const nextAction: string | undefined = useSelector((state: RootState) => { return state.settingsState.nextAction} );
+    const settingsState: string | undefined = useSelector((state: RootState) => { return state.settingsState} );
     const isLoggedIn: boolean = useSelector((state: RootState) => { return state.settingsState.isLoggedIn} );
 
     const errors: string[] = useSelector((state: RootState) => { return state.settingsState.loginErrors} );
     
-    
-    function submit(e: any) {
 
-        e.preventDefault();
-        userService.login(email, password);
+    // console.log(userService.isLoggedIn())
+    if (!userService.isLoggedIn()) {
+
+        return (<Redirect to="/login"></Redirect>);
+
+    }
+
+    console.log(settingsState);
+    console.log("AccountWizardComponent: nextAction " + nextAction);
+
+    switch(nextAction) {
+        case ActionType.NEXT_ACTION_HIW:
+            return getHIW();
+        case ActionType.NEXT_ACTION_DG:
+            return getDGForm();
         
+        case ActionType.NEXT_ACTION_DWS:
+            return getDWSForm();
+        
+        case ActionType.NEXT_ACTION_DWT:
+            return getDWTForm();
+
+        default:
+            return (<Redirect to="/week"></Redirect>);
+
+
     }
 
-    if (userService.isLoggedIn()) {
+    function getHIW() {
+        
+        return (
+            <Container className="login-container" >
+                <Row className="justify-content-md-center">
+                    App wizard
+                    How it works
+                    <Button variant="primary"
+                        onClick={(e: any) => {
+                            userService.nextAction();
+                        }}
+                    >
+                        Skip
+                    </Button>
+                </Row>
+            </Container>
+        );
+    };
 
-        return (<Redirect to="/week"></Redirect>);
-
-    }
-
-    return (
-        <Container className="login-container" >
-            <Row className="justify-content-md-center">
-                <Col xs lg="2">
-                </Col>
-                <Col md="auto">
-                    <Card style={{ width: '18rem' }}>
-                        <Card.Body>
-                            <Card.Title>Sign up</Card.Title>
-                            <Form>
-                                <Form.Group controlId="formEmail">
-                                    <Form.Control type="text" placeholder="Name"
-                                        value={name}
-                                        onChange={e => {
-                                            setemail(e.target.value);
-                                        }} />
-                                    <Form.Text className="text-muted">
-                                    </Form.Text>
-                                </Form.Group>
-
-                                <Form.Group controlId="formBasicEmail">
-                                    <Form.Control type="email" placeholder="Enter email"
-                                        value={email}
-                                        onChange={e => {
-                                            setemail(e.target.value);
-                                        }} />
-                                    <Form.Text className="text-muted">
-                                    </Form.Text>
-                                </Form.Group>
-
-                                <Form.Group controlId="formBasicPassword">
-                                    <Form.Control type="password" placeholder="Password" 
-                                        value={password}
-                                        onChange={e => {
-                                            setPassword(e.target.value);
-                                        }} />
-                                </Form.Group>
-                                <Form.Group controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" label="Remember me!" />
-                                </Form.Group>
-                                <Button variant="primary" type="submit" onClick={submit}>
-                                    Submit
-                                </Button>
-                            </Form>
-                            <br/>
-                            <div>
-                                {errors && 
-                                    <Alert variant="warning">
-                                        {Utility.getListRep(errors)}
-                                    </Alert>
-                                }
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col xs lg="2">
-                </Col>
-            </Row>
-        </Container>
-    );
+    function getDGForm() {
+        
+        return (
+            <Container className="login-container" >
+                <Row className="justify-content-md-center">
+                    App wizard
+                    getDGForm
+                    <Button variant="primary"
+                        onClick={(e: any) => {
+                            userService.nextAction();
+                        }}
+                    >
+                        Skip
+                    </Button>
+                </Row>
+            </Container>
+        );
+    };
+    function getDWSForm() {
+        
+        return (
+            <Container className="login-container" >
+                <Row className="justify-content-md-center">
+                    App wizard
+                    getDWSForm
+                    <Button variant="primary"
+                        onClick={(e: any) => {
+                            userService.nextAction();
+                        }}
+                    >
+                        Skip
+                    </Button>
+                </Row>
+            </Container>
+        );
+    };
+    function getDWTForm() {
+        
+        return (
+            <Container className="login-container" >
+                <Row className="justify-content-md-center">
+                    App wizard
+                    getDWTForm
+                    <Button variant="primary"
+                        onClick={(e: any) => {
+                            userService.nextAction();
+                        }}
+                    >
+                        Skip
+                    </Button>
+                </Row>
+            </Container>
+        );
+    };
+    
 }
