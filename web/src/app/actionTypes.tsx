@@ -11,6 +11,8 @@ export enum ActionType {
     NEXT_ACTION_HIW = "how-it-works",
     NEXT_ACTION_DG = "default-goals",
     NEXT_ACTION_DWT= "default-week-template",
-    NEXT_ACTION_DWS = "default-week-schedule" 
+    NEXT_ACTION_DWS = "default-week-schedule",
+
+    DEFAULT_GOALS_ADDED = "DEFAULT_GOALS_ADDED"
 
 }

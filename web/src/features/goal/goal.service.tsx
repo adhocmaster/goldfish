@@ -6,10 +6,23 @@ import actionManager from 'framework/ActionManager';
 import config from "framework/Configuration";
 import ResponseProcessor from 'framework/ResponseProcessor';
 import Utility from 'framework/Utility';
+import { ActionType } from 'app/actionTypes';
 
 class GoalService {
 
     serviceUrl = config.getBackend() + "/categories";
+
+    private handleDataError(errors: any[]) {
+        actionManager.dispatch(WeekActionType.GOAL_ERROR, errors, true);
+        toastService.error(errors);
+    }
+
+    private handleHttpError(error: any) {
+        const errors = ResponseProcessor.getHTTPError(error);
+        actionManager.dispatch(WeekActionType.GOAL_ERROR, errors, true);
+        toastService.error(errors);
+    }
+
     public create(newGoal: any) {
 
         axios.post(
@@ -30,16 +43,47 @@ class GoalService {
 
             } else {
 
-                actionManager.dispatch(WeekActionType.GOAL_ERROR, errors, true);
-                toastService.error(errors);
+                this.handleDataError(errors);
 
             }
 
         }).catch((error) => {
             
-            const errors = ResponseProcessor.getHTTPError(error);
-            actionManager.dispatch(WeekActionType.GOAL_ERROR, errors, true);
+            this.handleHttpError(error);
+
         });
+
+    }
+
+    public createDefaultGoals(titlesWithColors:{title: string, color: string}[]) {
+        
+        axios.post(
+            this.serviceUrl + "/defaults",
+            titlesWithColors
+
+        ).then( (result) => {
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("got goals");
+                // console.log(data);
+                actionManager.dispatch(ActionType.DEFAULT_GOALS_ADDED, result.data, false);
+
+
+            } else {
+
+                this.handleDataError(errors);
+
+            }
+
+        }).catch((error) => {
+            
+            this.handleHttpError(error);
+
+        });
+
 
     }
 

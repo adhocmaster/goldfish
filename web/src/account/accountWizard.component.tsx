@@ -15,6 +15,8 @@ import Utility from 'framework/Utility';
 
 import userService from 'features/user/user.service';
 import { ActionType } from 'app/actionTypes';
+import toastService from 'app/toast.service';
+import DefaultGoalComponent from 'features/goal/defaultGoal.component';
 
 export default function AccountWizardComponent(props: any) {
 
@@ -28,7 +30,7 @@ export default function AccountWizardComponent(props: any) {
     const isLoggedIn: boolean = useSelector((state: RootState) => { return state.settingsState.isLoggedIn} );
 
     const errors: string[] = useSelector((state: RootState) => { return state.settingsState.loginErrors} );
-    
+
 
     // console.log(userService.isLoggedIn())
     if (!userService.isLoggedIn()) {
@@ -58,6 +60,10 @@ export default function AccountWizardComponent(props: any) {
 
     }
 
+    function saveDefaultGoals() {
+        
+    }
+
     function getHIW() {
         
         return (
@@ -79,22 +85,9 @@ export default function AccountWizardComponent(props: any) {
 
     function getDGForm() {
         
-        return (
-            <Container className="login-container" >
-                <Row className="justify-content-md-center">
-                    App wizard
-                    getDGForm
-                    <Button variant="primary"
-                        onClick={(e: any) => {
-                            userService.nextAction();
-                        }}
-                    >
-                        Skip
-                    </Button>
-                </Row>
-            </Container>
-        );
+        return (<DefaultGoalComponent />);
     };
+
     function getDWSForm() {
         
         return (

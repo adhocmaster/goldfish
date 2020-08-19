@@ -15,23 +15,15 @@ class WeekService {
     cache: Map<string, any> = new Map();
     serviceUrl = config.getBackend() + "/weeks";
 
-    public create(goal: string, start?: Date, days?: number) {
+    private handleDataError(errors: any[]) {
+        actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+        toastService.error(errors);
+    }
 
-        axios.post(
-            this.serviceUrl,
-            {
-                "goal": goal,
-                "start": start ?? new Date().toISOString(),
-                "days": days ?? 7
-            }
-
-        ).then( (result) => {
-
-        }).catch((error) => {
-            
-            const errors = ResponseProcessor.getHTTPError(error);
-            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-        });
+    private handleHttpError(error: any) {
+        const errors = ResponseProcessor.getHTTPError(error);
+        actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
+        toastService.error(errors);
     }
 
 
@@ -70,19 +62,13 @@ class WeekService {
 
 
             } else {
-
-                actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-                toastService.error(errors);
-
+                this.handleDataError(errors);
             }
 
         }).catch((error) => {
-            
-            const errors = ResponseProcessor.getHTTPError(error);
-            // console.log(errors);
-            actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-            toastService.error(errors);
+            this.handleHttpError(error);
         });
+
 
     }
     public getByStartDate(startDate: Date) {
@@ -328,16 +314,6 @@ class WeekService {
 
     }
 
-    private handleDataError(errors: any[]) {
-        actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-        toastService.error(errors);
-    }
-
-    private handleHttpError(error: any) {
-        const errors = ResponseProcessor.getHTTPError(error);
-        actionManager.dispatch(WeekActionType.WEEK_ERROR, errors, true);
-        toastService.error(errors);
-    }
 
     public getGoalsWithoutId(goals: any, goalId: string) {
 
