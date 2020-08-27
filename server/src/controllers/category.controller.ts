@@ -5,6 +5,8 @@ import {
   FilterExcludingWhere,
   repository,
   Where,
+  WhereBuilder,
+  FilterBuilder,
 } from '@loopback/repository';
 import {
   post,
@@ -23,6 +25,7 @@ import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import { inject } from '@loopback/core';
 import { UserServiceBindings } from '@loopback/authentication-jwt';
 import { CustomUserService } from '../services/user.service';
+import { title } from 'process';
 
 @authenticate('jwt')
 export class CategoryController {
@@ -59,6 +62,65 @@ export class CategoryController {
     
     category.userId = currentUserProfile[securityId];
     return this.categoryRepository.create(category);
+  }
+
+  @post('/categories/defaults', {
+    responses: {
+      '200': {
+        description: 'Category model instance',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(Category, {includeRelations: true}),
+            },
+          },
+        },
+      },
+    },
+  })
+  async createDefaultCategories(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(Category),
+          },
+        },
+      },
+    })
+    categories: Omit<Category, 'id'>[],
+  ): Promise<Category[]> {
+
+    console.log(categories);
+    
+    let savedCategories = [];
+    for (let category of categories) {
+
+      if (!category.title) {
+        continue;
+      }
+
+      const filterBuilder = new FilterBuilder<Category>();
+      let filter = filterBuilder.build();
+
+      let foundCategory = await this.findByTitle(currentUserProfile, category.title, filter);
+      if (foundCategory.length > 0 ) {
+        continue;
+      }
+
+      category.userId = currentUserProfile[securityId];
+      // savedCategories.push( await this.categoryRepository.create(category) );
+
+    }
+    // return savedCategories;
+
+    const filterBuilder = new FilterBuilder<Category>();
+    let filter = filterBuilder.build();
+    return this.find(currentUserProfile, filter);
   }
 
   @get('/categories/count', {
@@ -141,6 +203,31 @@ export class CategoryController {
   ): Promise<Category> {
     filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
     return this.categoryRepository.findById(id, filter);
+  }
+
+  @get('/categories/title/{title}', {
+    responses: {
+      '200': {
+        description: 'Category model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Category, {includeRelations: true}),
+          },
+        },
+      },
+    },
+  })
+  async findByTitle(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @param.path.string('title') title: string,
+    @param.filter(Category) filter?: Filter<Category>
+  ): Promise<Category[]> {
+    filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
+    const whereBuilder = new WhereBuilder(filter.where);
+    let where = whereBuilder.and({title: title}).build();
+    console.log(where);
+    return this.categoryRepository.find(filter)
   }
 
   @patch('/categories/{id}', {
