@@ -68,6 +68,7 @@ export class CategorizedTaskController {
 
     }
 
+
     @patch('/weeks/category/{weekId}', {
         responses: {
             '200': {
@@ -94,6 +95,7 @@ export class CategorizedTaskController {
 
     }
 
+
     @post('/weeks/category/{weekId}', {
         responses: {
             '200': {
@@ -119,6 +121,7 @@ export class CategorizedTaskController {
         return this.weekService.addCategory(currentUserProfile, weekId, category);
 
     }
+
 
     @post('/weeks/new-category/{weekId}/{totalMinutes}', {
         responses: {
@@ -154,6 +157,7 @@ export class CategorizedTaskController {
         return this.weekService.addCategory(currentUserProfile, weekId, categorizedTasks);
 
     }
+    
 
     @del('/weeks/category/{weekId}/{id}', {
         responses: {

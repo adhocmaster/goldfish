@@ -87,6 +87,37 @@ class GoalService {
 
     }
 
+    public getDefaultGoals() {
+
+        axios.get(
+            this.serviceUrl
+
+        ).then( (result) => {
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("got goals");
+                // console.log(data);
+                actionManager.dispatch(ActionType.DEFAULT_GOALS_FETCHED, result.data, false);
+
+
+            } else {
+
+                this.handleDataError(errors);
+
+            }
+
+        }).catch((error) => {
+            
+            this.handleHttpError(error);
+
+        });
+
+
+    }
+
 
     public getAvaiableMinutes(goal: any) {
 

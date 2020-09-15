@@ -189,7 +189,6 @@ class UserService {
 
             if ( errors.length == 0 ) {
 
-                console.log("USER CREATED");
                 actionManager.dispatch(ActionType.NEXT_ACTION, response.data);
 
 

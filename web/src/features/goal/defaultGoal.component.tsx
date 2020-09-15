@@ -31,6 +31,25 @@ export default function DefaultGoalComponent(props: any): any {
     const [newTitle, setNewTitle] = useState<string>("");
     const [newColor, setNewColor] = useState<string>(defaultColor);
 
+    const defaultGoals = useSelector((state: RootState) => { return state.settingsState.defaultGoals });
+
+    
+
+    useEffect(() => {
+
+        console.log("DefaultGoalComponent: initializing with default Goals!");
+        if (defaultGoals) {
+
+            let defaultTitlesWithColors = []
+            for (let goal of defaultGoals) {
+                defaultTitlesWithColors.push({title: goal.title, color: goal.color});
+            }
+
+            setTitlesWithColors(defaultTitlesWithColors);
+        }
+
+    }, []);
+
 
     return (
         <Container className="login-container" >

@@ -2,8 +2,11 @@ import React from 'react';
 import { ActionType } from 'app/actionTypes';
 import cookies from 'framework/Cookie';
 import userService from 'features/user/user.service';
+import goalService from 'features/goal/goal.service';
 
 export default function SettingsReducer(state: any, action: any) {
+
+    console.log(state);
 
     const initialState = {
         'authToken': null,
@@ -19,6 +22,9 @@ export default function SettingsReducer(state: any, action: any) {
     if (action.type == ActionType.APP_STARTING) {
 
         state = {...state, ...userService.fromCookie()};
+        if (state.isLoggedIn) {
+            goalService.getDefaultGoals();
+        }
 
     } else if (action.type == ActionType.LOG_OUT) {
 
@@ -35,6 +41,7 @@ export default function SettingsReducer(state: any, action: any) {
         case ActionType.ACCOUNT_LOGGEDIN:
             let userWithAuthToken = action.payload;
             userService.updateAxiosHeader(userWithAuthToken.authToken);
+            goalService.getDefaultGoals();
             return { ...state, 
                 ...userWithAuthToken,
                 'isLoggedIn': true
@@ -56,9 +63,15 @@ export default function SettingsReducer(state: any, action: any) {
         
         case ActionType.ACCOUNT_CREATED:
         case ActionType.NEXT_ACTION:
-            console.log("SettingsReducer: action payload: ");
+            console.log("SettingsReducer: NEXT_ACTION: ");
             console.log(action.payload);
             state = {...state, accountErrors: undefined, ...action.payload};
+            break;
+
+        case ActionType.DEFAULT_GOALS_ADDED:
+        case ActionType.DEFAULT_GOALS_FETCHED:
+            const defaultGoals = action.payload;
+            state = {...state, defaultGoals: defaultGoals}
             break;
 
     }

@@ -68,8 +68,8 @@ export default function AccountWizardComponent(props: any) {
         
         return (
             <Container className="login-container" >
+                <h1>Account Setup</h1>
                 <Row className="justify-content-md-center">
-                    App wizard
                     How it works
                     <Button variant="primary"
                         onClick={(e: any) => {
@@ -92,8 +92,8 @@ export default function AccountWizardComponent(props: any) {
         
         return (
             <Container className="login-container" >
+                <h1>Account Setup</h1>
                 <Row className="justify-content-md-center">
-                    App wizard
                     getDWSForm
                     <Button variant="primary"
                         onClick={(e: any) => {
@@ -110,8 +110,8 @@ export default function AccountWizardComponent(props: any) {
         
         return (
             <Container className="login-container" >
+                <h1>Account Setup</h1>
                 <Row className="justify-content-md-center">
-                    App wizard
                     getDWTForm
                     <Button variant="primary"
                         onClick={(e: any) => {

@@ -95,7 +95,7 @@ export class CategoryController {
     categories: Omit<Category, 'id'>[],
   ): Promise<Category[]> {
 
-    console.log(categories);
+    // console.log(categories);
     
     let savedCategories = [];
     for (let category of categories) {
@@ -113,15 +113,17 @@ export class CategoryController {
       }
 
       category.userId = currentUserProfile[securityId];
-      // savedCategories.push( await this.categoryRepository.create(category) );
+      await this.categoryRepository.create(category);
 
     }
-    // return savedCategories;
 
     const filterBuilder = new FilterBuilder<Category>();
     let filter = filterBuilder.build();
     return this.find(currentUserProfile, filter);
+    
   }
+
+  
 
   @get('/categories/count', {
     responses: {
@@ -161,6 +163,7 @@ export class CategoryController {
     return this.categoryRepository.find(filter);
   }
 
+
   @patch('/categories', {
     responses: {
       '200': {
@@ -183,6 +186,7 @@ export class CategoryController {
     return this.categoryRepository.updateAll(category, where);
   }
 
+
   @get('/categories/{id}', {
     responses: {
       '200': {
@@ -204,6 +208,7 @@ export class CategoryController {
     filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
     return this.categoryRepository.findById(id, filter);
   }
+
 
   @get('/categories/title/{title}', {
     responses: {
@@ -229,6 +234,7 @@ export class CategoryController {
     console.log(where);
     return this.categoryRepository.find(filter)
   }
+
 
   @patch('/categories/{id}', {
     responses: {

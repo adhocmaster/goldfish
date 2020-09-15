@@ -13,6 +13,7 @@ export enum ActionType {
     NEXT_ACTION_DWT= "default-week-template",
     NEXT_ACTION_DWS = "default-week-schedule",
 
-    DEFAULT_GOALS_ADDED = "DEFAULT_GOALS_ADDED"
+    DEFAULT_GOALS_ADDED = "DEFAULT_GOALS_ADDED",
+    DEFAULT_GOALS_FETCHED = "DEFAULT_GOALS_FETCHED"
 
 }
