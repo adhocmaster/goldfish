@@ -1,23 +1,20 @@
-import { faCheckSquare, faList, faPlusCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import toastService from 'app/toast.service';
 import deepEqual from 'deep-equal';
+import userService from 'features/user/user.service';
 import Utility from 'framework/Utility';
-import React, { createRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import { shallowEqual, useSelector } from 'react-redux';
+import Row from 'react-bootstrap/Row';
+import { CirclePicker } from 'react-color';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
 import goalService from './goal.service';
-import TaskComponent from './task.component';
-import weekService from 'features/week/week.service';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Alert from 'react-bootstrap/Alert';
-import userService from 'features/user/user.service';
-import { SketchPicker, CirclePicker } from 'react-color';
 
 
 
@@ -27,7 +24,7 @@ export default function DefaultGoalComponent(props: any): any {
     const defaultColor = "#444444";
     // Goal states
     const [errors, setErrors] = useState<string[]>([]);
-    const [titlesWithColors, setTitlesWithColors] = useState<{title: string, color: string}[]>([]);
+    const [titlesWithColors, setTitlesWithColors] = useState<{title: string, color: string, id: string|undefined}[]>([]);
     const [newTitle, setNewTitle] = useState<string>("");
     const [newColor, setNewColor] = useState<string>(defaultColor);
 
@@ -42,20 +39,25 @@ export default function DefaultGoalComponent(props: any): any {
 
             let defaultTitlesWithColors = []
             for (let goal of defaultGoals) {
-                defaultTitlesWithColors.push({title: goal.title, color: goal.color});
+                defaultTitlesWithColors.push({title: goal.title, color: goal.color, id: goal.id});
             }
 
-            setTitlesWithColors(defaultTitlesWithColors);
+            if (! deepEqual(titlesWithColors, defaultTitlesWithColors)) {
+
+                // defaultTitlesWithColors = [...defaultTitlesWithColors, ...titlesWithColors];
+                setTitlesWithColors(defaultTitlesWithColors);
+            }
         }
 
-    }, []);
+    });
 
+    console.log(titlesWithColors);
 
     return (
         <Container className="login-container" >
             <Row className="justify-content-md-center">
                 App wizard
-                <Card style={{ width: '18rem', margin: "10px" }}>
+                <Card id="default-goal-form" style={{ width: '18rem', margin: "10px" }}>
                     <Card.Body>
                         <Card.Title>Add a few goals</Card.Title>
                         <Form.Group>
@@ -100,14 +102,18 @@ export default function DefaultGoalComponent(props: any): any {
                         <Button size='sm'  variant="primary" type="submit" onClick={(e: any) => {
                                 setTitlesWithColors([...titlesWithColors, {
                                     title: newTitle,
-                                    color: newColor
+                                    color: newColor, 
+                                    id: undefined
+                    
                                 }]);
                             }}>
                                 ADD
                         </Button>
                     </Card.Footer>
                 </Card>
-                <Card style={{ width: '18rem', margin: "10px" }}>
+                
+                
+                <Card id="default-goal-list" style={{ width: '18rem', margin: "10px" }}>
                     <Card.Body>
                         {getGoalCards()}
                     </Card.Body>
@@ -148,9 +154,10 @@ export default function DefaultGoalComponent(props: any): any {
             cards.push(
                 <Card className={`task-card`} key={`goal-${index}`}>
                     <Card.Body>
-                        <Button variant="light"  size='sm'  className='float-right'
+                        <Button value={index} variant="light"  size='sm'  className='float-right'
                             onClick={(e: any) => {
-                                removeGoal(index);
+                                // console.log(e.currentTarget);
+                                removeGoal(e.currentTarget.value);
                             }}
                         > 
                             <FontAwesomeIcon icon={faTimes} color={"#bbbbbb"} />
@@ -174,6 +181,12 @@ export default function DefaultGoalComponent(props: any): any {
 
     function removeGoal(index: number) {
         let clonedTitles = [...titlesWithColors];
+        let removedTitleWithColor = clonedTitles[index];
+        console.log("DefaultGoalcomponent: removing at index: " + index);
+        console.log(removedTitleWithColor);
+        if (removedTitleWithColor.id) {
+            goalService.removeDefaultGoalById(removedTitleWithColor.id);
+        }
         clonedTitles.splice(index, 1);
         setTitlesWithColors(clonedTitles);
     }

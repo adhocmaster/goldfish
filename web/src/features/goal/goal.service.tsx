@@ -55,7 +55,7 @@ class GoalService {
 
     }
 
-    public createDefaultGoals(titlesWithColors:{title: string, color: string}[]) {
+    public createDefaultGoals(titlesWithColors:any[]) {
         
         axios.post(
             this.serviceUrl + "/defaults",
@@ -91,6 +91,37 @@ class GoalService {
 
         axios.get(
             this.serviceUrl
+
+        ).then( (result) => {
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("got goals");
+                // console.log(data);
+                actionManager.dispatch(ActionType.DEFAULT_GOALS_FETCHED, result.data, false);
+
+
+            } else {
+
+                this.handleDataError(errors);
+
+            }
+
+        }).catch((error) => {
+            
+            this.handleHttpError(error);
+
+        });
+
+
+    }
+
+    public removeDefaultGoalById(id: string) {
+
+        axios.delete(
+            this.serviceUrl + "/" + id
 
         ).then( (result) => {
             

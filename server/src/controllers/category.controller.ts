@@ -275,14 +275,32 @@ export class CategoryController {
     await this.categoryRepository.replaceById(id, category);
   }
 
+
   @del('/categories/{id}', {
     responses: {
-      '204': {
-        description: 'Category DELETE success',
+      '200': {
+          description: 'Week model instance',
+          content: { 'application/json': { schema: getModelSchemaRef(Category) } },
       },
     },
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.categoryRepository.deleteById(id);
+  async deleteById(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @param.path.string('id') id: string,
+    @param.filter(Category) filter?: Filter<Category>
+    ): Promise<Category[]> {
+
+    filter  = this.userService.addUserIdToFilter(filter, currentUserProfile);
+    const foundCategory = await this.categoryRepository.findById(id, filter);
+
+    if (foundCategory) {
+
+      await this.categoryRepository.deleteById(id);
+      
+    }
+
+    return this.categoryRepository.find(filter);
+    
   }
 }

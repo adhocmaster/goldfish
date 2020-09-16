@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
-import ReduxUIComponent from './../../framework/ReduxUIComponent';
-import { RootState, store } from './../../app/store';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Modal from 'react-bootstrap/Modal';
-import YearReducer from 'features/year/year.reducer';
-import yearService from 'features/year/year.service';
-
 import WeekSummaryComponent from 'features/week/weekSummary.component';
+import { YearActionTypes } from 'features/year/year.action';
+import yearService from 'features/year/year.service';
 import actionManager from 'framework/ActionManager';
-import {YearActionTypes} from 'features/year/year.action';
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
+import { store } from './../../app/store';
+import ReduxUIComponent from './../../framework/ReduxUIComponent';
+
 
 export default class YearComponent extends ReduxUIComponent {
 
