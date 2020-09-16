@@ -74,6 +74,12 @@ export default function SettingsReducer(state: any, action: any) {
             state = {...state, defaultGoals: defaultGoals}
             break;
 
+        case ActionType.NEW_GOAL_ADDED:
+            const newGoal = action.payload;
+            const existingGoals = state.defaultGoals ?? [];
+            state = {...state, defaultGoals: [...existingGoals, newGoal]}
+            break;
+
     }
 
 

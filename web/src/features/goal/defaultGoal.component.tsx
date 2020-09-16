@@ -24,34 +24,13 @@ export default function DefaultGoalComponent(props: any): any {
     const defaultColor = "#444444";
     // Goal states
     const [errors, setErrors] = useState<string[]>([]);
-    const [titlesWithColors, setTitlesWithColors] = useState<{title: string, color: string, id: string|undefined}[]>([]);
     const [newTitle, setNewTitle] = useState<string>("");
     const [newColor, setNewColor] = useState<string>(defaultColor);
 
     const defaultGoals = useSelector((state: RootState) => { return state.settingsState.defaultGoals });
+   
 
-    
-
-    useEffect(() => {
-
-        console.log("DefaultGoalComponent: initializing with default Goals!");
-        if (defaultGoals) {
-
-            let defaultTitlesWithColors = []
-            for (let goal of defaultGoals) {
-                defaultTitlesWithColors.push({title: goal.title, color: goal.color, id: goal.id});
-            }
-
-            if (! deepEqual(titlesWithColors, defaultTitlesWithColors)) {
-
-                // defaultTitlesWithColors = [...defaultTitlesWithColors, ...titlesWithColors];
-                setTitlesWithColors(defaultTitlesWithColors);
-            }
-        }
-
-    });
-
-    console.log(titlesWithColors);
+    // console.log(titlesWithColors);
 
     return (
         <Container className="login-container" >
@@ -100,12 +79,11 @@ export default function DefaultGoalComponent(props: any): any {
                     <Card.Footer>
                     
                         <Button size='sm'  variant="primary" type="submit" onClick={(e: any) => {
-                                setTitlesWithColors([...titlesWithColors, {
+
+                                goalService.create({
                                     title: newTitle,
-                                    color: newColor, 
-                                    id: undefined
-                    
-                                }]);
+                                    color: newColor                    
+                                })
                             }}>
                                 ADD
                         </Button>
@@ -119,20 +97,20 @@ export default function DefaultGoalComponent(props: any): any {
                     </Card.Body>
                     <Card.Footer className="d-flex justify-content-center">
                         
-                        <Button variant="success" size='sm' 
+                        {/* <Button variant="success" size='sm' 
                             onClick={(e: any) => {
                                 goalService.createDefaultGoals(titlesWithColors);
                             }}
                         >
                             UPDATE GOALS
-                        </Button>
+                        </Button> */}
                         &nbsp;
                         <Button variant="secondary" size='sm' 
                             onClick={(e: any) => {
                                 userService.nextAction();
                             }}
                         >
-                            SKIP
+                            NEXT
                         </Button>
                     </Card.Footer>
                 </Card>
@@ -144,10 +122,14 @@ export default function DefaultGoalComponent(props: any): any {
 
     function getGoalCards() {
 
+        if (!defaultGoals) {
+            return <></>;
+        }
+
         let cards = []
 
         let index = -1;
-        for(let goal of titlesWithColors) {
+        for(let goal of defaultGoals) {
             ++index;
             let color = goal.color;
 
@@ -180,15 +162,17 @@ export default function DefaultGoalComponent(props: any): any {
     }
 
     function removeGoal(index: number) {
-        let clonedTitles = [...titlesWithColors];
-        let removedTitleWithColor = clonedTitles[index];
-        console.log("DefaultGoalcomponent: removing at index: " + index);
-        console.log(removedTitleWithColor);
-        if (removedTitleWithColor.id) {
-            goalService.removeDefaultGoalById(removedTitleWithColor.id);
-        }
-        clonedTitles.splice(index, 1);
-        setTitlesWithColors(clonedTitles);
+        // let clonedTitles = [...titlesWithColors];
+        // let removedTitleWithColor = clonedTitles[index];
+        // console.log("DefaultGoalcomponent: removing at index: " + index);
+        // console.log(removedTitleWithColor);
+        // if (removedTitleWithColor.id) {
+        //     goalService.removeDefaultGoalById(removedTitleWithColor.id);
+        // }
+        // clonedTitles.splice(index, 1);
+        // setTitlesWithColors(clonedTitles);
+        
+        goalService.removeDefaultGoalById(defaultGoals[index].id);
     }
     
 }
