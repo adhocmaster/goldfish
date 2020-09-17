@@ -27,6 +27,18 @@ export class CustomUser extends User {
   })
   nextAction?: string
 
+  @property({
+    type: 'string',
+    default: 0
+  })
+  hoursPerWeekDays?: string
+
+  @property({
+    type: 'string',
+    default: 0
+  })
+  hoursPerWeekWeekends?: string
+
   constructor(data?: Partial<CustomUser>) {
     super(data);
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -29,8 +29,31 @@ export default function AccountWizardComponent(props: any) {
     const settingsState: string | undefined = useSelector((state: RootState) => { return state.settingsState} );
     const isLoggedIn: boolean = useSelector((state: RootState) => { return state.settingsState.isLoggedIn} );
 
-    const errors: string[] = useSelector((state: RootState) => { return state.settingsState.loginErrors} );
+    const [errors, setErrors] = useState<string[]>([]);
 
+    // elements for default week schedule
+    
+    const [hoursPerWeekDays, setHoursPerWeekDays] = useState<number>(0);
+    const [hoursPerWeekWeekends, setHoursPerWeekends] = useState<number>(0);
+    const hoursPerWeekDaysStore = userService.getHoursPerWeekDays();
+    const hoursPerWeekWeekendsStore = userService.getHoursPerWeekWeekends();
+    
+
+
+    useEffect(() => {
+        if (hoursPerWeekDaysStore) {
+            if (hoursPerWeekDaysStore!= hoursPerWeekDays) {
+                setHoursPerWeekDays(hoursPerWeekDaysStore);
+            }
+        }
+
+        if (hoursPerWeekWeekendsStore) {
+            if (hoursPerWeekWeekendsStore != hoursPerWeekWeekends) {
+                setHoursPerWeekends(hoursPerWeekWeekendsStore);
+            }
+        }
+
+    });
 
     // console.log(userService.isLoggedIn())
     if (!userService.isLoggedIn()) {
@@ -39,8 +62,8 @@ export default function AccountWizardComponent(props: any) {
 
     }
 
-    console.log(settingsState);
-    console.log("AccountWizardComponent: nextAction " + nextAction);
+    // console.log(settingsState);
+    // console.log("AccountWizardComponent: nextAction " + nextAction);
 
     switch(nextAction) {
         case ActionType.NEXT_ACTION_HIW:
@@ -88,24 +111,6 @@ export default function AccountWizardComponent(props: any) {
         return (<DefaultGoalComponent />);
     };
 
-    function getDWSForm() {
-        
-        return (
-            <Container className="login-container" >
-                <h1>Account Setup</h1>
-                <Row className="justify-content-md-center">
-                    getDWSForm
-                    <Button variant="primary"
-                        onClick={(e: any) => {
-                            userService.nextAction();
-                        }}
-                    >
-                        Skip
-                    </Button>
-                </Row>
-            </Container>
-        );
-    };
     function getDWTForm() {
         
         return (
@@ -120,6 +125,80 @@ export default function AccountWizardComponent(props: any) {
                     >
                         Skip
                     </Button>
+                </Row>
+            </Container>
+        );
+    };
+
+    function getDWSForm() {
+        
+        return (
+            <Container className="login-container" >
+                <h1>Account Setup</h1>
+                <Row className="justify-content-md-center">
+                    <Card id="default-goal-form" style={{ width: '18rem', margin: "10px" }}>
+                        <Card.Body>
+                            <Card.Title>Dedicate some time every week!</Card.Title>
+                            <Form.Group>
+                                <Form.Label>Hours during weekdays:</Form.Label>
+                                <Form.Control type="text"
+                                    value={hoursPerWeekDays}
+                                    onChange={e => {
+                                        let hours = parseInt(e.target.value);
+
+                                        if (hours < 0) {
+                                            toastService.error("hours cannot be negative");
+                                        } else {
+                                            setHoursPerWeekDays(hours);
+                                        }
+                                    }} />
+                                <Form.Text className="text-muted">Don't add your working hours.
+                                </Form.Text>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Hours during weekends:</Form.Label>
+                                <Form.Control type="text"
+                                    value={hoursPerWeekWeekends}
+                                    onChange={e => {
+                                        let hours = parseInt(e.target.value);
+
+                                        if (hours < 0) {
+                                            toastService.error("hours cannot be negative");
+                                        } else {
+                                            setHoursPerWeekends(hours);
+                                        }
+                                    }} />
+                                <Form.Text className="text-muted">Don't add your entertainment hours.
+                                </Form.Text>
+                            </Form.Group>
+
+                            <br/>
+                            <div>
+                                {errors.length > 0 && 
+                                    <Alert variant="warning">
+                                        {Utility.getListRep(errors)}
+                                    </Alert>
+                                }
+                            </div>
+                        </Card.Body>
+                        <Card.Footer>
+                        
+                            <Button size='sm'  variant="primary" type="submit" onClick={(e: any) => {
+
+                                userService.saveDWT(hoursPerWeekDays, hoursPerWeekWeekends);
+
+                                }}>
+                                    SAVE
+                            </Button> &nbsp;
+                            <Button  size='sm'  variant="primary"
+                                onClick={(e: any) => {
+                                    userService.nextAction();
+                                }}
+                            >
+                                NEXT
+                            </Button>
+                        </Card.Footer>
+                    </Card>
                 </Row>
             </Container>
         );

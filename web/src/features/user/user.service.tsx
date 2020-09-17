@@ -201,8 +201,48 @@ class UserService {
         }).catch(error => {
         
             this.handleHttpError(error);
-        }
-    );
+            }
+        );
+    }
+
+
+    public saveDWT(hoursPerWeekDays: number, hoursPerWeekWeekends: number) {
+
+        axios.post(
+
+            this.serviceUrl + "/DWT",
+            {
+                hoursPerWeekDays: hoursPerWeekDays,
+                hoursPerWeekWeekends: hoursPerWeekWeekends
+            },
+
+        ).then(response => {
+
+            const errors = ResponseProcessor.getError(response.data);
+
+            if ( errors.length == 0 ) {
+
+                actionManager.dispatch(ActionType.USER_UPDATED, response.data);
+
+            } else {
+
+                this.handleDataError(errors);
+
+            }
+
+        }).catch(error => {
+        
+            this.handleHttpError(error);
+            }
+        );
+
+    }
+
+    public getHoursPerWeekDays() {
+        return useSelector((state: RootState) => { return state.settingsState.hoursPerWeekDays})
+    }
+    public getHoursPerWeekWeekends() {
+        return useSelector((state: RootState) => { return state.settingsState.hoursPerWeekWeekends})
     }
 
 

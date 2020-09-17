@@ -38,6 +38,13 @@ export default function SettingsReducer(state: any, action: any) {
     }
 
     switch(action.type) {
+        
+        case ActionType.USER_UPDATED:
+            return { ...state, 
+                ...action.payload,
+                'isLoggedIn': true
+            };
+
         case ActionType.ACCOUNT_LOGGEDIN:
             let userWithAuthToken = action.payload;
             userService.updateAxiosHeader(userWithAuthToken.authToken);

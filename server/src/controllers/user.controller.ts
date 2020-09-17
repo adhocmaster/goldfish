@@ -12,7 +12,7 @@ import {
 } from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {model, property, repository} from '@loopback/repository';
-import {get, getModelSchemaRef, post, requestBody, HttpErrors} from '@loopback/rest';
+import {get, getModelSchemaRef, post, requestBody, HttpErrors, param} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
@@ -202,6 +202,41 @@ export class UserController {
     console.log(user);
 
     return _.omit(user, ["password"]);
+
+  }
+
+  @authenticate('jwt')
+  @post( "/users/DWT", {
+    responses: {
+      '200': {
+        description: "default week schedule",
+        content: {
+          'application/json': {
+            schema: {
+              'x-ts-type': CustomUser,
+            },
+          },
+        },
+      },
+    }
+  })
+  async saveDWT(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+    @param.query.string("hoursPerWeekDays") hoursPerWeekDays: string,
+    @param.query.string("hoursPerWeekWeekends") hoursPerWeekWeekends: string,
+
+  ): Promise<CustomUser> {
+    let user = await this.userRepository.findById(currentUserProfile[securityId]);
+
+    if( !user ) {
+      throw new HttpErrors.NotFound("user not found with id: " + currentUserProfile[securityId]);
+    }
+
+    user.hoursPerWeekDays = hoursPerWeekDays;
+    user.hoursPerWeekends = hoursPerWeekWeekends;
+
+    return this.userRepository.save(user);
 
   }
 
