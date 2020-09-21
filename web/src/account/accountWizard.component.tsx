@@ -117,7 +117,7 @@ export default function AccountWizardComponent(props: any) {
             <Container className="login-container" >
                 <h1>Account Setup</h1>
                 <Row className="justify-content-md-center">
-                    getDWTForm
+                    Default Wee4k Template will come soon. Please skip.
                     <Button variant="primary"
                         onClick={(e: any) => {
                             userService.nextAction();
@@ -185,7 +185,7 @@ export default function AccountWizardComponent(props: any) {
                         
                             <Button size='sm'  variant="primary" type="submit" onClick={(e: any) => {
 
-                                userService.saveDWT(hoursPerWeekDays, hoursPerWeekWeekends);
+                                userService.saveDWS(hoursPerWeekDays, hoursPerWeekWeekends);
 
                                 }}>
                                     SAVE

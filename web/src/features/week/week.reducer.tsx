@@ -33,6 +33,7 @@ export default function WeekReducer(state: any, action: any) {
     let goalStates: any = {};
     switch(action.type) {
 
+        case WeekActionType.WEEK_CREATED:
         case WeekActionType.WEEK_FETCHED:
             week = action.payload;
             reCalculateTImes(week);

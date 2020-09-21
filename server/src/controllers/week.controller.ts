@@ -1,32 +1,41 @@
+import { authenticate } from '@loopback/authentication';
+import { UserRepository, UserServiceBindings } from '@loopback/authentication-jwt';
+import { inject } from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
-  WhereBuilder,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
+  del, get,
   getModelSchemaRef,
-  patch,
+
+
+
+
+  HttpErrors, param,
+
+
+  patch, post,
+
+
+
+
   put,
-  del,
-  requestBody,
-  HttpErrors,
+
+  requestBody
 } from '@loopback/rest';
-import {Week} from '../models';
-import {WeekRepository} from '../repositories';
-import { authenticate } from '@loopback/authentication';
-import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
-import { inject } from '@loopback/core';
-import { UserServiceBindings } from '@loopback/authentication-jwt';
-import { CustomUserService } from '../services/user.service';
+import { SecurityBindings, securityId, UserProfile } from '@loopback/security';
 import { Bindings } from '../bindings';
+import { Week } from '../models';
+import { WeekRepository } from '../repositories';
+import CustomUserRepository from '../repositories/user.repository';
+import { CustomUserService } from '../services/user.service';
 import { WeekService } from '../services/week.service';
+import { UserController } from './user.controller';
 
 @authenticate('jwt')
 export class WeekController {
@@ -63,6 +72,19 @@ export class WeekController {
     currentUserProfile: UserProfile
   ): Promise<Week> {
     week.userId = currentUserProfile[securityId];
+
+    // add default hours.
+
+    const user = this.userService.findById(currentUserProfile[securityId]);
+
+    if(!user) {
+      throw new HttpErrors.NotFound("User not found");
+    }
+
+    week.hoursPerWeekDays = user.hoursPerWeekDays;
+    week.hoursPerWeekWeekends = user.hoursPerWeekDays;
+    week.totalMinutes = week.hoursPerWeekDays ?? 0 * 60 + week.hoursPerWeekWeekends ?? 0 * 60;
+
     return this.weekRepository.create(week);
   }
 

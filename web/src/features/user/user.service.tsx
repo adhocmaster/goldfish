@@ -206,11 +206,11 @@ class UserService {
     }
 
 
-    public saveDWT(hoursPerWeekDays: number, hoursPerWeekWeekends: number) {
+    public saveDWS(hoursPerWeekDays: number, hoursPerWeekWeekends: number) {
 
         axios.post(
 
-            this.serviceUrl + "/DWT",
+            this.serviceUrl + "/DWS",
             {
                 hoursPerWeekDays: hoursPerWeekDays,
                 hoursPerWeekWeekends: hoursPerWeekWeekends

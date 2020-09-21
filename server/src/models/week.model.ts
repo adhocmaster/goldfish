@@ -67,6 +67,18 @@ export class Week extends Entity {
       default: 0
   })
   completedMinutes?: number;
+  
+  @property({
+    type: 'string',
+    default: 0
+  })
+  hoursPerWeekDays?: string
+
+  @property({
+    type: 'string',
+    default: 0
+  })
+  hoursPerWeekWeekends?: string
 
 
   @property({

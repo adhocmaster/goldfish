@@ -206,7 +206,7 @@ export class UserController {
   }
 
   @authenticate('jwt')
-  @post( "/users/DWT", {
+  @post( "/users/DWS", {
     responses: {
       '200': {
         description: "default week schedule",
@@ -220,11 +220,11 @@ export class UserController {
       },
     }
   })
-  async saveDWT(
+  async saveDWS(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-    @param.query.string("hoursPerWeekDays") hoursPerWeekDays: string,
-    @param.query.string("hoursPerWeekWeekends") hoursPerWeekWeekends: string,
+    @param.query.number("hoursPerWeekDays") hoursPerWeekDays: number,
+    @param.query.number("hoursPerWeekWeekends") hoursPerWeekWeekends: number,
 
   ): Promise<CustomUser> {
     let user = await this.userRepository.findById(currentUserProfile[securityId]);

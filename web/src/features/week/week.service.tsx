@@ -31,6 +31,60 @@ class WeekService {
         return useSelector((state:RootState) => {return state.weekState.weekDetails}, deepEqual);
     }
 
+    public setToMonday(date: Date) {
+        var day = date.getDay() || 7;  
+        if( day !== 1 ) 
+            date.setHours(-24 * (day - 1)); 
+        return date;
+    }
+
+    public create(date: Date | undefined, useCache: boolean = false) {
+
+        if (date) {
+            date = this.setToMonday(date);
+        } else {
+            date = this.setToMonday(new Date())
+        }
+
+        let dateEnd = new Date(date);
+        dateEnd.setDate(dateEnd.getDate() + 6);
+
+        axios.post(
+            this.serviceUrl + '/create/' + date, {
+                title: "New Week",
+                dateStart: date.toISOString(),
+                dateEnd: dateEnd
+            }
+
+        ).then( (result) => {
+
+            
+            const errors = ResponseProcessor.getError(result.data);
+
+            if ( errors.length == 0 ) {
+
+                console.log("got week");
+                let data = result.data;
+                
+                if (useCache) {
+                    this.cache.set(data.id, data);
+                }
+                actionManager.dispatch(WeekActionType.WEEK_CREATED, data, false);
+
+
+            } else {
+                this.handleDataError(errors);
+            }
+
+        }).catch((error) => {
+            this.handleHttpError(error);
+        });
+
+
+
+
+    }
+
 
     public getById(weekId: string, useCache = false) {
 

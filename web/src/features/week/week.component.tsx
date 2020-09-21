@@ -36,6 +36,7 @@ export default function WeekComponent( props: any ) {
 
     // const[weekDetails, setWeekDetails] = useState<any>(null);
 
+
     function getMenubar(props: any) {
         let taskViewChecked = "";
         if (taskView) {
@@ -224,7 +225,15 @@ export default function WeekComponent( props: any ) {
     useEffect(() => {
 
         console.log("WeekComponent: one time useEffect!");
-        weekService.getById('5f311ccd8c32ed4bf89f9fc1', true);
+        // weekService.getById('5f311ccd8c32ed4bf89f9fc1', true);
+
+        if (props.weekId) {
+            weekService.getById(props.weekId, true);
+
+        } else {
+
+            weekService.create(new Date());
+        }
 
     }, []);
 

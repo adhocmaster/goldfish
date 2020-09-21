@@ -24,6 +24,11 @@ export class CustomUserService implements UserService<CustomUser, Credentials> {
     @repository(CustomUserRepository) public userRepository: CustomUserRepository
   ) {}
 
+
+  async findById(id: string) {
+    return this.userRepository.findById(id);
+  }
+
   // User --> MyUser
   async verifyCredentials(credentials: Credentials): Promise<CustomUser> {
     const invalidCredentialsError = 'Invalid email or password.';
